@@ -1,0 +1,418 @@
+import logging
+import typer
+import rich
+
+from datetime import datetime
+from typing import Optional, List
+from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.table import Table
+
+from ibm_watsonx_orchestrate.cli.commands.observability.traces.traces_exporters import TraceExporter
+from ibm_watsonx_orchestrate.cli.commands.observability.traces import traces_helper
+from ibm_watsonx_orchestrate.client.utils import instantiate_client
+from ibm_watsonx_orchestrate.client.base_api_client import ClientAPIException
+from ibm_watsonx_orchestrate.client.observability.traces.traces_client import (
+    TracesClient,
+    ObservationsExportResponse,
+    TraceSearchResponse,
+    TraceFilters,
+    TraceSort,
+)
+from ibm_watsonx_orchestrate.client.utils import is_local_dev
+from ibm_watsonx_orchestrate.utils.docker_utils import get_container_env_var
+from ibm_watsonx_orchestrate.utils.exceptions import BadRequest
+
+
+logger = logging.getLogger(__name__)
+console = Console()
+
+
+class TracesController:
+    """
+    Controller for trace operations.
+
+    This controller provides methods to search, fetch and export traces.
+
+    Example:
+        ```python
+        controller = TracesController()
+        result = controller.fetch_trace_observations("abc123...")
+        for obs in result.observations:
+            print(obs.name, obs.type)
+        ```
+    """
+
+    def __init__(self):
+        self.client: Optional[TracesClient] = None
+
+    def get_client(self) -> TracesClient:
+        """Get or create TracesClient instance."""
+        if not self.client:
+            self.client = instantiate_client(TracesClient)
+
+        return self.client
+
+    def fetch_trace_observations(
+        self,
+        trace_id: str,
+        page_size: int = 100,
+        fetch_all: bool = True,
+        show_progress: bool = False
+    ) -> ObservationsExportResponse:
+        """
+        Fetch all observations for a given trace ID.
+
+        Args:
+            trace_id: Trace ID (32-character hexadecimal string)
+            page_size: Number of observations per page (1-1000)
+            fetch_all: If True, automatically fetches all pages
+            show_progress: If True, log progress (for CLI use)
+
+        Returns:
+            ObservationsExportResponse containing observations and pagination info
+
+        Raises:
+            ClientAPIException: If the API request fails
+            ValueError: If trace_id format is invalid
+
+        Example:
+            ```python
+            controller = TracesController()
+            result = controller.fetch_trace_observations("abc123...")
+            print(f"Fetched {len(result.observations)} observations")
+            ```
+        """
+        if show_progress:
+            logger.info(f"Fetching observations for trace {trace_id[:8]}...")
+
+        client = self.get_client()
+        obs_response = client.get_observations(
+            trace_id=trace_id,
+            page_size=page_size,
+            fetch_all=fetch_all
+        )
+
+        if show_progress:
+            obs_count = len(obs_response.observations) if obs_response.observations else 0
+            logger.info(f"Fetched {obs_count} observations")
+
+        return obs_response
+
+    def export_trace_to_json(
+        self,
+        trace_id: str,
+        output_file: Optional[str] = None,
+        pretty: bool = True,
+        page_size: int = 50
+    ) -> tuple[ObservationsExportResponse, str]:
+        """
+        Fetch trace observations and export to JSON format.
+
+        Args:
+            trace_id: Trace ID (32-character hexadecimal string)
+            output_file: Optional file path to write to
+            pretty: If True, format with indentation
+            page_size: Number of observations per page
+
+        Returns:
+            Tuple of (ObservationsExportResponse, json_string)
+
+        Raises:
+            ClientAPIException: If the API request fails
+            ValueError: If trace_id format is invalid
+
+        Example:
+            ```python
+            controller = TracesController()
+            result, json_str = controller.export_trace_to_json(
+                "abc123...",
+                output_file="trace.json"
+            )
+            ```
+        """
+        obs_response = self.fetch_trace_observations(
+            trace_id=trace_id,
+            page_size=page_size,
+            fetch_all=True
+        )
+
+        exporter = TraceExporter()
+        json_str = exporter.export_to_json(
+            obs_response,
+            output_file=output_file,
+            pretty=pretty
+        )
+
+        return obs_response, json_str
+        
+    def search_traces(
+        self,
+        filters: Optional[TraceFilters] = None,
+        sort: Optional[TraceSort] = None,
+        page_size: int = 100,
+        show_progress: bool = False
+    ) -> TraceSearchResponse:
+        """
+        Search for traces using filters.
+
+        Args:
+            filters: TraceFilters object with search criteria
+            sort: TraceSort object for sorting results
+            page_size: Number of results per page (1-1000)
+            show_progress: If True, log progress (for CLI use)
+
+        Returns:
+            TraceSearchResponse containing trace summaries and pagination info
+
+        Raises:
+            ClientAPIException: If the API request fails
+            ValueError: If parameters are invalid
+
+        Example:
+            ```python
+            from ibm_watsonx_orchestrate.client.observability.traces.traces_client import TraceFilters, TraceSort
+
+            controller = TracesController()
+
+            filters = TraceFilters(
+                start_time="2026-01-26T00:00:00.000Z",
+                end_time="2026-01-27T23:59:59.000Z"
+            )
+            sort = TraceSort(field="start_time", direction="desc")
+
+            results = controller.search_traces(filters=filters, sort=sort)
+            print(f"Found {len(results.traceSummaries)} traces")
+            ```
+        """
+        if show_progress:
+            logger.info("Searching for traces...")
+        
+        client = self.get_client()
+        search_response = client.search_traces(
+            filters=filters,
+            sort=sort,
+            page_size=page_size,
+        )
+        
+        if show_progress:
+            trace_count = len(search_response.traceSummaries)
+            logger.info(f"Found {trace_count} traces")
+        
+        return search_response
+
+
+def trace_search(start_time: Optional[datetime] = None,
+                    end_time: Optional[datetime] = None,
+                    service_names: Optional[List[str]] = None,
+                    agent_ids: Optional[List[str]] = None,
+                    agent_names: Optional[List[str]] = None,
+                    user_ids: Optional[List[str]] = None,
+                    session_ids: Optional[List[str]] = None,
+                    min_spans: Optional[int] = None,
+                    max_spans: Optional[int] = None,
+                    sort_field: str = "start_time",
+                    sort_direction: str = "desc",
+                    page_size: int = 100,
+                    ):
+        try:
+            # agent-name and agent-id params are deprecated; the API no longer filters by agent.
+            # The resolution call is kept so that the deprecation warning in resolve_agent_names_to_ids
+            # still fires when a caller passes these flags.
+            resolved_agent_ids = traces_helper.resolve_agent_names_to_ids(agent_names, agent_ids)
+
+            # For local development with FORCE_SINGLE_TENANT=true, service_name is required, defaulting to "wxo-server" if not provided
+            try:
+                if is_local_dev() and (not service_names or len(service_names) == 0):
+                    logger.info("Local development detected: defaulting to service_name='wxo-server'")
+                    service_names = ["wxo-server"]
+            except (KeyError, AttributeError): # In test environments or when config is not set up, skip local dev check
+                pass
+
+            filters = TraceFilters(
+                start_time=start_time,
+                end_time=end_time,
+                service_names=service_names,
+                agent_ids=resolved_agent_ids,
+                agent_names=None,
+                user_ids=user_ids,
+                session_ids=session_ids,
+            )
+            
+            sort = TraceSort(field=sort_field, direction=sort_direction)
+            
+            controller = TracesController()
+            
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                console=console
+            ) as progress:
+                
+                # Set progress on client so it can stop spinner before logging
+                controller.get_client().progress = progress
+                task = progress.add_task("Searching for traces...", total=None)
+                
+                search_response = controller.search_traces(
+                    filters=filters,
+                    sort=sort,
+                    page_size=page_size,
+                )
+                            
+            if not search_response.traceSummaries:
+                logger.warning("No traces found matching the criteria")
+                return
+            
+            traces_to_display = search_response.traceSummaries
+            # Display results in a table
+            table = Table(title=f"Found {len(traces_to_display)} traces")
+            table.add_column("Timestamp")
+            table.add_column("Trace ID", no_wrap=True)
+            table.add_column("Agent Name")
+            table.add_column("Latency", justify="right")
+            for trace in traces_to_display:
+                # Get agent name (use first one if multiple, or "-" if none)
+                agent_name = trace.agentNames[0] if trace.agentNames else "-"
+                
+                # Convert duration from ms to seconds
+                latency_s = trace.durationMs / 1000.0
+                
+                # Format latency with appropriate precision
+                # Note: latency may be 0 if not available in trace metadata
+                if latency_s == 0:
+                    latency_str = "-"
+                elif latency_s < 0.001:
+                    latency_str = f"{latency_s*1000:.3f}ms"
+                elif latency_s < 1:
+                    latency_str = f"{latency_s*1000:.0f}ms"
+                else:
+                    latency_str = f"{latency_s:.3f}s"
+                # Format timestamp to match UI: MM/DD/YYYY , HH:MM:SSAM/PM
+                # Parse ISO format: 2026-04-02T09:42:27.548775Z
+                dt = datetime.fromisoformat(trace.startTime.replace('Z', '+00:00'))
+                formatted_timestamp = dt.strftime("%m/%d/%Y , %I:%M:%S%p")
+
+                table.add_row(
+                    formatted_timestamp,  # Show date and time only (YYYY-MM-DDTHH:MM:SS)
+                    trace.traceId,
+                    agent_name,
+                    latency_str,
+                )
+
+            console.print()
+            console.print(table)
+            console.print()
+            
+            if traces_to_display: # Show tip for exporting
+                logger.info("Tip: Use 'orchestrate observability traces export --trace-id <TRACE_ID>' to export full trace data")
+        
+        except ClientAPIException as e:
+            status_code = e.response.status_code if e.response is not None else None
+            error_messages = {
+                400: "Invalid request parameters. Check your filter values.",
+                401: "Authentication failed. Missing or invalid tenant.id header.",
+                429: "Rate limit exceeded. Maximum 4 requests per minute. Please wait and try again.",
+                500: "Internal server error. Please try again later."
+            }
+            
+            error_msg = (
+                error_messages.get(status_code, f"API error (status {status_code})")
+                if status_code is not None
+                else "API error (no response status)"
+            )
+            logger.error(f"Error: {error_msg}")
+            
+            if status_code == 429:
+                logger.info("Tip: Wait at least 15 seconds before retrying")
+            
+            logger.error(f"API error: {e}")
+            raise typer.Exit(1)
+            
+        except ValueError as e:
+            logger.error(f"Error: {str(e)}")
+            raise typer.Exit(1)
+        
+        except Exception as e:
+            logger.error(f"Unexpected error during trace search: {str(e)}")
+            raise typer.Exit(1)
+
+def traces_export(trace_id: str, output: Optional[str] = None, pretty: bool = True):
+
+    try:
+        if not trace_id or not trace_id.strip():
+            logger.error("Error: trace_id must be a non-empty string")
+            raise typer.Exit(1)
+
+        if output and not output.lower().endswith('.json'):
+            logger.warning(f"Output file '{output}' must have .json extension. Displaying output to stdout")
+            output = None
+
+        if not output and not pretty:
+            logger.warning("--no-pretty can only be used when exporting to a file using --output/-o")
+
+        controller = TracesController()
+
+        if output:  # Show progress only if outputting to file
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                console=console
+            ) as progress:
+                task = progress.add_task(f"Fetching observations for trace {trace_id[:8]}...", total=None)
+                obs_response, json_str = controller.export_trace_to_json(
+                    trace_id=trace_id,
+                    output_file=output,
+                    pretty=pretty,
+                )
+                if obs_response.observations:
+                    progress.update(task, description=f"Fetched {len(obs_response.observations)} observations")
+        else:  # Fetch without progress bar when outputting to stdout
+            obs_response, json_str = controller.export_trace_to_json(
+                trace_id=trace_id,
+                output_file=output,
+                pretty=pretty,
+            )
+
+        if not obs_response.observations:
+            logger.warning(f"No trace data found for trace ID {trace_id}")
+            return
+
+        # Display success message or output to stdout
+        if output:
+            logger.info(f"Successfully exported {len(obs_response.observations)} observations to {output}")
+            logger.info(f"Trace ID: {trace_id}")
+            if obs_response.totalCount:
+                logger.info(f"  Total items in trace: {obs_response.totalCount}")
+        else:
+            rich.print_json(json_str)
+    
+    except ClientAPIException as e:
+        status_code = e.response.status_code if e.response is not None else None
+        error_messages = {
+            400: "Invalid request parameters. Check that trace_id is a valid 32-character hex string.",
+            401: "Authentication failed. Missing or invalid tenant.id header.",
+            404: f"Trace ID '{trace_id}' not found.",
+            429: "Rate limit exceeded. Maximum 4 requests per minute. Please wait and try again.",
+            500: "Internal server error. Please try again later."
+        }
+        
+        error_msg = (
+            error_messages.get(status_code, f"API error (status {status_code})")
+            if status_code is not None
+            else "API error (no response status)"
+        )
+        logger.error(f"Error: {error_msg}")
+        
+        if status_code == 429:
+            logger.info("Tip: Wait at least 15 seconds before retrying")
+        
+        logger.error(f"API error: {e}")
+        raise typer.Exit(1)
+    
+    except ValueError as e:
+        logger.error(f"Error: {str(e)}")
+        raise typer.Exit(1)
+    
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        raise typer.Exit(1)

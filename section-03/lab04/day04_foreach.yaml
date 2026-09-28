@@ -1,0 +1,97 @@
+kind: native
+name: day04_foreach
+display_name: day04_foreach
+description: A general-purpose AI agent that can assist with various tasks.
+context_access_enabled: true
+context_variables: []
+restrictions: editable
+memory_enabled: false
+supported_apps: []
+llm: groq/openai/gpt-oss-120b
+style: react_core
+hide_reasoning: false
+instructions: |-
+  사용자가 sku와 quantity가 포함된 items 배열을 제공하면 반드시
+  Calculate line total 워크플로를 실행한다.
+
+  사용자에게 unit_price를 질문하지 않는다.
+  품목별 unit_price는 워크플로 내부의 교육용 단가표를 사용한다.
+
+  지원하는 SKU는 다음과 같다.
+  - NOTEBOOK
+  - MONITOR
+  - KEYBOARD
+
+  워크플로 실행 결과의 lines와 total을 사용자에게 표시한다.
+  직접 가격을 추측하거나 계산하지 않는다.
+guidelines: []
+collaborators: []
+tools:
+- tool_04_array_96778s
+toolkits: []
+skills: []
+plugins:
+  agent_pre_invoke: []
+  agent_post_invoke: []
+sync_tool_flow_interactions: true
+bundled: false
+knowledge_base: []
+chat_with_docs:
+  enabled: false
+  supports_full_document: true
+  vector_index:
+    chunk_size: 400
+    chunk_overlap: 50
+    limit: 10
+    extraction_strategy: express
+  generation:
+    prompt_instruction: ''
+    max_docs_passed_to_llm: 5
+    generated_response_length: Moderate
+    display_text_no_results_found: I searched my knowledge base, but did not find
+      anything related to your query
+    display_text_connectivity_issue: I might have information related to your query
+      to share, but am unable to connect to my knowledge base at the moment
+    idk_message: I'm afraid I don't understand. Please rephrase your question.
+    enabled: false
+  query_rewrite:
+    enabled: true
+  confidence_thresholds:
+    retrieval_confidence_threshold: Lowest
+    response_confidence_threshold: Lowest
+  citations:
+    citation_title: How do we know?
+    citations_shown: -1
+  hap_filtering:
+    output:
+      enabled: false
+      threshold: 0.5
+  query_source: Agent
+  agent_query_description: The query to search for in the knowledge base
+starter_prompts:
+  is_default_prompts: false
+  prompts:
+  - id: default0
+    title: What can you do for me?
+    subtitle: Learn about watsonx Orchestrate AI Agent and Gen AI capabilities
+    prompt: Summarize the capabilities of watsonx Orchestrate.
+    state: active
+  - id: default1
+    title: Formalize Message
+    subtitle: Craft more professional messages
+    prompt: Please revise the text in the following prompt to improve clarity and
+      brevity, while preserving all essential information.
+    state: active
+  - id: default2
+    title: Summarize Meeting Notes
+    subtitle: Bullet key points from meeting notes
+    prompt: Create a bulleted summary highlighting key points from the meeting notes
+      sent in the next prompt.
+    state: active
+welcome_content:
+  welcome_message: Hello, welcome to watsonx Orchestrate
+  description: Accuracy of generated answers may vary. Please double-check responses.
+  is_default_message: false
+  is_user_barge_in_disabled: false
+is_schedulable: false
+spec_version: v1

@@ -1,0 +1,2 @@
+[console_scripts]
+ibm-watsonx-orchestrate-mcp-server = ibm_watsonx_orchestrate_mcp_server.server:start_server

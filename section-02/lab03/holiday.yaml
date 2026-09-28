@@ -1,0 +1,88 @@
+kind: native
+name: holiday
+display_name: Holiday
+description: '당신은 공휴일 안내 어시스턴트입니다. '
+context_access_enabled: true
+context_variables: []
+restrictions: editable
+memory_enabled: true
+llm: groq/openai/gpt-oss-120b
+style: react_core
+hide_reasoning: false
+instructions: |-
+  **Policy**
+
+  **Instructions**
+   사용자가 특정 국가 또는 국가/연도의 공휴일을 물으면 get_public_holidays 도구를 호출해 답하세요
+
+  **default**
+  대한민국의 국가 코드 : KR
+
+  이 agent에서 아래 tool들은 다음과 같은 목적/작업을 위해 사용됩니다:
+  - get_next_public_holidays_by_country — 특정 국가의 다가오는 공휴일 목록을 반환합니다 (향후 365일).
+  - get_public_holidays_by_year_and_country — 지정한 연도(4자리)와 국가 코드(ISO 3166-1 alpha-2)에 해당하는 모든 법정 공휴일을
+guidelines: []
+collaborators: []
+tools:
+- get_next_public_holidays_by_country
+- get_public_holidays_by_year_and_country
+toolkits: []
+skills: []
+plugins:
+  agent_pre_invoke: []
+  agent_post_invoke: []
+sync_tool_flow_interactions: true
+bundled: false
+knowledge_base: []
+chat_with_docs:
+  enabled: false
+  supports_full_document: true
+  vector_index:
+    chunk_size: 400
+    chunk_overlap: 50
+    limit: 10
+    extraction_strategy: express
+  generation:
+    prompt_instruction: ''
+    max_docs_passed_to_llm: 5
+    generated_response_length: Moderate
+    display_text_no_results_found: I searched my knowledge base, but did not find
+      anything related to your query
+    display_text_connectivity_issue: I might have information related to your query
+      to share, but am unable to connect to my knowledge base at the moment
+    idk_message: I'm afraid I don't understand. Please rephrase your question.
+    enabled: false
+  query_rewrite:
+    enabled: true
+  confidence_thresholds:
+    retrieval_confidence_threshold: Lowest
+    response_confidence_threshold: Lowest
+  citations:
+    citation_title: How do we know?
+    citations_shown: -1
+  hap_filtering:
+    output:
+      enabled: false
+      threshold: 0.5
+  query_source: Agent
+  agent_query_description: The query to search for in the knowledge base
+starter_prompts:
+  is_default_prompts: false
+  prompts:
+  - id: 91dcfb0b-55d8-4c75-8522-1ff421282758
+    title: 대한민국(KR)의 현재년도 공휴일  조회
+    subtitle: 올해 공휴일을 확인해보세요
+    prompt: 올해 공휴일을 알려줘
+    state: active
+  - id: 681b5c9a-165c-42c5-9ae6-c05a14875291
+    title: 지정한 국가의 해당년도 공휴일  조회
+    subtitle: 해당 연도 공휴일을 확인해보세요
+    prompt: 올해 공휴일을 알려줘
+    state: active
+welcome_content:
+  welcome_message: 안녕하세요, Holiday Assistant입니다.
+  description: 해당 연도의 Holiday를 알려드립니다.
+  is_default_message: false
+  is_user_barge_in_disabled: false
+is_schedulable: false
+spec_version: v1

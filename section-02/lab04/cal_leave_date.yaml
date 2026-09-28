@@ -1,0 +1,78 @@
+kind: native
+name: cal_leave_date
+display_name: 연차 계산 Assistant
+description: '당신은 공휴일 안내 어시스턴트입니다. '
+context_access_enabled: true
+context_variables: []
+restrictions: editable
+memory_enabled: true
+llm: groq/openai/gpt-oss-120b
+style: react_core
+hide_reasoning: false
+instructions: |-
+  **Policy**
+
+  **Instructions**
+   사용자가 "연차 며칠 남았어?"라고 물으면 입사일을 되물은 뒤 calculate_leave_days 도구를 호출해 답하세요.
+
+  이 agent에서 아래 tool들은 다음과 같은 목적/작업을 위해 사용됩니다:
+  - cal_leave_days — 입사일과 현재 날짜를 기준으로 사용 가능한 연차 일수를 계산합니다.
+guidelines: []
+collaborators: []
+tools:
+- cal_leave_days
+toolkits: []
+skills: []
+plugins:
+  agent_pre_invoke: []
+  agent_post_invoke: []
+sync_tool_flow_interactions: true
+bundled: false
+knowledge_base: []
+chat_with_docs:
+  enabled: false
+  supports_full_document: true
+  vector_index:
+    chunk_size: 400
+    chunk_overlap: 50
+    limit: 10
+    extraction_strategy: express
+  generation:
+    prompt_instruction: ''
+    max_docs_passed_to_llm: 5
+    generated_response_length: Moderate
+    display_text_no_results_found: I searched my knowledge base, but did not find
+      anything related to your query
+    display_text_connectivity_issue: I might have information related to your query
+      to share, but am unable to connect to my knowledge base at the moment
+    idk_message: I'm afraid I don't understand. Please rephrase your question.
+    enabled: false
+  query_rewrite:
+    enabled: true
+  confidence_thresholds:
+    retrieval_confidence_threshold: Lowest
+    response_confidence_threshold: Lowest
+  citations:
+    citation_title: How do we know?
+    citations_shown: -1
+  hap_filtering:
+    output:
+      enabled: false
+      threshold: 0.5
+  query_source: Agent
+  agent_query_description: The query to search for in the knowledge base
+starter_prompts:
+  is_default_prompts: false
+  prompts:
+  - id: 5a6f88b0-e84a-4f41-8a0c-fd0618d8125a
+    title: 나의 연차는
+    subtitle: 나의 연차를 확인해보세요
+    prompt: 연차를 알려줘
+    state: active
+welcome_content:
+  welcome_message: 안녕하세요, 연차계산 Assistant입니다.
+  description: 당신의 연차를 알려드립니다.
+  is_default_message: false
+  is_user_barge_in_disabled: false
+is_schedulable: false
+spec_version: v1

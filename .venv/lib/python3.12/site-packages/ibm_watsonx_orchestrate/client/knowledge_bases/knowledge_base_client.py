@@ -1,0 +1,1 @@
+from ibm_watsonx_orchestrate_clients.knowledge_bases.knowledge_base_client import *

@@ -1,0 +1,483 @@
+from typing import Optional, Dict, Any
+from datetime import datetime
+from uuid import UUID
+from enum import Enum
+
+from pydantic import BaseModel, model_validator, Field
+
+
+class SpecVersion(str, Enum):
+    V1 = "v1"
+
+class KnowledgeBaseKind(str, Enum):
+    KNOWLEDGE_BASE = "knowledge_base"
+
+class ExtractionStrategy(str, Enum):
+    EXPRESS = 'express'
+    STANDARD = 'standard'
+    HIGH_QUALITY = 'high_quality'
+
+class RetrievalConfidenceThreshold(str, Enum):
+    Off = "Off"
+    Lowest = "Lowest"
+    Low = "Low"
+    High = "High"
+    Highest = "Highest"
+
+
+class GeneratedResponseLength(str, Enum):
+    Concise = "Concise"
+    Moderate = "Moderate"
+    Verbose = "Verbose"
+
+
+class ResponseConfidenceThreshold(str, Enum):
+    Off = "Off"
+    Lowest = "Lowest"
+    Low = "Low"
+    High = "High"
+    Highest = "Highest"
+
+class KnowledgeBaseRepresentation(str, Enum):
+    auto = "auto"
+    tool = "tool"
+
+class EmbeddingMode(str, Enum):
+    Server = "server"
+    Client = "client"
+
+
+class SearchMode(str, Enum):
+    Vector = "vector"
+    Hybrid = "hybrid"
+    Lexical = "lexical"
+
+
+class ConfidenceThresholds(BaseModel):
+    retrieval_confidence_threshold: Optional[RetrievalConfidenceThreshold] = None
+    response_confidence_threshold: Optional[ResponseConfidenceThreshold] = None
+
+class CitationsConfig(BaseModel):
+    """
+    example:
+    {
+        "citation_title": "how do i know",
+        "citations_shown": 5,
+    }
+    """
+    citation_title: Optional[str] = None
+    citations_shown: Optional[int] = None
+
+
+class HAPFilteringConfig(BaseModel):
+    enabled: Optional[bool] = None
+    threshold: Optional[float] = None
+
+
+class HAPFiltering(BaseModel):
+    """
+    example
+    {
+        "output": {
+            "enabled": True,
+            "threshold": 0.7,
+        }
+    }
+
+    """
+    output: Optional[HAPFilteringConfig] = None
+
+class QueryRewriteConfig(BaseModel):
+    """
+    example
+
+    {
+        "enabled": True,
+        "model_id": "watsonx/openai/gpt-oss-120b"
+    }
+
+    """
+    enabled: Optional[bool] = None
+    model_id: Optional[str] = None
+
+class GenerationConfiguration(BaseModel):
+    """
+    example
+    {
+        "model_id": "watsonx/openai/gpt-oss-120b",
+        "prompt_instruction": "When the documents are in different languages, you should respond in english.",
+        "max_docs_passed_to_llm": 10,
+        "retrieval_confidence_threshold": "Lowest",
+        "generated_response_length": "Moderate",
+        "display_text_no_results_found": "no docs found",
+        "display_text_connectivity_issue": "conn failed",
+        "idk_message": "I dont know",
+    }
+    """
+
+    model_id: Optional[str] = None
+    prompt_instruction: Optional[str] = None
+    max_docs_passed_to_llm: Optional[int] = None
+    generated_response_length: Optional[GeneratedResponseLength] = None
+    display_text_no_results_found: Optional[str] = None
+    display_text_connectivity_issue: Optional[str] = None
+    idk_message: Optional[str] = None
+    enabled: bool = False
+
+class FieldMapping(BaseModel):
+    """
+    Maps search result fields to output fields.
+    
+    Example:
+    {
+        "title": "title",
+        "body": "text",
+        "url": "some-url",
+        "custom_fields": {
+            "score": "_score",
+            "department": "dept",
+            "last_updated": "updated_at"
+        }
+    }
+    """
+    title: Optional[str] = None
+    body: Optional[str] = None
+    url: Optional[str] = None
+    custom_fields: Optional[Dict[str, str]] = None
+
+class MilvusConnection(BaseModel):
+    """
+    example:
+    {
+        "grpc_host": "https://xxxx.lakehouse.appdomain.cloud",
+        "database": "test_db",
+        "collection": "search_wa_docs",
+        "index": "dense",
+        "embedding_model_id": "sentence-transformers/all-minilm-l12-v2",
+        "grpc_port": "30564",
+        "filter": "title like \"%action%\"",
+        "limit": 10,
+        "field_mapping": {
+                        "title": "title",
+                        "body": "text",
+                        "url": "some-url"
+                    }
+    }
+    """
+    grpc_host: Optional[str] = None
+    grpc_port: Optional[str] = None
+    server_cert: Optional[str] = None
+    database: Optional[str] = None
+    collection: Optional[str] = None
+    index: Optional[str] = None
+    embedding_model_id: Optional[str] = None
+    limit : Optional[int] = None
+    filter: Optional[str] = None
+    field_mapping: Optional[FieldMapping] = None
+
+
+class ElasticSearchConnection(BaseModel):
+    """
+    example:
+
+    {
+        "url": "https://xxxx.databases.appdomain.cloud",
+        "index": "search-wa-docs",
+        "port": "31871",
+        "query_body": {"size":5,"query":{"text_expansion":{"ml.tokens":{"model_id":".elser_model_2_linux-x86_64","model_text": "$QUERY"}}}},
+        "result_filter": [
+                            {
+                                "match": {
+                                    "title": "A_keyword_in_title"
+                                }
+                            },
+                            {
+                                "match": {
+                                    "text": "A_keyword_in_text"
+                                }
+                            },
+                            {
+                                "match": {
+                                    "id": "A_specific_ID"
+                                }
+                            }
+                        ] = None,
+        "field_mapping": {
+                        "title": "title",
+                        "body": "text",
+                        "url": "some-url"
+                    }
+    }
+    """
+    url: Optional[str] = None  # URL can be provided in connection
+    index: Optional[str] = None
+    port: Optional[str] = None
+    query_body: Optional[dict] = None
+    result_filter: Optional[list] = None 
+    field_mapping: Optional[FieldMapping] = None
+
+class CustomSearchConnection(BaseModel):
+    """
+    example:
+    {
+        "url": "https://customsearch.xxxx.us-east.codeengine.appdomain.cloud",
+        "filter": "...",
+        "metadata": {...}
+    }
+    """
+    url: Optional[str] = None  # URL can be provided in connection
+    filter: Optional[str] = None
+    metadata: Optional[dict] = None
+    field_mapping: Optional[FieldMapping] = None
+
+class AstraDBConnection(BaseModel):
+    """
+    example:
+    {
+        "api_endpoint": "https://xxx-us-east-2.apps.astra.datastax.com",
+        "key_space": "default_keyspace",
+        "collection": "search_wa_docs",
+        "embedding_model_id": "sentence-transformers/all-minilm-l12-v2",
+        "port": "443",
+        "filter": "productType: \"boots\"",
+        "limit": 5,
+        "field_mapping": {
+                        "title": "title",
+                        "body": "text",
+                        "url": "some-url"
+                    }
+    }
+    """
+    api_endpoint: Optional[str] = None  # URL can be provided in connection
+    port: Optional[str] = None
+    server_cert: Optional[str] = None
+    keyspace: Optional[str] = None
+    data_type: str
+    collection: Optional[str] = None
+    table: Optional[str] = None
+    index_column: Optional[str] = None
+    embedding_mode: Optional[str] = None
+    embedding_model_id: Optional[str] = None
+    search_mode: Optional[str] = None
+    limit: Optional[int] = 5
+    filter: Optional[str] = None
+    field_mapping: Optional[FieldMapping] = None
+
+class OpenSearchConnection(BaseModel):
+    """
+    example:
+
+    {
+        "url": "https://xxxx.databases.appdomain.cloud",
+        "index": "search-wa-docs",
+        "port": "31871",
+        "query_body": {"size":5,"query":{"text_expansion":{"ml.tokens":{"model_id":".elser_model_2_linux-x86_64","model_text": "$QUERY"}}}},
+        "result_filter": [
+                            {
+                                "match": {
+                                    "title": "A_keyword_in_title"
+                                }
+                            },
+                            {
+                                "match": {
+                                    "text": "A_keyword_in_text"
+                                }
+                            },
+                            {
+                                "match": {
+                                    "id": "A_specific_ID"
+                                }
+                            }
+                        ],
+        "field_mapping": {
+                        "title": "title",
+                        "body": "text",
+                        "url": "some-url"
+                    }
+    }
+    """
+    url: Optional[str] = None  # URL can be provided in connection
+    index: str
+    port: Optional[str] = None
+    text_field: Optional[str] = None
+    vector_field: Optional[str] = None
+    embedding_mode: Optional[str] = None
+    embedding_model_id: Optional[str] = None
+    search_mode: Optional[str] = None
+    query_body: Optional[dict] = None
+    result_filter: Optional[list] = None
+    field_mapping: FieldMapping = \
+        Field(default_factory=lambda: FieldMapping())
+
+    @model_validator(mode='after')
+    def validate_client_embedding(self) -> 'OpenSearchConnection':
+        if self.embedding_mode == EmbeddingMode.Client and (self.embedding_model_id is None or self.vector_field is None):
+            raise ValueError("embedding_model_id and vector_field are required when embedding_mode is \"client\"")
+        return self
+
+    @model_validator(mode='after')
+    def validate_search_mode(self) -> 'OpenSearchConnection':
+        if self.search_mode == SearchMode.Hybrid and (self.text_field is None or self.vector_field is None):
+            raise ValueError("both text_field and vector_field are required when search_mode is \"hybrid\"")
+        return self
+
+
+class IndexConnection(BaseModel):
+    connection_id: Optional[str] = None
+    app_id: Optional[str] = None
+    milvus: Optional[MilvusConnection] = None
+    elastic_search: Optional[ElasticSearchConnection] = None
+    custom_search: Optional[CustomSearchConnection] = None
+    astradb: Optional[AstraDBConnection] = None
+    open_search: Optional[OpenSearchConnection] = None
+
+class QuerySource(str, Enum):
+    SessionHistory = "SessionHistory"
+    Agent = "Agent"
+
+
+class ConversationalSearchConfig(BaseModel):
+    language: Optional[str] = None
+    index_config: list[IndexConnection] = None
+    generation: Optional[GenerationConfiguration] = None
+    query_rewrite: Optional[QueryRewriteConfig] = None
+    citations: Optional[CitationsConfig] = None
+    hap_filtering: Optional[HAPFiltering] = None
+    confidence_thresholds: Optional[ConfidenceThresholds] = None
+    query_source: QuerySource = QuerySource.Agent
+    agent_query_description: str = "The query to search for in the knowledge base"
+    supports_full_document: Optional[bool] = None
+    
+    # Dynamic input schema support
+    input_schema: Optional[Dict[str, Any]] = None
+
+    @model_validator(mode="after")
+    def validate_agent_query_description(self) -> 'ConversationalSearchConfig':
+        if self.query_source == QuerySource.Agent and len(self.agent_query_description) == 0:
+            raise ValueError("Provide a non-empty agent_query_description when query source is `Agent`")
+        return self
+    
+    @model_validator(mode='after')
+    def validate_input_schema(self) -> 'ConversationalSearchConfig':
+        """Validate that input_schema is only used with Agent query_source and without document modes."""
+        if self.input_schema is None:
+            return self
+
+        # input_schema only supported when query_source is Agent
+        if self.query_source != QuerySource.Agent:
+            raise ValueError(
+                "input_schema is only supported when query_source is 'Agent'. "
+                f"Current query_source is '{self.query_source.value}'."
+            )
+
+        # input_schema not supported with document modes
+        if self.supports_full_document:
+            raise ValueError(
+                "input_schema is not supported when supports_full_document=True or full_documents_only=True. "
+                "Dynamic input schema only works with standard search mode."
+            )
+
+        return self
+
+
+class KnowledgeBaseBuiltInVectorIndexConfig(BaseModel):
+    embeddings_model_name: Optional[str] = None
+    chunk_size: Optional[int] = None
+    chunk_overlap: Optional[int] = None
+    limit: Optional[int] = None
+    extraction_strategy: Optional[ExtractionStrategy] = ExtractionStrategy.STANDARD
+
+class FileUpload(BaseModel):
+    path: str
+    url: Optional[str] = None
+
+class ContentSourceType(str, Enum):
+    """Supported external content source types.
+
+    These values must match the connector IDs from wdp-connect-library
+    as they are used directly as datasource_name in Flight service calls.
+    """
+    amazons3 = "amazons3"
+    azureblobstorage = "azureblobstorage"
+    box = "box"
+    dropbox = "dropbox"
+    googlecloudstorage = "googlecloudstorage"
+    onedrive = "onedrive"
+    sharepoint_file = "sharepoint-file"
+
+class ContentSourceConfig(BaseModel):
+    """Configuration for the external content source of a knowledge base."""
+    type: ContentSourceType = Field(
+        ...,
+        description="Type of external source (box, sharepoint, google_drive, etc.)"
+    )
+    app_id: Optional[str] = Field(
+        None,
+        description="App ID of the connector application (specified in the spec; resolved to connection_id at import time)"
+    )
+    connection_id: Optional[str] = Field(
+        None,
+        description="Resolved connection ID for the external source (populated at import time from app_id)"
+    )
+
+class KnowledgeBaseSyncJob(BaseModel):
+    """Schedule repeat options for knowledge base ingestion"""
+    schedule: str = Field(..., description="Cron pattern (e.g., '0 0 * * *' for daily at midnight)")
+    
+class KnowledgeBaseSpec(BaseModel):
+    """Schema for a complete knowledge-base."""
+    spec_version: SpecVersion = None
+    kind: KnowledgeBaseKind = KnowledgeBaseKind.KNOWLEDGE_BASE
+    id: Optional[UUID] = None
+    tenant_id: Optional[str] = None
+    name: str
+    description: Optional[str] = None
+    vector_index: Optional[KnowledgeBaseBuiltInVectorIndexConfig] = None
+    conversational_search_tool: Optional[ConversationalSearchConfig] | Optional[UUID] = None
+    prioritize_built_in_index: Optional[bool] = None
+    workspace: Optional[str] = Field(None, description="Workspace name (will be resolved to workspace_id)")
+    representation: Optional[KnowledgeBaseRepresentation] = None
+    vector_index_id: Optional[UUID] = None
+    created_by: Optional[str] = None
+    created_on: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    content_source: Optional[ContentSourceConfig] = None
+    sync_job: Optional[KnowledgeBaseSyncJob] = None
+    # For import/update
+    documents: list[str] | list[FileUpload] = None
+    
+    # DEFERRED: sync_job scheduling deferred to a future release.
+    # @model_validator(mode='after')
+    # def validate_sync_job_requires_content_source(self) -> 'KnowledgeBaseSpec':
+    #     """Validate that sync_job is only used with content_source, not with index_config."""
+    #     if self.sync_job is not None:
+    #         # Check if using index_config (external knowledge base)
+    #         if self.conversational_search_tool and isinstance(self.conversational_search_tool, ConversationalSearchConfig):
+    #             if self.conversational_search_tool.index_config:
+    #                 raise ValueError(
+    #                     "sync_job is not supported for knowledge bases using index_config. "
+    #                     "sync_job can only be used with content_source."
+    #                 )
+    #
+    #         # Ensure content_source is provided when sync_job is specified
+    #         if self.content_source is None:
+    #             raise ValueError(
+    #                 "sync_job requires content_source to be specified. "
+    #                 "Please provide a content_source (e.g., type: 'box')."
+    #             )
+    #
+    #     return self
+
+class KnowledgeBaseListEntry(BaseModel):
+    name: str = Field(description="Name of the knowledge base")
+    description: Optional[str] = Field(description="A description of the content contained in a knowledge base")
+    app_id: Optional[str] = Field(description="The app id for a connection that connects the knowledge base to an external knowledge store")
+    id: Optional[str] = Field(description="Unique identifier of the knowledge base")
+    is_global: Optional[bool] = Field(default=None, description="Is the knowledge base present in the global workspace")
+    sync_pattern: Optional[str] = Field(default=None, description="Cron schedule pattern for automatic sync (content_source knowledge bases only)")
+
+    def get_row_details(self):
+        row = [self.name, self.description, self.app_id, self.id]
+        if self.is_global is not None:
+            row.append("[green bold]✔[/green bold]" if self.is_global else "[red bold]x[/red bold]")
+        return row
