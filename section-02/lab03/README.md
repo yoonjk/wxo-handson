@@ -14,6 +14,17 @@ orchestrate tools list
 orchestrate agents import -f holiday_agent.yaml
 ```
 
+# Update Agent Name
+```bash
+curl --request PATCH \
+  --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}" \
+  --header "Authorization: Bearer ${TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "name": "a2a_demo"
+  }'
+```
+
 ## TOKEN
 ```bash
 TOKEN=$(curl -s -X POST \
@@ -45,7 +56,7 @@ curl -s --request GET \
   --header "Authorization: Bearer ${TOKEN}" \
   | jq .
 ```  
-
+## Agent List
 ```bash
 curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
@@ -64,14 +75,14 @@ AGENT_NAME="holiday"
 AGENT_ID=$(curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "Untitled_Agent_1_9510Qd") | .id')
+  | jq -r '.[] | select(.name == "purchase_approval") | .id')
 
 
 AGENT_NAME="holiday"
 curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "Untitled_Agent_1_5849T6")'
+  | jq -r '.[] | select(.name == "Untitled_Agent_1_0708AT")'
 
 
 orchestrate agents export \

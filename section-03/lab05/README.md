@@ -1,7 +1,112 @@
 
-# Active env
+# External Agent 등록
+
+
+1. Agents > Add Agent
+![alt text](add-agents.png)
+## Agent Type > Agent details
+Agent Type > Choose agent type
+![alt text](agent-type.png)
+Add Agents > Import
+
+Choose agent type
+Select the type of agent you would like to register
+External agent 선택
+
+## Register > Agent details
+![alt text](agent-details.png)
+Agent details : 
+External protocol: External Agent via A2A standard
+A2A protocol version : 0.3.0
+External agent's URL : http://nexweb.ddnsgeek.com/purchase/a2a
+
+Define new agent
+Provide details for how your agent will appear once added.
+
+Display name : purchase_approval_a2a_agent 
+
+The display name for this agent
+Description of agent capabilities
+purchase_approval_a2a_agent
+
+Connections
+A2A-compatible connections are listed below.
+
+
+
+![alt text](Connections.png)
+2. A2A 정보 입력
 ```bash
-orchestrate env activate nexweb-env
+Purpose:
+Import for use and observability
+
+External protocol:
+External agent via A2A protocol
+
+A2A protocol version:
+0.3.0
+
+Service instance URL:
+http://nexweb.ddnsgeek.com/purchase/a2a
+
+Display name:
+purchase_approval_a2a_agent
+```
+3. Connection 단계
+다음 화면에서 기존 Connection을 선택하거나 새로 만듭니다.   
+```bash
+Connection ID:
+purchase_approval_a2a_connection
+
+Display name:
+Purchase Approval A2A Connection
+
+Description:
+구매 승인 A2A 에이전트 연결
+```
+
+# connection 등록 draft/live
+- draft
+orchestrate connections add -a purchase_approval_a2a_dev
+
+- live
+orchestrate connections add -a purchase_approval_a2a
+
+
+```bash
+orchestrate connections configure \
+  -a purchase_approval_a2a_dev \
+  --env live \
+  --type team \
+  --kind bearer
+```  
+
+## token 등록
+- draft
+```bash
+orchestrate connections set-credentials \
+  --app-id purchase_approval_a2a_dev \
+  --env draft \
+  --token "$A2A_BEARER_TOKEN"
+```
+
+- live
+```bash
+orchestrate connections set-credentials \
+  --app-id purchase_approval_a2a_dev \
+  --env live \
+  --token "$A2A_BEARER_TOKEN"
+```
+## tool 등록
+```bash
+orchestrate tools import -k python -f leave_calculator.py
+orchestrate tools list
+```
+
+
+## Agent 등록
+```bash
+orchestrate agents import -f leave_agent.yaml
 ```
 
 ## TOKEN
@@ -13,38 +118,15 @@ TOKEN=$(curl -s -X POST \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 ```
 
-# Export openapi
-```bash
-curl http://nexweb.ddnsgeek.com/purchase/openapi.json \
-  -o openapi.json 
-```
-
-## Import tool
-```bash
- orchestrate tools import \
-  -k openapi \
-  -f openapi.json 
-```  
-
-## export tool
-```bash
-orchestrate tools export \
-  --name tool_04_foreach_adv_7664Sg \
-  --output day05_foreach_adv_workflow01.zip
-```  
-
-```bash
-orchestrate tools export \
-  --name get_product_by_sku \
-  --output day05_foreach_adv_workflow02.zip
-```  
-
-
-# List Agents
-## API-ENDPOINT
+## Find Agents
 ```bash
 API_ENDPOINT="https://api.ca-tor.watson-orchestrate.cloud.ibm.com/instances/6a4f1092-b48c-4340-8703-6b22d0c6821a"
-```
+curl -s --request GET \
+  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
+  --header "Authorization: Bearer ${TOKEN}" \
+  | jq .
+```  
+
 ```bash
 curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
@@ -52,63 +134,31 @@ curl -s --request GET \
   | jq -r ".[].name"
 ```
 
-# findByName : AGENT_ID
+# CLI만으로 agent_id 확인하기 (token 발급 없이)
+
+굳이 raw API를 쓰지 않아도, CLI가 이미 인증을 갖고 있으니 이걸로도 충분합니다:
 ```bash
-orchestrate agents list -v
+orchestrate agents list -v |grep -B2 '"name": "IBank"'
+```
 
-
+```bash
 curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "day04_foreach_adv")'
+  | jq -r '.[] | select(.name == "Untitled_Agent_1_0708AT")'
+```
 
+```bash
+AGENT_NAME="holiday"
 AGENT_ID=$(curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "day04_foreach_adv") | .id')  
-
-
-AGENT_ID=$(curl -s --request GET \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "cal_leave_date") | .id')  
-
-```
-
-# Export Agent
-```bash
-orchestrate agents export \
-  -n "day05_foreach_adv" \
-  -k native \
-  -o day05_foreach_adv.yaml \
-  --agent-only  
-```
-
-# Update Agent Name
-```bash
-curl --request PATCH \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "name": "day04_foreach_adv",
-    "display_name": "day04-foreach-adv"
-  }'
+  | jq -r '.[] | select(.name == "Untitled_Agent_1_0708AT") | .id')
 ```
 
 ```bash
-curl --request PATCH \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "name": "day05_foreach_adv",
-    "display_name": "day05_foreach_adv"
-  }'
-```
+API_ENDPOINT="https://api.ca-tor.watson-orchestrate.cloud.ibm.com/instances/6a4f1092-b48c-4340-8703-6b22d0c6821a"
 
-# Update Agent
-```bash
 curl --request PUT \
   --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}/chat-starter-settings" \
   --header "Authorization: Bearer ${TOKEN}" \
@@ -116,41 +166,43 @@ curl --request PUT \
   --data '{
     "starter_prompts": {
       "customize": [
-         {
-          "title": "구매 요청 조회",
-          "subtitle": "나의 구매 요청 조회",
-          "prompt": "구매 요청 조회"
-        },          
         {
-          "title": "구매 승인 요청",
-          "subtitle": "구매 승인 요청해 보세요",
-          "prompt": "구매 승인 요청"
-        },
-        {
-          "title": "구매 승인 승인 or 취소",
-          "subtitle": "승인 or 취소",
-          "prompt": "구매 승인 or 취소"
-        }         
+          "title": "나의 연차는",
+          "subtitle": "나의 연차를 확인해보세요",
+          "prompt": "연차를 알려줘"
+        } 
       ]
     },
     "welcome_content": {
-      "welcome_message": "안녕하세요, 구매 Assistant입니다.",
-      "description": "구매 신청."
+      "welcome_message": "안녕하세요, 연차계산 Assistant입니다.",
+      "description": "당신의 연차를 알려드립니다."
     }
   }'
+
+  ```
+
+
+  ## nginx
+  ```
+  현재 외부 A2A 주소를 /hello/a2a로 유지하려면, Nginx가 그 요청을 앱 내부 /로 전달하도록 설정하세요.
+
+location = /hello/a2a {
+    proxy_pass http://127.0.0.1:8020/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
 ```
 
-# export workflow
-```bash
-orchestrate tools list -v|grep "adv"
-
-orchestrate tools export \
-  --name tool_04_array_96778s \
-  --output day04_foreach_workflow.zip
+## .env
+```ini
+HELLO_AGENT_HOST=0.0.0.0
+HELLO_AGENT_PORT=8020
+AGENT_PUBLIC_URL=http://localhost:8020
+#AGENT_PUBLIC_URL=http://localhost:8020/
+ROOT_PATH=/hello
+# 비워두면 인증 없음. 값을 넣으면 Authorization: Bearer <값> 을 검사합니다.
+A2A_AUTH_TOKEN=qwer1234567890
 ```
-
-# import workflow
-```bash
-orchestrate tools import \
-  --kind flow \
-  --file day04_foreach_adv_workflow.json

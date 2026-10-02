@@ -1,109 +1,89 @@
-# Purchase Approval FastAPI
 
-watsonx Orchestrate의 구매 승인 플로우가 승인/반려 결과를 MySQL에 저장할 때 사용하는 API입니다.
+# External Agent 등록
 
-## 구조
 
-- `app/db/connection.py`: DB 연결과 세션 생성
-- `app/repositories/purchase_repository.py`: SQL/DB 처리
-- `app/services/purchase_service.py`: 상태 전이 업무 규칙
-- `app/api/routes/purchases.py`: FastAPI 엔드포인트
-- `sql/schema.sql`: MySQL 테이블 생성문
+1. Agents > Add Agent
+![alt text](add-agents.png)
+## Agent Type > Agent details
+Agent Type > Choose agent type
+![alt text](agent-type.png)
+Add Agents > Import
 
-## 1. 테이블 생성
+Choose agent type
+Select the type of agent you would like to register
+External agent 선택
 
+## Register > Agent details
+![alt text](agent-details.png)
+Agent details : 
+External protocol: External Agent via A2A standard
+A2A protocol version : 0.3.0
+External agent's URL : http://nexweb.ddnsgeek.com/hello/a2a
+
+Define new agent
+Provide details for how your agent will appear once added.
+
+Display name : hello_a2a_agent 
+
+The display name for this agent
+Description of agent capabilities
+hello_a2a_agent
+
+Connections
+A2A-compatible connections are listed below.
+
+
+
+![alt text](Connections.png)
+2. A2A 정보 입력
 ```bash
-mysql -h nexweb.ddnsgeeki.com -P 13306 -u nexweb -p demo < sql/schema.sql
+Purpose:
+Import for use and observability
+
+External protocol:
+External agent via A2A protocol
+
+A2A protocol version:
+0.3.0
+
+Service instance URL:
+http://nexweb.ddnsgeek.com/hello/a2a
+
+Display name:
+hello_a2a_agent
+```
+3. Connection 단계
+다음 화면에서 기존 Connection을 선택하거나 새로 만듭니다.   
+```bash
+Connection ID:
+hello_a2a_connection
+
+Display name:
+Hello A2A Connection
+
+Description:
+구매 승인 A2A 에이전트 연결
+```
+## token 등록
+```bash
+orchestrate connections set-credentials \
+  --app-id hello_a2a_dev \
+  --env draft \
+  --token "$A2A_BEARER_TOKEN"
 ```
 
-## 2. 로컬 실행
-
+## tool 등록
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-# .env의 DB_PASSWORD를 실제 값으로 변경
-uvicorn app.main:app --host 0.0.0.0 --port 8010--reload
+orchestrate tools import -k python -f leave_calculator.py
+orchestrate tools list
 ```
 
-- Swagger UI: `http://localhost:8010/docs`
-- OpenAPI 문서: `http://localhost:8010/openapi.json`
-- 상태 확인: `http://localhost:8010/health`
 
-## 3. 테스트용 구매 요청 생성
-
+## Agent 등록
 ```bash
-curl -X POST http://localhost:8010/api/purchase-requests \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "purchase_type": "IT_EQUIPMENT",
-    "requester": "hong.gildong",
-    "total_amount": 1500000,
-    "reason": "개발용 노트북 구매"
-  }'
+orchestrate agents import -f leave_agent.yaml
 ```
 
-응답의 `id`를 Orchestrate 플로우의 `request_id` 입력값으로 사용합니다.
-
-## 4. 승인 결과 API 테스트
-
-승인:
-
-```bash
-curl -X PATCH http://localhost:8010/api/purchase-requests/1/status \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "status": "APPROVED",
-    "comment": "예산 확인 완료",
-    "approver_role": "IT_MANAGER"
-  }'
-```
-
-반려할 때는 `status`를 `REJECTED`로 전달합니다.
-
-## 5. watsonx Orchestrate Tool 등록
-
-1. FastAPI를 Orchestrate에서 접근 가능한 **HTTPS 주소**로 배포합니다. 클라우드 Orchestrate는 `localhost`에 접근할 수 없습니다.
-2. Orchestrate의 Tools에서 OpenAPI 문서 URL `https://<호스트>/openapi.json`을 가져옵니다.
-3. operation ID가 `update_purchase_status`인 작업을 활성화합니다.
-4. 승인 Branch에서 Call a tool을 추가하고 다음처럼 매핑합니다.
-
-| Tool 입력 | 승인 경로 | 반려 경로 |
-|---|---|---|
-| `request_id` | 플로우 입력의 구매 요청 ID | 동일 |
-| `status` | `APPROVED` | `REJECTED` |
-| `comment` | `approval_comment` | `approval_comment` |
-| `approver_role` | Decision 출력 `approver_role` | 동일 |
-
-현재 API는 실습용으로 인증을 넣지 않았습니다. 외부 공개 배포 시 API Gateway 또는 애플리케이션 인증을 추가하세요.
-
-# Active env
-
-
-```bash
-orchestrate env activate nexweb-env
-```
-
-# Export openapi
-```bash
-curl http://nexweb.ddnsgeek.com/purchase/openapi.json \
-  -o openapi.json 
-```
-
-## Import tool
-```bash
- orchestrate tools import \
-  -k openapi \
-  -f openapi.json 
-```  
-
-## export tool
-```bash
-orchestrate tools export \
-  --name update_purchase_status \
-  --output update_purchase_status.zip
-```
 ## TOKEN
 ```bash
 TOKEN=$(curl -s -X POST \
@@ -113,7 +93,15 @@ TOKEN=$(curl -s -X POST \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 ```
 
-# List Agents
+## Find Agents
+```bash
+API_ENDPOINT="https://api.ca-tor.watson-orchestrate.cloud.ibm.com/instances/6a4f1092-b48c-4340-8703-6b22d0c6821a"
+curl -s --request GET \
+  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
+  --header "Authorization: Bearer ${TOKEN}" \
+  | jq .
+```  
+
 ```bash
 curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
@@ -121,61 +109,31 @@ curl -s --request GET \
   | jq -r ".[].name"
 ```
 
-# findByName : AGENT_ID
+# CLI만으로 agent_id 확인하기 (token 발급 없이)
+
+굳이 raw API를 쓰지 않아도, CLI가 이미 인증을 갖고 있으니 이걸로도 충분합니다:
 ```bash
-orchestrate agents list -v
+orchestrate agents list -v |grep -B2 '"name": "IBank"'
+```
 
-
+```bash
 curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "day02_decision")'
+  | jq -r '.[] | select(.name == "Untitled_Agent_1_0708AT")'
+```
 
+```bash
+AGENT_NAME="holiday"
 AGENT_ID=$(curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "day02_decision") | .id')  
-
-```
-# Import Agent
-```
-orchestrate agents import -f day02_decision.yaml
-```
-
-# Export Agent
-```bash
-orchestrate agents export \
-  -n "day02_decision" \
-  -k native \
-  -o day02_decision.yaml \
-  --agent-only  
-```
-
-# Update Agent Name
-```bash
-curl --request PATCH \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "name": "day02_decision",
-    "display_name": "구매 요청 승인"
-  }'
+  | jq -r '.[] | select(.name == "Untitled_Agent_1_0708AT") | .id')
 ```
 
 ```bash
-curl --request PATCH \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "name": "day01_firstworkflow",
-    "display_name": "day01-firstworkflow"
-  }'
-```
+API_ENDPOINT="https://api.ca-tor.watson-orchestrate.cloud.ibm.com/instances/6a4f1092-b48c-4340-8703-6b22d0c6821a"
 
-# Update Agent
-```bash
 curl --request PUT \
   --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}/chat-starter-settings" \
   --header "Authorization: Bearer ${TOKEN}" \
@@ -183,26 +141,43 @@ curl --request PUT \
   --data '{
     "starter_prompts": {
       "customize": [
-         {
-          "title": "구매 요청 조회",
-          "subtitle": "나의 구매 요청 조회",
-          "prompt": "구매 요청 조회"
-        },          
         {
-          "title": "구매 승인 요청",
-          "subtitle": "구매 승인 요청해 보세요",
-          "prompt": "구매 승인 요청"
-        },
-        {
-          "title": "구매 승인 승인 or 취소",
-          "subtitle": "승인 or 취소",
-          "prompt": "구매 승인 or 취소"
-        }         
+          "title": "나의 연차는",
+          "subtitle": "나의 연차를 확인해보세요",
+          "prompt": "연차를 알려줘"
+        } 
       ]
     },
     "welcome_content": {
-      "welcome_message": "안녕하세요, 구매 Assistant입니다.",
-      "description": "구매 신청."
+      "welcome_message": "안녕하세요, 연차계산 Assistant입니다.",
+      "description": "당신의 연차를 알려드립니다."
     }
   }'
+
+  ```
+
+
+  ## nginx
+  ```
+  현재 외부 A2A 주소를 /hello/a2a로 유지하려면, Nginx가 그 요청을 앱 내부 /로 전달하도록 설정하세요.
+
+location = /hello/a2a {
+    proxy_pass http://127.0.0.1:8020/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+## .env
+```ini
+HELLO_AGENT_HOST=0.0.0.0
+HELLO_AGENT_PORT=8020
+AGENT_PUBLIC_URL=http://localhost:8020
+#AGENT_PUBLIC_URL=http://localhost:8020/
+ROOT_PATH=/hello
+# 비워두면 인증 없음. 값을 넣으면 Authorization: Bearer <값> 을 검사합니다.
+A2A_AUTH_TOKEN=qwer1234567890
 ```

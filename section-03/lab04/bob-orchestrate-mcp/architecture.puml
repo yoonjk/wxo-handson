@@ -1,0 +1,35 @@
+@startuml
+title Bob Chat -> MCP -> watsonx Orchestrate
+
+actor User
+participant "IBM Bob Chat" as Bob
+participant "MCP Gateway\nFastMCP" as MCP
+participant "IBM Cloud IAM" as IAM
+participant "watsonx Orchestrate\nA2A / Chat API" as WXO
+participant "Purchase Agent" as Agent
+database "Enterprise API / MySQL" as DB
+
+User -> Bob: 구매요청 PR-1001 상태 알려줘
+Bob -> MCP: MCP tools/call\nask_purchase_agent(message)
+
+alt IAM token cache miss/expired
+  MCP -> IAM: API Key -> access token
+  IAM --> MCP: Bearer token
+end
+
+alt Chat API mode
+  MCP -> WXO: POST /{agent_id}/chat/completions\nAuthorization: Bearer
+else A2A mode
+  MCP -> WXO: agents/get
+  WXO --> MCP: agent card + interaction endpoint
+  MCP -> WXO: message/send
+end
+
+WXO -> Agent: user message
+Agent -> DB: Tool / Workflow
+DB --> Agent: business data
+Agent --> WXO: answer
+WXO --> MCP: response
+MCP --> Bob: MCP tool result
+Bob --> User: 자연어 응답
+@enduml

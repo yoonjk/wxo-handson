@@ -1,9 +1,9 @@
 
 ## tool 등록
-```
+```bash
 orchestrate tools import -k python -f leave_calculator.py
 orchestrate tools list
-
+```
 
 
 ## Agent 등록
