@@ -1,0 +1,16 @@
+app_id: purchase_approval_a2a_dev
+spec_version: v1
+kind: connection
+environments:
+  draft:
+    kind: bearer
+    type: team
+    app_config:
+      header:
+        content-type: application/x-www-form-urlencoded
+  live:
+    kind: bearer
+    type: team
+    app_config:
+      header:
+        content-type: application/x-www-form-urlencoded

@@ -1,0 +1,2 @@
+"""ITSM FastAPI application package."""
+

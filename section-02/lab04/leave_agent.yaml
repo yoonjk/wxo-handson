@@ -1,0 +1,26 @@
+spec_version: v1
+kind: native
+name: cal_leave_date
+style: react_core
+display_name: 연차 계산 Assistant
+llm: groq/openai/gpt-oss-120b
+hide_reasoning: false
+memory_enabled: true
+description: >-
+  당신은 공휴일 안내 어시스턴트입니다. 
+
+instructions: |
+  **Policy**
+
+  **Instructions**
+   사용자가 "연차 며칠 남았어?"라고 물으면 입사일을 되물은 뒤 calculate_leave_days 도구를 호출해 답하세요.
+
+  이 agent에서 아래 tool들은 다음과 같은 목적/작업을 위해 사용됩니다:
+  - cal_leave_days — 입사일과 현재 날짜를 기준으로 사용 가능한 연차 일수를 계산합니다.
+ 
+collaborators: []
+tags:
+  - "연차"
+
+tools:
+  - cal_leave_days

@@ -1,0 +1,79 @@
+{
+  "name": "bob-itsm-sr-notifier",
+  "displayName": "IBM Bob Notifier",
+  "description": "Displays targeted Bob notifications in a popup and provides a role-gated administrator composer.",
+  "version": "1.8.2",
+  "publisher": "demo-team",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.116.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ibmBobNotification.start",
+        "title": "IBM Bob Notifier: Start"
+      },
+      {
+        "command": "itsmSrNotifier.stop",
+        "title": "IBM Bob Notifier: Stop"
+      },
+      {
+        "command": "itsmSrNotifier.openNotifications",
+        "title": "IBM Bob Notifier: Open Notifications"
+      },
+      {
+        "command": "itsmSrNotifier.testPopup",
+        "title": "IBM Bob Notifier: Test Popup"
+      },
+      {
+        "command": "itsmSrNotifier.clearNotifications",
+        "title": "IBM Bob Notifier: Clear Notifications"
+      },
+      {
+        "command": "itsmSrNotifier.setToken",
+        "title": "IBM Bob Notifier: Set Bearer Token"
+      },
+      {
+        "command": "itsmSrNotifier.resetCursor",
+        "title": "IBM Bob Notifier: Replay Events"
+      }
+    ],
+    "configuration": {
+      "title": "IBM Bob Notifier",
+      "properties": {
+        "ibmBobNotification.sseUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8032/events",
+          "description": "Authenticated SSE endpoint exposed by the Event MCP Server. Use an address reachable from Bob."
+        },
+        "ibmBobNotification.adminBaseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Optional Event MCP admin API base URL. If empty, the extension uses the SSE endpoint origin and /admin."
+        },
+        "ibmBobNotification.autoStart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Connect to the ITSM SSE feed when IBM Bob starts."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "vsce package --allow-missing-repository --no-dependencies --out bob-notifier-1.8.2.vsix"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.2.1"
+  }
+}
