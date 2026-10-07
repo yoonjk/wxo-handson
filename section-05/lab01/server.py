@@ -1,10 +1,8 @@
+from mcp.server.fastmcp import FastMCP
 import math
-from fastmcp import FastMCP
 
-mcp = FastMCP(
-    name="Factorial MCP Server",
-    description="Provides tools to compute factorial values and digit counts.",
-)
+# MCP Server
+mcp = FastMCP("factorial_mcp")
 
 
 def _compute_factorial(n: int) -> int:

@@ -1,0 +1,428 @@
+
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>lab02 — TRM 아키텍처 다이어그램</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    background: #ffffff;
+    color: #1f2328;
+    padding: 32px 24px;
+  }
+  h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { color: #57606a; font-size: 13px; margin-bottom: 32px; }
+
+  /* ── 등록 흐름 ── */
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #57606a;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  /* ── 공통 박스 ── */
+  .box {
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .box sub { font-size: 10px; font-weight: 400; display: block; color: inherit; opacity: 0.8; }
+
+  .b-user    { background:#f7f8fa; border:1.5px solid #d0d7de; color:#1f2328; }
+  .b-agent   { background:#dbeafe; border:1.5px solid #93c5fd; color:#1e40af; }
+  .b-worker  { background:#ede9fe; border:1.5px solid #c4b5fd; color:#5b21b6; }
+  .b-trm     { background:#fef3c7; border:1.5px solid #fcd34d; color:#92400e; }
+  .b-tr      { background:#fff7ed; border:1.5px solid #fdba74; color:#7c2d12; }
+  .b-pg      { background:#f0fdf4; border:1.5px solid #86efac; color:#14532d; }
+  .b-minio   { background:#fdf4ff; border:1.5px solid #d8b4fe; color:#581c87; }
+  .b-vol     { background:#f7f8fa; border:1.5px dashed #d0d7de; color:#57606a; }
+  .b-tool    { background:#ecfdf5; border:1.5px solid #6ee7b7; color:#065f46; }
+  .b-toolkit { background:#eff6ff; border:1.5px solid #93c5fd; color:#1e40af; }
+  .b-cold    { background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; }
+  .b-warm    { background:#f0fdf4; border:1.5px solid #86efac; color:#14532d; }
+
+  /* ── 화살표 ── */
+  .arr { text-align: center; font-size: 16px; color: #57606a; line-height: 1.2; }
+  .arr-label { font-size: 10px; color: #57606a; }
+
+  /* ── 등록 섹션 ── */
+  .reg-grid {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr 40px 1fr 40px 1fr;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 32px;
+  }
+
+  /* ── 실행 흐름 비교 ── */
+  .flow-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .flow-col {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .flow-col-header {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .flow-col-header.cold { background: #fef2f2; color: #991b1b; border-bottom: 1px solid #fca5a5; }
+  .flow-col-header.warm { background: #f0fdf4; color: #14532d; border-bottom: 1px solid #86efac; }
+  .flow-col-body { padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+
+  /* ── 저장소 테이블 ── */
+  .storage-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; font-size: 13px; }
+  .storage-table th {
+    background: #f7f8fa; text-align: left;
+    padding: 8px 12px; border: 1px solid #e5e7eb;
+    font-weight: 600; color: #57606a;
+  }
+  .storage-table td { padding: 8px 12px; border: 1px solid #e5e7eb; vertical-align: top; }
+  .storage-table tr:hover td { background: #f7f8fa; }
+  .tag {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-size: 11px; font-weight: 600;
+  }
+  .tag-blue   { background:#dbeafe; color:#1e40af; }
+  .tag-green  { background:#dcfce7; color:#14532d; }
+  .tag-orange { background:#ffedd5; color:#7c2d12; }
+  .tag-purple { background:#ede9fe; color:#5b21b6; }
+
+  /* ── 타임라인 ── */
+  .timeline { display: flex; flex-direction: column; gap: 4px; }
+  .tl-row { display: flex; align-items: flex-start; gap: 10px; }
+  .tl-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    margin-top: 5px; flex-shrink: 0;
+  }
+  .tl-dot.cold { background: #ef4444; }
+  .tl-dot.warm { background: #22c55e; }
+  .tl-dot.gray { background: #9ca3af; }
+  .tl-text { font-size: 12px; }
+  .tl-sub  { font-size: 11px; color: #57606a; }
+
+  .divider { border: none; border-top: 1px solid #e5e7eb; margin: 24px 0; }
+
+  footer {
+    margin-top: 32px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+    font-size: 12px;
+    color: #57606a;
+  }
+</style>
+</head>
+<body>
+
+<h1>lab02 — TRM 관점 아키텍처 다이어그램</h1>
+<p class="subtitle">Python Tool (unit_convert) · Python Toolkit (math_toolkit) · math_agent 의 등록 및 실행 흐름</p>
+
+
+<div class="section-title">1. 등록 흐름 (orchestrate tools import / toolkits add)</div>
+
+<div style="margin-bottom:8px;display:flex;gap:32px">
+  
+  <div style="flex:1">
+    <div style="font-size:12px;font-weight:700;color:#991b1b;margin-bottom:8px">
+      🔴 Python Tool — <code>orchestrate tools import --kind python</code>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <div class="box b-tool">unit_convert.py<sub>단일 .py 파일</sub></div>
+      <div class="arr">→</div>
+      <div class="box b-trm">TRM<sub>:8080</sub></div>
+      <div class="arr">→</div>
+      <div class="box b-minio">MinIO (S3)<sub>wxo-server-storage-bucket</sub></div>
+      <div class="arr">→</div>
+      <div class="box b-pg">PostgreSQL<sub>postgres DB · tool 메타데이터</sub></div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-bottom:24px;display:flex;gap:32px">
+  
+  <div style="flex:1">
+    <div style="font-size:12px;font-weight:700;color:#1e40af;margin-bottom:8px">
+      🔵 Python Toolkit — <code>orchestrate toolkits add --kind python --tier small</code>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <div class="box b-toolkit">math_toolkit/<sub>패키지 디렉토리 zip</sub></div>
+      <div class="arr">→</div>
+      <div class="box b-trm">TRM<sub>:8080</sub></div>
+      <div class="arr">→</div>
+      <div class="box b-minio">MinIO (S3)<sub>wxo-server-storage-bucket</sub></div>
+      <div class="arr">→</div>
+      <div class="box b-pg">PostgreSQL<sub>postgres DB · toolkit + tool 메타데이터</sub></div>
+    </div>
+    <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+      <div style="width:120px"></div>
+      <div class="arr">↓ tier=small 자원 할당</div>
+      <div class="box b-tr" style="margin-left:6px">tools-runtime<sub>:8000 · 프로세스 상주 기동</sub></div>
+      <div class="arr">→</div>
+      <div class="box b-vol">tools-runtime-data<sub>/shared-data (shared volume)</sub></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+
+<div class="section-title">2. 호출 실행 흐름 비교 (Agent → TRM → TR)</div>
+
+<div class="flow-compare">
+
+  
+  <div class="flow-col">
+    <div class="flow-col-header cold">🔴 Python Tool — unit_convert (Cold Start)</div>
+    <div class="flow-col-body">
+      <div class="timeline">
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>사용자 → math_agent</strong></div><div class="tl-sub">"100km는 몇 마일?"</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>wxo-server-worker (Celery)</strong></div><div class="tl-sub">Tool 선택 결정: unit_convert</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>TRM_BASE_URL → tools-runtime-manager :8080</strong></div><div class="tl-sub">unit_convert 실행 요청</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot cold"></div>
+          <div><div class="tl-text"><strong>MinIO에서 unit_convert.py 다운로드</strong></div><div class="tl-sub">매 호출마다 발생</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot cold"></div>
+          <div><div class="tl-text"><strong>tools-runtime :8000 → subprocess 생성</strong></div><div class="tl-sub">python unit_convert.py 실행<br />DISABLE_SUBPROCESS_EXECUTION=false</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot cold"></div>
+          <div><div class="tl-text"><strong>Python 인터프리터 초기화 + import</strong></div><div class="tl-sub">cold start 비용 (수백 ms)</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>unit_convert(100, "km", "mile") 실행</strong></div><div class="tl-sub">→ "100 km = 62.1371 mile"</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot cold"></div>
+          <div><div class="tl-text"><strong>프로세스 종료</strong></div><div class="tl-sub">결과 반환 후 즉시 소멸 (stateless)</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>Agent → 사용자 응답</strong></div><div class="tl-sub">TOOL_TIMEOUT: 300s 내</div></div>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:8px 10px;background:#fef2f2;border-radius:6px;font-size:11px;color:#991b1b">
+        ⚠️ 다음 호출에서도 동일하게 subprocess 새로 생성됨
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="flow-col">
+    <div class="flow-col-header warm">🔵 Python Toolkit — math_toolkit (Warm)</div>
+    <div class="flow-col-body">
+      <div class="timeline">
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>사용자 → math_agent</strong></div><div class="tl-sub">"144의 제곱근은?"</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>wxo-server-worker (Celery)</strong></div><div class="tl-sub">Tool 선택 결정: square_root</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>TRM_BASE_URL → tools-runtime-manager :8080</strong></div><div class="tl-sub">math_toolkit / square_root 실행 요청</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot warm"></div>
+          <div><div class="tl-text"><strong>tools-runtime :8000 — 프로세스 이미 상주 중</strong></div><div class="tl-sub">tier=small 전용 자원으로 기동 유지<br />tools-runtime-data (shared-data) 에서 로드됨</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot warm"></div>
+          <div><div class="tl-text"><strong>상주 프로세스에 함수 호출 메시지 전달</strong></div><div class="tl-sub">subprocess 생성 없음 — IPC only</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>square_root(144) 실행</strong></div><div class="tl-sub">→ "√144 = 12.0" (수십 ms)</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot warm"></div>
+          <div><div class="tl-text"><strong>프로세스 유지 (종료 안 함)</strong></div><div class="tl-sub">다음 호출도 즉시 응답 가능 (stateful 가능)</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot gray"></div>
+          <div><div class="tl-text"><strong>Agent → 사용자 응답</strong></div><div class="tl-sub">TOOL_TIMEOUT: 300s 내</div></div>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:8px 10px;background:#f0fdf4;border-radius:6px;font-size:11px;color:#14532d">
+        ✅ 다음 호출(power, square_root)도 동일 프로세스에서 즉시 처리
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider" />
+
+
+<div class="section-title">3. TRM 관련 저장소 역할 (docker-compose.yml 기반)</div>
+
+<table class="storage-table">
+  <thead>
+    <tr>
+      <th>저장소</th>
+      <th>서비스 (port)</th>
+      <th>unit_convert 저장 내용</th>
+      <th>math_toolkit 저장 내용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>PostgreSQL</strong><br /><span style="font-size:11px;color:#57606a">wxo-server-db :5432<br />DB: postgres</span></td>
+      <td><span class="tag tag-green">TRM</span> <span class="tag tag-purple">wxo-server</span></td>
+      <td>tool 이름, 설명, 파라미터 스키마, MinIO 경로</td>
+      <td>toolkit 이름, tool 목록, tier 설정, MinIO 경로</td>
+    </tr>
+    <tr>
+      <td><strong>MinIO (S3)</strong><br /><span style="font-size:11px;color:#57606a">wxo-server-minio :9000<br />bucket: wxo-server-storage-bucket</span></td>
+      <td><span class="tag tag-green">TRM</span></td>
+      <td>unit_convert.py + requirements.txt (zip)</td>
+      <td>math_toolkit/ 디렉토리 전체 (zip)</td>
+    </tr>
+    <tr>
+      <td><strong>tools-runtime-data</strong><br /><span style="font-size:11px;color:#57606a">Docker volume<br />/shared-data</span></td>
+      <td><span class="tag tag-orange">TR :8000</span> <span class="tag tag-orange">TRM :8080</span> <span class="tag tag-blue">agent-runtime</span></td>
+      <td>MinIO에서 압축 해제된 실행 파일 (호출 시마다 fetch)</td>
+      <td>MinIO에서 압축 해제된 패키지 (1회 배포 후 상주)</td>
+    </tr>
+    <tr>
+      <td><strong>Redis</strong><br /><span style="font-size:11px;color:#57606a">wxo-server-redis :6379</span></td>
+      <td><span class="tag tag-purple">Celery Broker</span></td>
+      <td colspan="2">Tool 실행 요청 큐 · AGENT_STEP_DETAILS · 결과 TTL: 3600s</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr class="divider" />
+
+
+<div class="section-title">4. TRM 서비스 관계도</div>
+
+<div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-bottom:24px">
+
+  <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+    <div class="box b-user" style="width:120px">사용자</div>
+    <div class="arr">↓</div>
+    <div class="box b-agent" style="width:120px">math_agent<sub>granite-3-8b</sub></div>
+    <div class="arr">↓</div>
+    <div class="box b-worker" style="width:120px">wxo-server-worker<sub>Celery Consumer</sub></div>
+  </div>
+
+  <div style="display:flex;align-items:center;padding-top:80px">
+    <div style="text-align:center">
+      <div class="arr">→</div>
+      <div class="arr-label">TRM_BASE_URL<br />:8080</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+    <div class="box b-trm" style="width:160px">tools-runtime-manager<sub>:8080 · 제어 플레인</sub></div>
+    <div class="arr">↓ 파일 관리</div>
+    <div class="box b-minio" style="width:160px">MinIO (S3)<sub>:9000 · zip 저장</sub></div>
+    <div class="arr">↓ 메타데이터</div>
+    <div class="box b-pg" style="width:160px">PostgreSQL<sub>:5432 · postgres DB</sub></div>
+  </div>
+
+  <div style="display:flex;align-items:center;padding-top:20px">
+    <div style="text-align:center">
+      <div class="arr">→</div>
+      <div class="arr-label">subprocess<br />dispatch</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+    <div class="box b-tr" style="width:160px">tools-runtime<sub>:8000 · 실행 플레인</sub></div>
+    <div class="arr">↓ shared volume</div>
+    <div class="box b-vol" style="width:160px">tools-runtime-data<sub>/shared-data</sub></div>
+    <div style="display:flex;gap:6px;margin-top:4px">
+      <div class="box b-cold" style="width:74px;font-size:11px">unit_convert<sub>cold · stateless</sub></div>
+      <div class="box b-warm" style="width:74px;font-size:11px">math_toolkit<sub>warm · stateful</sub></div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider" />
+
+
+<div class="section-title">5. 성능 관점 요약</div>
+
+<table class="storage-table">
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>🔴 Python Tool (unit_convert)</th>
+      <th>🔵 Python Toolkit (math_toolkit)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TRM 처리</td>
+      <td>호출마다 MinIO fetch → subprocess spawn</td>
+      <td>등록 시 1회 배포 → 프로세스 상주</td>
+    </tr>
+    <tr>
+      <td>Cold Start</td>
+      <td><span class="tag tag-orange">매 호출마다 발생</span></td>
+      <td><span class="tag tag-green">최초 1회만</span></td>
+    </tr>
+    <tr>
+      <td>Warm 호출 지연</td>
+      <td>수백 ms ~ 수 초 (Python 초기화 포함)</td>
+      <td>수십 ms (IPC 메시지만)</td>
+    </tr>
+    <tr>
+      <td>메모리</td>
+      <td>요청 시 생성, 완료 후 해제</td>
+      <td>tier=small 전용 메모리 상시 점유</td>
+    </tr>
+    <tr>
+      <td>상태 유지</td>
+      <td><span class="tag tag-orange">Stateless</span></td>
+      <td><span class="tag tag-green">Stateful 가능</span></td>
+    </tr>
+    <tr>
+      <td>적합한 사용</td>
+      <td>단순 변환 함수, 빠른 프로토타이핑</td>
+      <td>초기화 비용 있는 로직, 반복 호출 많은 경우</td>
+    </tr>
+    <tr>
+      <td>TOOL_TIMEOUT</td>
+      <td colspan="2" style="text-align:center">300초 (docker-compose.yml Line 168 — 공통 적용)</td>
+    </tr>
+  </tbody>
+</table>
+
+<footer>Made with IBM Bob</footer>
+</body>
+</html>

@@ -1,0 +1,8 @@
+[project]
+name = "factorial-mcp"
+version = "0.1.0"
+description = "Factorial MCP Server: compute n! value and digit count
+requires-python = ">=3.11"
+dependencies = [
+    "mcp==2.3.0"
+]

@@ -1,0 +1,9 @@
+kind: mcp
+name: factorial_mcp
+description: "Factorial MCP Server: compute exact n! value (factorial_value) and digit count (factorial_digits) for any non-negative integer."
+package-root: /tmp/factorial_mcp_v2.zip
+command: "python server.py"
+tools:
+  - factorial_value
+  - factorial_digits
+spec_version: v1
