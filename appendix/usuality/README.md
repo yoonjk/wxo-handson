@@ -96,7 +96,7 @@ AGENT_ID=$(curl -s --request GET \
   --header "Authorization: Bearer ${TOKEN}" \
   | jq -r '.[] | select(.name == "Untitled_Agent_1_2892NK") | .id')
 
-
+AGENT_NAME="cal_leave_date"
 AGENT_ID=$(curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \

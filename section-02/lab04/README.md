@@ -5,7 +5,14 @@ orchestrate tools import -k python -f leave_calculator.py
 orchestrate tools list
 ```
 
-
+## Agent Export
+```
+orchestrate agents export \
+  -n "cal_leave_date" \
+  -k native \
+  -o cal_leave_date.yaml \
+  --agent-only  
+```
 ## Agent 등록
 ```bash
 orchestrate agents import -f leave_agent.yaml
@@ -51,12 +58,12 @@ orchestrate agents export \
 orchestrate agents list -v |grep -B2 '"name": "IBank"'
 ```
 
-AGENT_NAME="holiday"
+AGENT_NAME="it_faq"
 AGENT_ID=$(curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "cal_leave_date") | .id')
-
+  | jq -r --arg agent_name "$AGENT_NAME" \
+      '.[] | select(.name == $agent_name) | .id')    
 ```bash
 curl --request PUT \
   --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}/chat-starter-settings" \
@@ -66,15 +73,15 @@ curl --request PUT \
     "starter_prompts": {
       "customize": [
         {
-          "title": "나의 연차는",
-          "subtitle": "나의 연차를 확인해보세요",
-          "prompt": "연차를 알려줘"
-        } 
+          "title": "노트북 화면이 안 켜져요",
+          "subtitle": "노트북 화면이 안 켜져요",
+          "prompt": "노트북 화면이 안 켜져요"
+        }  
       ]
     },
     "welcome_content": {
-      "welcome_message": "안녕하세요, 연차계산 Assistant입니다.",
-      "description": "당신의 연차를 알려드립니다."
+      "welcome_message": "안녕하세요, IT FAQ Assistant입니다.",
+      "description": "IT FAQ를 알려드립니다."
     }
   }'
 

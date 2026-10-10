@@ -40,7 +40,7 @@ orchestrate connections set-credentials -a mysql_hr_demo --env live \
 ## 4. watsonx Orchestrate에 Tools 등록하기
 
 ```bash
-orchestrate tools import -k python -f lab01/tools.py -p lab01  -r lab01/requirements.txt --app-id mysql_hr_demo
+orchestrate tools import -k python -f lab01/tools.py -p lab01  -r lab01/requirements.txt --app-id mysql_bank_demo
 ```
 
 ## 5. Agent 등록

@@ -33,7 +33,7 @@ orchestrate connections set-credentials --app-id mysql_bank_demo --env live \
 
 
 # 3) 툴 등록 시 db.py처럼 banking_db.py를 같은 패키지에 포함해서 임포트
-orchestrate tools import -k python -f lab11/banking_tools.py -p lab11 -r lab11/requirements.txt --app-id mysql_bank_demo
+orchestrate tools import -k python -f lab02/banking_tools.py -p lab02 -r lab02/requirements.txt --app-id mysql_bank_demo
 
 # 4) Token 발급 API
 

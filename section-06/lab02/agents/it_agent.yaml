@@ -1,0 +1,13 @@
+spec_version: v1
+kind: native
+name: it_faq
+description: >
+  노트북·계정·VPN·메일 등 IT 장애와 사용 문의에 답하고 장애 신고를 접수하는 IT 지원 전문 에이전트
+
+llm: groq/openai/gpt-oss-120b
+instruction: |
+  IT 문의에만 답합니다. 
+  FAQ로 해결되지 않으면 증상, 장비 종류, 연락처를 물어 장애 신고 내용을 정리해 줍니다.
+knowledge_base:
+  - itfaq_knowledge_base
+tools: []

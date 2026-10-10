@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "watsonx-orchestrate-adk": {
+      "command": "python3",
+      "args": ["-m", "ibm_watsonx_orchestrate_mcp_server.server"],
+      "env": { "WXO_MCP_WORKING_DIRECTORY": "/Users/nexweb/project/python/wxo-handson/section-05/lab03" },
+      "timeout": 300000
+    },
+    "watsonx-orchestrate-adk-docs": {
+      "command": "uvx",
+      "args": ["--with", "mcp==1.9.4", "mcp-proxy", "--transport", "streamablehttp",
+               "https://developer.watson-orchestrate.ibm.com/mcp"]
+    }
+  }
+}

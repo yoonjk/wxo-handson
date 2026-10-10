@@ -31,7 +31,7 @@ except ImportError:
     _HAS_ORCHESTRATE_CONNECTIONS = False
 
 # orchestrate connections add -a mysql_hr_demo 로 등록한 app-id와 반드시 동일해야 합니다.
-MYSQL_APP_ID = "mysql_hr_demo"
+MYSQL_APP_ID = "mysql_bank_demo"
 
 _POOL: Optional[MySQLConnectionPool] = None
 

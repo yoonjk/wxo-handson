@@ -1,0 +1,12 @@
+spec_version: v1
+kind: native
+name: office_faq
+description: >
+  회사 인사 규정 문서. 연차·병가·경조휴가 일수와 신청 절차, 재택근무 신청 요건과 승인 절차를 담고 있음
+
+llm: groq/openai/gpt-oss-120b
+instruction: |
+  인사 규정 질문은 반드시 Knowledge의 문서를 근거로 답하고, 답변 끝에 근거 문서명을 표시합니다
+knowledge_base:
+  - office_knowledge_base
+tools: []
