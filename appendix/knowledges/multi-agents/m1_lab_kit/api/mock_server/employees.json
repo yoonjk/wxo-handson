@@ -1,0 +1,12 @@
+[
+  {"employeeId": "E1001", "name": "김하늘", "department": "영업1팀", "position": "대리", "hireDate": "2021-03-02", "leave": {"total": 15, "used": 8, "remaining": 7}},
+  {"employeeId": "E1002", "name": "이준호", "department": "개발팀", "position": "과장", "hireDate": "2018-07-16", "leave": {"total": 18, "used": 4.5, "remaining": 13.5}},
+  {"employeeId": "E1003", "name": "박서연", "department": "인사팀", "position": "사원", "hireDate": "2026-02-02", "leave": {"total": 8, "used": 2, "remaining": 6}},
+  {"employeeId": "E1004", "name": "최민수", "department": "재무팀", "position": "차장", "hireDate": "2012-01-09", "leave": {"total": 22, "used": 21, "remaining": 1}},
+  {"employeeId": "E1005", "name": "정유진", "department": "개발팀", "position": "대리", "hireDate": "2020-11-23", "leave": {"total": 16, "used": 11, "remaining": 5}},
+  {"employeeId": "E1006", "name": "강도윤", "department": "영업2팀", "position": "사원", "hireDate": "2024-09-02", "leave": {"total": 15, "used": 0, "remaining": 15}},
+  {"employeeId": "E1007", "name": "윤지아", "department": "마케팅팀", "position": "과장", "hireDate": "2017-04-03", "leave": {"total": 19, "used": 19, "remaining": 0}},
+  {"employeeId": "E1008", "name": "장현우", "department": "개발팀", "position": "부장", "hireDate": "2008-06-02", "leave": {"total": 25, "used": 10.25, "remaining": 14.75}},
+  {"employeeId": "E1009", "name": "한소희", "department": "구매팀", "position": "대리", "hireDate": "2022-01-03", "leave": {"total": 15, "used": 7.5, "remaining": 7.5}},
+  {"employeeId": "E1010", "name": "오태양", "department": "IT지원팀", "position": "사원", "hireDate": "2025-08-18", "leave": {"total": 11, "used": 3, "remaining": 8}}
+]

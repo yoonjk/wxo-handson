@@ -1,0 +1,14 @@
+# watsonx Orchestrate ADK knowledge base for the custom search service.
+# Import with a Basic Auth knowledge connection (see orchestrate/cli_commands.sh):
+#   orchestrate knowledge-bases import -f orchestrate/purchase_knowledge_basic.yaml -a custom_service_basic
+spec_version: v1
+kind: knowledge_base
+name: purchase_knowledge_basic
+description: |
+  구매 요청 승인 기준과 판정 절차에 대한 사내 규정 검색.
+  금액별 승인권자, 견적 요건, 긴급 구매, 수의계약, IT 자산 구매, 반려 사유, 예산 초과 처리를 다룬다.
+prioritize_built_in_index: false
+conversational_search_tool:
+  index_config:
+    - custom_search:
+        metadata: {}

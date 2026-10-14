@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: Hanbit Mock HR API
+  version: "1.0.0"
+  description: |
+    watsonx Orchestrate Module 1 실습용 가상 인사 API입니다.
+    모든 요청에는 X-API-Key 헤더가 필요합니다.
+servers:
+  # 강사가 Mock 서버를 배포한 뒤 아래 URL을 실제 주소로 바꿔서 배포합니다.
+  - url: https://REPLACE-WITH-MOCK-HOST
+security:
+  - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    LeaveBalance:
+      type: object
+      properties:
+        employeeId: { type: string, description: 사번 }
+        name: { type: string, description: 직원 이름 }
+        year: { type: integer, description: 기준 연도 }
+        total: { type: number, description: 올해 부여된 연차 일수 }
+        used: { type: number, description: 사용한 연차 일수 }
+        remaining: { type: number, description: 남은 연차 일수 }
+    EmployeeProfile:
+      type: object
+      properties:
+        employeeId: { type: string }
+        name: { type: string }
+        department: { type: string, description: 소속 부서 }
+        position: { type: string, description: 직급 }
+        hireDate: { type: string, format: date, description: 입사일 }
+    LeaveRequest:
+      type: object
+      required: [startDate, endDate, type]
+      properties:
+        startDate: { type: string, format: date, description: "휴가 시작일 (YYYY-MM-DD)" }
+        endDate: { type: string, format: date, description: "휴가 종료일 (YYYY-MM-DD)" }
+        type:
+          type: string
+          enum: [annual, half_am, half_pm]
+          description: "annual=연차, half_am=오전 반차, half_pm=오후 반차"
+        reason: { type: string, description: 사유 }
+    LeaveRequestResult:
+      type: object
+      properties:
+        requestId: { type: string }
+        status: { type: string, description: "PENDING_APPROVAL (팀장 승인 대기)" }
+        days: { type: number, description: 차감 예정 일수 }
+        remainingAfter: { type: number, description: 승인 시 남는 연차 일수 }
+    Error:
+      type: object
+      properties:
+        code: { type: string }
+        message: { type: string }
+paths:
+  /employees/{employeeId}/leave-balance:
+    get:
+      operationId: getLeaveBalance
+      summary: 직원의 올해 연차 총일수, 사용일수, 잔여일수를 조회한다
+      description: 사용자가 자신의 남은 연차나 사용한 연차를 물을 때 사용한다. 사번이 필요하다.
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          description: "사번 (예: E1001)"
+          schema: { type: string, pattern: "^E[0-9]{4}$" }
+      responses:
+        "200":
+          description: 조회 성공
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeaveBalance" }
+        "401":
+          description: API Key 없음 또는 잘못됨
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404":
+          description: 해당 사번의 직원이 없음
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /employees/{employeeId}:
+    get:
+      operationId: getEmployeeProfile
+      summary: 직원의 이름, 부서, 직급, 입사일을 조회한다
+      description: 사용자의 소속 부서나 입사일을 확인할 때 사용한다. 급여·평가 정보는 제공하지 않는다.
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          description: "사번 (예: E1001)"
+          schema: { type: string }
+      responses:
+        "200":
+          description: 조회 성공
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EmployeeProfile" }
+        "404":
+          description: 해당 사번의 직원이 없음
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /employees/{employeeId}/leave-requests:
+    post:
+      operationId: createLeaveRequest
+      summary: 연차 또는 반차를 신청한다 (도전 과제용)
+      description: 사용자가 휴가 신청을 요청하고 날짜와 종류를 확인한 뒤에만 사용한다. 신청 결과는 팀장 승인 대기 상태가 된다.
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          description: "사번 (예: E1001)"
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LeaveRequest" }
+      responses:
+        "201":
+          description: 신청 접수
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeaveRequestResult" }
+        "400":
+          description: 날짜 오류 또는 잔여 연차 부족
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404":
+          description: 해당 사번의 직원이 없음
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }

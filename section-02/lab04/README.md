@@ -58,7 +58,7 @@ orchestrate agents export \
 orchestrate agents list -v |grep -B2 '"name": "IBank"'
 ```
 
-AGENT_NAME="it_faq"
+AGENT_NAME="cal_leave_date"
 AGENT_ID=$(curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
@@ -73,15 +73,15 @@ curl --request PUT \
     "starter_prompts": {
       "customize": [
         {
-          "title": "노트북 화면이 안 켜져요",
-          "subtitle": "노트북 화면이 안 켜져요",
-          "prompt": "노트북 화면이 안 켜져요"
+          "title": "연차 계산",
+          "subtitle": "연차 며칠 남았어?",
+          "prompt": "연차 며칠 남았어 "
         }  
       ]
     },
     "welcome_content": {
-      "welcome_message": "안녕하세요, IT FAQ Assistant입니다.",
-      "description": "IT FAQ를 알려드립니다."
+      "welcome_message": "안녕하세요, 연차 Assistant 입니다.",
+      "description": "연차를 알려드립니다."
     }
   }'
 

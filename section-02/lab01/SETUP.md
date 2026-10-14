@@ -8,33 +8,42 @@ orchestrate env activate nexweb-env
 app-id는 db.py의 MYSQL_APP_ID와 반드시 동일해야 함
 
 ```bash
-orchestrate connections add -a mysql_hr_demo
+orchestrate connections add -a mysql_bank_demo
+
 ```
+# Connection
+ ## 2) watsonx Orchestrate 커넥션 생성 (mysql_ai_agent에서 만든 것과 별개 app-id 사용)
+ ```bash
+orchestrate connections add --app-id mysql_bank_demo
+```
+
 ## 2) 종류 설정: key_value, team(공유) 또는 member(개인별)
 
 ```bash
-orchestrate connections configure -a mysql_hr_demo --env draft  --kind key_value --type team
+orchestrate connections configure -a mysql_bank_demo --env draft  --kind key_value --type team
+
+orchestrate connections configure -a mysql_bank_demo --env live  --kind key_value --type team
 ```
 ## 3) 자격증명 입력
 
 - draft
 ```bash
-orchestrate connections set-credentials -a mysql_hr_demo --env draft \
+orchestrate connections set-credentials -a mysql_bank_demo --env draft \
   -e MYSQL_HOST=localhost \
-  -e MYSQL_PORT=3306 \
-  -e MYSQL_USER= \
+  -e MYSQL_PORT= \
+  -e MYSQL_USER='' \
   -e MYSQL_PASSWORD='' \
-  -e MYSQL_DATABASE=
+  -e MYSQL_DATABASE=''
 ```
 
 - live
 ```
-orchestrate connections set-credentials -a mysql_hr_demo --env live \
+orchestrate connections set-credentials -a mysql_bank_demo --env live \
   -e MYSQL_HOST=localhost \
-  -e MYSQL_PORT=3306 \
-  -e MYSQL_USER= \
+  -e MYSQL_PORT= \
+  -e MYSQL_USER='' \
   -e MYSQL_PASSWORD='' \
-  -e MYSQL_DATABASE=
+  -e MYSQL_DATABASE=''
 ```
 
 ## 4. watsonx Orchestrate에 Tools 등록하기
@@ -149,13 +158,13 @@ python main.py
 
 ```bash
 # 1) 커넥션 애플리케이션 등록 (app-id는 db.py의 MYSQL_APP_ID와 반드시 동일해야 함)
-orchestrate connections add -a mysql_hr_demo
+orchestrate connections add -a mysql_bank_demo
 
 # 2) 종류 설정: key_value, team(공유) 또는 member(개인별)
-orchestrate connections configure -a mysql_hr_demo --env draft --kind key_value --type team
+orchestrate connections configure -a mysql_bank_demo --env draft --kind key_value --type team
 
 # 3) 자격증명 입력 (비밀번호에 특수문자가 있으면 작따표로 감싸기)
-orchestrate connections set-credentials -a mysql_hr_demo --env draft \
+orchestrate connections set-credentials -a mysql_bank_demo --env draft \
   -e MYSQL_HOST=localhost \
   -e MYSQL_PORT=3306 \
   -e MYSQL_USER= \
@@ -163,8 +172,8 @@ orchestrate connections set-credentials -a mysql_hr_demo --env draft \
   -e MYSQL_DATABASE=
 
 # 4) 실제 배포(live) 환경에도 동일하게 설정 (draft와 독립적으로 관리됨)
-orchestrate connections configure -a mysql_hr_demo --env live --kind key_value --type team
-orchestrate connections set-credentials -a mysql_hr_demo --env live \
+orchestrate connections configure -a mysql_bank_demo --env live --kind key_value --type team
+orchestrate connections set-credentials -a mysql_bank_demo --env live \
   -e MYSQL_HOST=localhost \
   -e MYSQL_PORT=3306 \
   -e MYSQL_USER=user \
@@ -175,9 +184,9 @@ orchestrate connections set-credentials -a mysql_hr_demo --env live \
 orchestrate connections list
 ```
 
-`tools.py`의 세 함수는 모두 `expected_credentials=[{"app_id": "mysql_hr_demo", "type": ConnectionType.KEY_VALUE}]`를
+`tools.py`의 세 함수는 모두 `expected_credentials=[{"app_id": "mysql_bank_demo", "type": ConnectionType.KEY_VALUE}]`를
 선언하고 있어서, 툴 임포트 시 이 커넥션이 자동으로 연결됩니다.
-`db.py`는 내부적으로 `connections.key_value("mysql_hr_demo")`를 호출해
+`db.py`는 내부적으로 `connections.key_value("mysql_bank_demo")`를 호출해
 `{MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE}` 딕셔너리를 받아옵니다.
 
 > app-id(`mysql_hr_demo`)를 바꾸고 싶다면 `db.py`의 `MYSQL_APP_ID` 상수도

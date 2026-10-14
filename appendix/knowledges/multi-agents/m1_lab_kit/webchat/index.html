@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>한빛솔루션 사내 포털 (실습용)</title>
+  <style>
+    body { margin: 0; font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; background: #f4f6fa; color: #1a1a1a; }
+    header { background: #0f62fe; color: #fff; padding: 16px 24px; font-weight: 700; }
+    main { max-width: 760px; margin: 32px auto; padding: 0 16px; }
+    .card { background: #fff; border-radius: 8px; padding: 20px 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    code { background: #eef2f8; padding: 1px 5px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>한빛솔루션 사내 포털 · 실습용 페이지</header>
+  <main>
+    <div class="card">
+      <h2>HR 도우미 웹챗 테스트</h2>
+      <p>오른쪽 아래 채팅 버튼이 보이면 성공입니다. 아래 질문으로 테스트해 보세요.</p>
+      <ul>
+        <li>E1001 연차 얼마나 남았어?</li>
+        <li>국내 출장 숙박비 한도는?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>설정 방법</h3>
+      <ol>
+        <li>watsonx Orchestrate에서 에이전트의 배포/채널 설정(Embedded agent)에 있는 임베드 스크립트를 복사합니다.</li>
+        <li>이 파일 아래쪽 <code>&lt;!-- ▼ 여기에 붙여넣기 ▼ --&gt;</code> 위치에 그대로 붙여넣습니다.</li>
+        <li>로컬 웹서버로 엽니다: <code>python3 -m http.server 8000</code> → <code>http://localhost:8000</code></li>
+      </ol>
+      <p>파일을 더블클릭해 <code>file://</code>로 열면 스크립트가 차단될 수 있으니 반드시 웹서버로 여세요.</p>
+    </div>
+  </main>
+  <div id="root"></div>
+
+  <!-- ▼ 여기에 붙여넣기 ▼ : Orchestrate 화면에서 복사한 임베드 스크립트 전체 -->
+<script>
+  window.wxOConfiguration = {
+    orchestrationID: "e78ab2ad0535408f8076c32046572804_93c1783b-16f4-4528-856d-a7109c5a7c11",
+    hostURL: "https://us-south.watson-orchestrate.cloud.ibm.com",
+    rootElementID: "root",
+    deploymentPlatform: "ibmcloud",
+    crn: "crn:v1:bluemix:public:watsonx-orchestrate:us-south:a/e78ab2ad0535408f8076c32046572804:93c1783b-16f4-4528-856d-a7109c5a7c11::",
+    chatOptions: {
+        agentId: "6f465855-2977-40d8-9a44-e95a549cf60c", 
+    }
+  };
+  setTimeout(function () {
+    const script = document.createElement('script');
+    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+    script.addEventListener('load', function () {
+        wxoLoader.init();
+    });
+    document.head.appendChild(script);
+  }, 0);                     
+</script>
+  <!-- ▲ 여기까지 ▲ -->
+</body>
+</html>
