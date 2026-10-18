@@ -1,0 +1,19 @@
+kind: assistant
+name: Purchase_Assistant_576TO
+description: purchase_assistant
+context_access_enabled: true
+context_variables: []
+restrictions: editable
+title: Purchase_Assistant
+config:
+  api_version: '2023-06-15'
+  assistant_id: <hidden>
+  crn: <hidden>
+  service_instance_url: <hidden>
+  environment_id: <hidden>
+  auth_type: MCSP
+  authorization_url: <hidden>
+  always_trigger_welcome_node: false
+nickname: Purchase_Assistant
+spec_version: v1
+llm_config: {}

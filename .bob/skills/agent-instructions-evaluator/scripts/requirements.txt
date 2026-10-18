@@ -1,2 +1,0 @@
-# Requirements for agent-instructions-evaluator scripts
-pyyaml>=6.0

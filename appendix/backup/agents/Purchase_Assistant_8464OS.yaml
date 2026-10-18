@@ -1,0 +1,20 @@
+kind: assistant
+name: Purchase_Assistant_8464OS
+description: 구매 승인 기준을 안내합니다. 예산 초과는 REJECTED, 예산 이내이면서 총액이 1,000,000원 이하이면 AUTO_APPROVED,
+  1,000,000원 초과이면 PENDING_APPROVAL로 설명합니다. 실제 구매 요청을 제출하거나 승인하지 않습니다.
+context_access_enabled: true
+context_variables: []
+restrictions: editable
+title: Purchase_Assistant
+config:
+  api_version: '2023-06-15'
+  assistant_id: <hidden>
+  crn: <hidden>
+  service_instance_url: <hidden>
+  environment_id: <hidden>
+  auth_type: MCSP
+  authorization_url: <hidden>
+  always_trigger_welcome_node: false
+nickname: Purchase_Assistant
+spec_version: v1
+llm_config: {}

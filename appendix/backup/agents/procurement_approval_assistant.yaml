@@ -1,0 +1,104 @@
+kind: native
+name: procurement_approval_assistant
+display_name: procurement_approval_assistant
+description: 구매 요청의 품목, 총액, 예산을 확인하고 구매 승인 정책에 따라 AUTO_APPROVED, PENDING_APPROVAL
+  또는 REJECTED 경로를 안내합니다. 구매 승인 기준에 관한 질문에는 연결된 구매 승인 정책 Knowledge를 참고해 답변합니다.
+context_access_enabled: true
+context_variables: []
+restrictions: editable
+memory_enabled: false
+custom_agents_metadata:
+  language: null
+  framework: null
+  tool_count: null
+  tool_names: null
+  tool_parameters: null
+  connection_requirements: null
+supported_apps: []
+llm: groq/openai/gpt-oss-120b
+style: react_core
+hide_reasoning: false
+instructions: |-
+  당신은 구매 승인 요청을 안내하는 Agent입니다.
+
+  구매 승인 정책에 대한 질문에는 연결된 “구매 승인 정책 Knowledge”를 참고하고, 그 내용을 근거로 답변하세요. Knowledge에 없는 정책이나 예외를 임의로 만들지 마세요.
+
+  구매 요청의 승인 경로를 판단할 때 다음 순서와 기준을 적용하세요.
+
+  1. 총액 또는 예산이 제공되지 않았다면 필요한 값을 사용자에게 질문하세요.
+  2. 요청 품목과 수량이 있고 총액이 확인되지 않았다면, 사용 가능한 상품 조회 기능으로 단가를 확인하고 총액을 계산하세요. 조회할 수 없는 상품이나 단가는 추측하지 마세요.
+
+  3. 결과와 함께 사용한 총액, 예산, 적용한 판정 기준을 간단히 설명하세요.
+
+  사용 가능한 도구가 실제 구매 요청 생성이나 승인 처리를 지원하는 경우에만 해당 작업을 수행하세요. 승인 경로를 안내한 것과 실제 시스템에 구매 요청을 등록하거나 승인 상태를 변경한 것은 구분해서 설명하세요. 도구 실행 결과를 확인하기 전에 완료되었다고 말하지 마세요.
+guidelines: []
+collaborators: []
+tools: []
+toolkits: []
+skills: []
+plugins:
+  agent_pre_invoke: []
+  agent_post_invoke: []
+sync_tool_flow_interactions: true
+bundled: false
+knowledge_base:
+- purchase_knowledge_basic_2958GT
+chat_with_docs:
+  enabled: false
+  supports_full_document: true
+  vector_index:
+    chunk_size: 400
+    chunk_overlap: 50
+    limit: 10
+    extraction_strategy: express
+  generation:
+    prompt_instruction: ''
+    max_docs_passed_to_llm: 5
+    generated_response_length: Moderate
+    display_text_no_results_found: I searched my knowledge base, but did not find
+      anything related to your query
+    display_text_connectivity_issue: I might have information related to your query
+      to share, but am unable to connect to my knowledge base at the moment
+    idk_message: I'm afraid I don't understand. Please rephrase your question.
+    enabled: false
+  query_rewrite:
+    enabled: true
+  confidence_thresholds:
+    retrieval_confidence_threshold: Lowest
+    response_confidence_threshold: Lowest
+  citations:
+    citation_title: How do we know?
+    citations_shown: -1
+  hap_filtering:
+    output:
+      enabled: false
+      threshold: 0.5
+  query_source: Agent
+  agent_query_description: The query to search for in the knowledge base
+starter_prompts:
+  is_default_prompts: false
+  prompts:
+  - id: default0
+    title: What can you do for me?
+    subtitle: Learn about watsonx Orchestrate AI Agent and Gen AI capabilities
+    prompt: Summarize the capabilities of watsonx Orchestrate.
+    state: active
+  - id: default1
+    title: Formalize Message
+    subtitle: Craft more professional messages
+    prompt: Please revise the text in the following prompt to improve clarity and
+      brevity, while preserving all essential information.
+    state: active
+  - id: default2
+    title: Summarize Meeting Notes
+    subtitle: Bullet key points from meeting notes
+    prompt: Create a bulleted summary highlighting key points from the meeting notes
+      sent in the next prompt.
+    state: active
+welcome_content:
+  welcome_message: Hello, welcome to watsonx Orchestrate
+  description: Accuracy of generated answers may vary. Please double-check responses.
+  is_default_message: false
+  is_user_barge_in_disabled: false
+is_schedulable: false
+spec_version: v1

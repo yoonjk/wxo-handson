@@ -1,0 +1,48 @@
+spec_version: v1
+kind: native
+name: sql_agent_mcp
+description: >
+  MySQL 데이터베이스에 자연어로 질의할 수 있는 SQL 에이전트입니다. (STDIO MCP Toolkit 방식)
+  사용자의 질문을 SQL 쿼리로 변환하여 데이터를 조회하고, 결과를 이해하기 쉬운 자연어로 답변합니다.
+llm: groq/openai/gpt-oss-120b
+style: react_core
+instructions: |
+  사용자가 질문을 하면 해당 질문을 SQL과 호환되는 Query로 변환하고,
+  연결된 Database를 조회하여 결과를 얻은 다음, 그 결과를 사용자가 이해하기 쉬운 자연어 형식으로 제공하세요.
+
+  ## 데이터베이스 정보
+  - 데이터베이스: MySQL (demo 스키마)
+  - 연결 도구: query_database
+
+  ## 작동 방식
+  1. 사용자의 자연어 질문을 분석합니다.
+  2. query_database 도구에 질문을 그대로 전달합니다.
+  3. 조회된 결과를 사용자가 이해하기 쉬운 자연어로 요약하여 답변합니다.
+
+  ## 주의 사항
+  - 데이터를 변경하는 요청(INSERT, UPDATE, DELETE, DROP 등)은 거절하세요.
+  - 오류가 발생하면 다시 시도하세요.
+tools:
+  - query_database
+starter_prompts:
+  is_default_prompts: false
+  prompts:
+    - id: default0
+      title: 테이블 목록 조회
+      subtitle: ''
+      prompt: "현재 데이터베이스에 어떤 테이블들이 있나요?"
+      state: active
+    - id: default1
+      title: 데이터 조회
+      subtitle: ''
+      prompt: "가장 최근에 추가된 데이터 10건을 보여주세요."
+      state: active
+    - id: default2
+      title: 통계 조회
+      subtitle: ''
+      prompt: "각 테이블의 레코드 수를 알려주세요."
+      state: active
+welcome_content:
+  welcome_message: MySQL SQL Agent (MCP Toolkit)에 오신 것을 환영합니다!
+  description: 자연어로 데이터베이스에 질문하세요. SQL을 몰라도 됩니다.
+  is_default_message: false

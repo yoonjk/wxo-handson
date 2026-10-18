@@ -1,0 +1,190 @@
+{
+  "data": {
+    "edges": [
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {"dataType": "SQLComponent","id": "SQLComponent-M2v3x","name": "component_as_tool","output_types": ["Tool"]},
+          "targetHandle": {"fieldName": "tools","id": "Agent-M5bEA","inputTypes": ["Tool"],"type": "other"}
+        },
+        "id": "xy-edge__SQLComponent-M2v3x-Agent-M5bEA",
+        "source": "SQLComponent-M2v3x",
+        "target": "Agent-M5bEA"
+      },
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {"dataType": "ChatInput","id": "ChatInput-en7qt","name": "message","output_types": ["Message"]},
+          "targetHandle": {"fieldName": "input_value","id": "Agent-M5bEA","inputTypes": ["Message"],"type": "str"}
+        },
+        "id": "xy-edge__ChatInput-en7qt-Agent-M5bEA",
+        "source": "ChatInput-en7qt",
+        "target": "Agent-M5bEA"
+      },
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {"dataType": "Prompt Template","id": "Prompt Template-ETcui","name": "prompt","output_types": ["Message"]},
+          "targetHandle": {"fieldName": "system_prompt","id": "Agent-M5bEA","inputTypes": ["Message"],"type": "str"}
+        },
+        "id": "xy-edge__PromptTemplate-ETcui-Agent-M5bEA",
+        "source": "Prompt Template-ETcui",
+        "target": "Agent-M5bEA"
+      },
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {"dataType": "Agent","id": "Agent-M5bEA","name": "response","output_types": ["Message"]},
+          "targetHandle": {"fieldName": "input_value","id": "ChatOutput-uYSPP","inputTypes": ["Data","JSON","DataFrame","Table","Message"],"type": "other"}
+        },
+        "id": "xy-edge__Agent-M5bEA-ChatOutput-uYSPP",
+        "source": "Agent-M5bEA",
+        "target": "ChatOutput-uYSPP"
+      }
+    ],
+    "nodes": [
+      {
+        "data": {
+          "id": "ChatInput-en7qt",
+          "node": {
+            "base_classes": ["Message"],
+            "description": "Get chat inputs from the Playground.",
+            "display_name": "Chat Input",
+            "minimized": true,
+            "outputs": [{"display_name": "Chat Message","name": "message","selected": "Message","types": ["Message"]}],
+            "template": {
+              "_type": "Component",
+              "input_value": {"display_name": "Input Text","name": "input_value","type": "str","value": ""}
+            }
+          },
+          "type": "ChatInput"
+        },
+        "id": "ChatInput-en7qt",
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "SQLComponent-M2v3x",
+          "node": {
+            "base_classes": ["Table"],
+            "description": "Executes SQL queries on SQLAlchemy-compatible databases.",
+            "display_name": "SQL Database",
+            "outputs": [{"display_name": "Result Table","name": "component_as_tool","selected": "Tool","tool_mode": true,"types": ["Tool"]}],
+            "template": {
+              "_type": "Component",
+              "database_url": {
+                "display_name": "Database URL",
+                "name": "database_url",
+                "required": true,
+                "type": "str",
+                "value": "mysql+pymysql://nexweb:Manito8785!@nexweb.ddnsgeek.com:13306/demo?charset=utf8mb4"
+              },
+              "query": {"display_name": "SQL Query","name": "query","tool_mode": true,"type": "str","value": ""}
+            },
+            "tool_mode": true
+          },
+          "type": "SQLComponent"
+        },
+        "id": "SQLComponent-M2v3x",
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "Agent-M5bEA",
+          "node": {
+            "base_classes": ["Data","JSON","Message"],
+            "description": "Define the agent's instructions, then enter a task to complete using tools.",
+            "display_name": "Agent",
+            "outputs": [
+              {"display_name": "Response","name": "response","selected": "Message","types": ["Message"]},
+              {"display_name": "Structured Response","name": "structured_response","selected": "Data","types": ["Data","JSON"]}
+            ],
+            "template": {
+              "_type": "Component",
+              "model": {
+                "display_name": "Language Model",
+                "name": "model",
+                "type": "model",
+                "value": [{"name": "meta-llama/llama-3-3-70b-instruct","provider": "IBM WatsonX"}]
+              },
+              "api_key": {"display_name": "API Key","name": "api_key","type": "str","value": ""},
+              "base_url_ibm_watsonx": {
+                "display_name": "watsonx API Endpoint",
+                "name": "base_url_ibm_watsonx",
+                "type": "str",
+                "value": "https://eu-de.ml.cloud.ibm.com"
+              },
+              "project_id": {"display_name": "watsonx Project ID","name": "project_id","type": "str","value": ""},
+              "system_prompt": {
+                "display_name": "Agent Instructions",
+                "name": "system_prompt",
+                "type": "str",
+                "value": "사용자가 질문을 하면 해당 질문을 SQL과 호환되는 Query로 변환하고, 연결된 Database를 조회하여 결과를 얻은 다음, 그 결과를 사용자가 이해하기 쉬운 자연어 형식으로 제공"
+              },
+              "input_value": {"display_name": "Input","name": "input_value","type": "str","value": ""},
+              "tools": {"display_name": "Tools","name": "tools","type": "other","value": ""}
+            }
+          },
+          "selected_output": "response",
+          "type": "Agent"
+        },
+        "id": "Agent-M5bEA",
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "Prompt Template-ETcui",
+          "node": {
+            "base_classes": ["Message"],
+            "description": "Create a prompt template with dynamic variables.",
+            "display_name": "Prompt Template",
+            "outputs": [{"display_name": "Prompt","name": "prompt","selected": "Message","types": ["Message"]}],
+            "template": {
+              "_type": "Component",
+              "template": {
+                "display_name": "Template",
+                "name": "template",
+                "type": "prompt",
+                "value": "사용자가 질문을 하면 해당 질문을 SQL과 호환되는 Query로 변환하고, 연결된 Database를 조회하여 결과를 얻은 다음, 그 결과를 사용자가 이해하기 쉬운 자연어 형식으로 제공"
+              }
+            }
+          },
+          "type": "Prompt Template"
+        },
+        "id": "Prompt Template-ETcui",
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "ChatOutput-uYSPP",
+          "node": {
+            "base_classes": ["Message"],
+            "description": "Display a chat message in the Playground.",
+            "display_name": "Chat Output",
+            "minimized": true,
+            "outputs": [{"display_name": "Output Message","name": "message","selected": "Message","types": ["Message"]}],
+            "template": {
+              "_type": "Component",
+              "input_value": {"display_name": "Inputs","name": "input_value","type": "other","value": ""}
+            }
+          },
+          "type": "ChatOutput"
+        },
+        "id": "ChatOutput-uYSPP",
+        "type": "genericNode"
+      }
+    ]
+  },
+  "description": "mysql을 자연어로 접근해서 데이터 조회",
+  "endpoint_name": null,
+  "id": "bfea7883-0b47-4aa4-99db-4357dbeb07cb",
+  "is_component": false,
+  "last_tested_version": "1.12.0",
+  "locked": false,
+  "name": "sqlflow",
+  "tags": []
+}

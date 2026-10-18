@@ -1,0 +1,69 @@
+kind: native
+name: hr_adk_assistant
+display_name: hr_adk_assistant
+description: 사내 인사 규정 질문에 답하고 연차 잔여일을 조회하는 HR 어시스턴트 (ADK 실습용)
+context_access_enabled: true
+context_variables: []
+restrictions: editable
+memory_enabled: false
+llm: groq/openai/gpt-oss-120b
+style: react_core
+hide_reasoning: false
+instructions: |-
+  당신은 사내 HR 어시스턴트입니다. 항상 한국어 존댓말로 간결하게 답합니다.
+  연차 잔여일 질문은 사번을 확인한 뒤 get_leave_balance 도구로 조회합니다.
+  사번을 모르면 먼저 물어봅니다. 근거 없는 숫자는 만들지 않습니다.
+guidelines: []
+collaborators: []
+tools:
+- get_leave_balance
+toolkits: []
+skills: []
+plugins:
+  agent_pre_invoke: []
+  agent_post_invoke: []
+sync_tool_flow_interactions: true
+bundled: false
+knowledge_base: []
+chat_with_docs:
+  enabled: false
+  supports_full_document: true
+  vector_index:
+    chunk_size: 400
+    chunk_overlap: 50
+    limit: 10
+    extraction_strategy: express
+  generation:
+    prompt_instruction: ''
+    max_docs_passed_to_llm: 5
+    generated_response_length: Moderate
+    display_text_no_results_found: I searched my knowledge base, but did not find
+      anything related to your query
+    display_text_connectivity_issue: I might have information related to your query
+      to share, but am unable to connect to my knowledge base at the moment
+    idk_message: I'm afraid I don't understand. Please rephrase your question.
+    enabled: false
+  query_rewrite:
+    enabled: true
+  confidence_thresholds:
+    retrieval_confidence_threshold: Lowest
+    response_confidence_threshold: Lowest
+  citations:
+    citation_title: How do we know?
+    citations_shown: -1
+  hap_filtering:
+    output:
+      enabled: false
+      threshold: 0.5
+  query_source: Agent
+  agent_query_description: The query to search for in the knowledge base
+starter_prompts:
+  is_default_prompts: false
+  prompts:
+  - id: balance
+    title: 연차 잔여일
+    subtitle: 내 연차 며칠 남았지?
+    prompt: 제 연차 잔여일을 알려주세요
+    state: active
+is_schedulable: false
+spec_version: v1
