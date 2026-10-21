@@ -376,6 +376,15 @@ def get_team_leave_requests(manager_id: str, include_past: bool = False) -> dict
     if not manager:
         return {"error": f"직원 ID '{manager_id}'를 찾을 수 없습니다."}
 
+    if not db.is_manager(manager_id):
+        return {
+            "success": False,
+            "error": (
+                f"'{manager['name']}'님({manager_id})은 관리자가 아닙니다. "
+                "팀원 휴가 신청 목록은 관리자만 조회할 수 있습니다."
+            ),
+        }
+
     requests = db.fetch_team_requests(manager_id, include_past=include_past)
 
     return {
@@ -496,7 +505,104 @@ def apply_leave(
 
 
 # ---------------------------------------------------------------------------
-# 8. 휴가 신청 폼 (캘린더로 날짜 선택)
+# 8. 휴가 승인/반려 (관리자 전용)
+# ---------------------------------------------------------------------------
+@tool(permission=ToolPermission.READ_WRITE, expected_credentials=_MYSQL_CREDENTIALS)
+def approve_leave_request(
+    manager_id: str,
+    request_id: str,
+    action: str,
+) -> dict:
+    """
+    관리자(매니저)가 Pending 상태의 휴가 신청을 승인(Approved) 또는
+    반려(Rejected)합니다.
+
+    관리자 여부와 팀원 소속 여부를 DB에서 자동으로 확인합니다. 다른 직원의
+    manager_id로 등록된 직원만 이 툴을 사용할 수 있으며, 자신의 팀원이
+    신청한 건만 처리할 수 있습니다.
+
+    Args:
+        manager_id: 승인/반려를 처리하는 관리자의 사번
+        request_id: 처리할 휴가 신청 번호 (예: "V-1005")
+        action: "approve" 또는 "reject"
+
+    Returns:
+        처리 결과를 담은 딕셔너리.
+        - success: 처리 성공 여부
+        - status: 변경된 상태 ("Approved" 또는 "Rejected")
+        - error: 오류 발생 시 사유
+    """
+    # 관리자 존재 확인
+    manager = db.fetch_employee(manager_id)
+    if not manager:
+        return {"error": f"직원 ID '{manager_id}'를 찾을 수 없습니다."}
+
+    # 관리자 권한 확인
+    if not db.is_manager(manager_id):
+        return {
+            "success": False,
+            "error": (
+                f"'{manager['name']}'님({manager_id})은 관리자가 아닙니다. "
+                "휴가 승인/반려는 관리자만 처리할 수 있습니다."
+            ),
+        }
+
+    # action 유효성 확인
+    action_lower = action.strip().lower()
+    if action_lower not in ("approve", "reject"):
+        return {"error": "action은 'approve' 또는 'reject' 중 하나여야 합니다."}
+
+    new_status = "Approved" if action_lower == "approve" else "Rejected"
+
+    # 신청 건 존재 확인
+    req = db.fetch_request_by_id(request_id)
+    if not req:
+        return {"error": f"신청 번호 '{request_id}'를 찾을 수 없습니다."}
+
+    # 신청자가 자신의 팀원인지 확인
+    applicant = db.fetch_employee(req["employee_id"])
+    if not applicant or applicant.get("manager_id") != manager_id:
+        applicant_name = applicant["name"] if applicant else req["employee_id"]
+        return {
+            "success": False,
+            "error": (
+                f"'{applicant_name}'님({req['employee_id']})은 "
+                f"'{manager['name']}'님({manager_id})의 팀원이 아닙니다. "
+                "본인 팀 직원의 신청만 처리할 수 있습니다."
+            ),
+        }
+
+    if req["status"] != "Pending":
+        return {
+            "success": False,
+            "error": (
+                f"신청 번호 '{request_id}'는 현재 '{req['status']}' 상태입니다. "
+                "Pending 상태인 신청 건만 처리할 수 있습니다."
+            ),
+        }
+
+    # 상태 변경
+    updated = db.update_request_status(request_id, new_status, manager_id)
+    if not updated:
+        return {"error": f"신청 번호 '{request_id}' 상태 변경에 실패했습니다."}
+
+    applicant_name = applicant["name"] if applicant else req["employee_id"]
+
+    return {
+        "success": True,
+        "request_id": request_id,
+        "employee_id": req["employee_id"],
+        "employee_name": applicant_name,
+        "start_date": req["start_date"],
+        "end_date": req["end_date"],
+        "status": new_status,
+        "processed_by": manager_id,
+        "manager_name": manager["name"],
+    }
+
+
+# ---------------------------------------------------------------------------
+# 9. 휴가 신청 폼 (캘린더로 날짜 선택)
 # ---------------------------------------------------------------------------
 @tool(permission=ToolPermission.READ_ONLY)
 def show_leave_request_form(employee_id: str):

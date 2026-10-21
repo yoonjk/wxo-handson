@@ -39,7 +39,7 @@ python main.py
 
 2. 툴 등록 (CLI 방식)
    ```bash
-   orchestrate tools import -k python -f tools.py
+  orchestrate tools import -k python -f lab01/tools.py --app-id mysql_bank_demo  -p lab01 -r lab01/requirements.txt
    ```
    `tools.py` 안의 `get_leave_balance`, `check_leave_conflict`, `apply_leave` 세 함수가
    각각 독립된 툴로 등록됩니다. 함수의 docstring이 그대로 툴 설명(description)으로,

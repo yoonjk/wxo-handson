@@ -8,9 +8,9 @@ orchestrate agents import -f holiday_agent.yaml
 ## Export Agent
 ```bash
 orchestrate agents export \
-  -n "holiday" \
+  -n "it_faq" \
   -k native \
-  -o holiday.yaml \
+  -o it_faq_agent.yaml \
   --agent-only  
 ```  
 
@@ -25,12 +25,17 @@ curl -s --request GET \
 
 ## Update Agent Name
 ```bash
+AGENT_ID=$(curl -s --request GET \
+  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
+  --header "Authorization: Bearer ${TOKEN}" \
+  | jq -r '.[] | select(.name == "Untitled_Agent_1_4632w2") | .id')
+
 curl --request PATCH \
   --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}" \
   --header "Authorization: Bearer ${TOKEN}" \
   --header "Content-Type: application/json" \
   --data '{
-    "name": "a2a_demo"
+    "name": "Purchase_Orchestrator"
   }'
 ```
 
@@ -59,6 +64,23 @@ curl --request POST \
 orchestrate agents list --kind external
 ```  
 
+## Find description of Agent
+```bash
+AGENT_NAME="cal_leave_date"
+AGENT_DESC=$(curl -s --request GET \
+  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
+  --header "Authorization: Bearer ${TOKEN}" \
+  | jq -r --arg agent_name "$AGENT_NAME" '.[] | select(.name == "Untitled_Agent_1_80564P")' | jq -r '.description')
+echo $AGENT_DESC
+```  
+
+```bash
+AGENT_NAME="Untitled_Agent_1_4632w2"
+curl -s --request GET \
+  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
+  --header "Authorization: Bearer ${TOKEN}" \
+  | jq -r  '.[] | select(.name == "cal_leave_date")' 
+```  
 
 
 # Access Controll Agent
@@ -94,7 +116,7 @@ AGENT_NAME="holiday"
 AGENT_ID=$(curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "Untitled_Agent_1_2892NK") | .id')
+  | jq -r '.[] | select(.name == "Untitled_Agent_1_4632w2") | .id')
 
 AGENT_NAME="cal_leave_date"
 AGENT_ID=$(curl -s --request GET \

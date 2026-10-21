@@ -20,7 +20,7 @@ except ImportError:
     _HAS_ORCHESTRATE_CONNECTIONS = False
 
 # toolkit import 시 --app-id mysql_hr_demo 로 연결을 연결해야 합니다.
-MYSQL_APP_ID = "mysql_hr_demo"
+MYSQL_APP_ID = "mysql_bank_demo"
 _POOL: Optional[MySQLConnectionPool] = None
 _POOL_INIT_LOCK = threading.Lock()
 

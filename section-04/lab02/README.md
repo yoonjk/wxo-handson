@@ -98,6 +98,13 @@ curl http://nexweb.ddnsgeek.com/purchase/openapi.json \
   -f openapi.json 
 ```  
 
+# Import workflow
+```bash
+orchestrate tools import \
+  --kind flow \
+  --file decision01_0939ll.json
+```
+
 ## export tool
 ```bash
 orchestrate tools export \
@@ -138,7 +145,7 @@ AGENT_ID=$(curl -s --request GET \
 
 ```
 # Import Agent
-```
+```bash
 orchestrate agents import -f day02_decision.yaml
 ```
 

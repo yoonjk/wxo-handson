@@ -63,7 +63,7 @@ orchestrate toolkits add \
   --description "HR 휴가 잔여일, 휴가 일정 충돌, 신청 및 승인현황 관리" \
   --package-root . \
   --tier small \
-  --app-id mysql_hr_demo
+  --app-id mysql__demo
 ```
 
 - live

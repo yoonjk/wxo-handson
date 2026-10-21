@@ -1,0 +1,404 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "tool_04_array_96778s",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "04_foreach_workflow",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sku": {
+                "type": "string",
+                "description": ""
+              },
+              "quantity": {
+                "type": "integer",
+                "description": ""
+              }
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sku": {
+                "type": "string",
+                "description": ""
+              },
+              "quantity": {
+                "type": "integer",
+                "description": ""
+              },
+              "line_total": {
+                "type": "integer",
+                "description": ""
+              },
+              "unit_price": {
+                "type": "integer",
+                "description": ""
+              }
+            }
+          },
+          "default": [],
+          "description": ""
+        },
+        "total": {
+          "type": "integer",
+          "default": "",
+          "description": ""
+        }
+      }
+    },
+    "private_schema": {
+      "type": "object",
+      "properties": {
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "object",
+                "properties": {},
+                "description": ""
+              }
+            }
+          },
+          "default": [],
+          "description": ""
+        },
+        "total": {
+          "type": "integer",
+          "description": ""
+        },
+        "line_total": {
+          "type": "integer",
+          "description": ""
+        },
+        "unit_price": {
+          "type": "integer",
+          "description": ""
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "448cc3ab-d0d6-4e6c-8ef1-7d916f6e713b",
+      "end": "script_10e160",
+      "start": "__start__"
+    },
+    {
+      "id": "510cc77a-9f51-4ff1-915d-b39d1d506d75",
+      "end": "script_2a1061",
+      "start": "foreach_9d9114"
+    },
+    {
+      "id": "43b37e5d-b6b8-49be-906f-5ea97108482b",
+      "end": "foreach_9d9114",
+      "start": "script_10e160"
+    },
+    {
+      "id": "7d034396-7c15-4142-9b2e-a2329a4ad931",
+      "end": "__end__",
+      "start": "script_2a1061"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": -34.910154984241444,
+          "y": 929.9738566667202
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": -36.68773356955097,
+          "y": 181.5152266297129
+        }
+      }
+    },
+    "script_10e160": {
+      "spec": {
+        "fn": "# Flow \uc804\uccb4\uc5d0\uc11c \uacf5\uc720\ud560 \uacb0\uacfc \ubc30\uc5f4\uacfc \ud569\uacc4\ub97c \ucd08\uae30\ud654\ud569\ub2c8\ub2e4.\n# \uc774 Logic block\uc740 For each \uc2e4\ud589 \uc804\uc5d0 \ud55c \ubc88\ub9cc \uc2e4\ud589\ub429\ub2c8\ub2e4.\n\nflow.private.total = 0\n\n\nflow.private.lines = []",
+        "kind": "script",
+        "name": "script_10e160",
+        "position": {
+          "x": -36.39265948716309,
+          "y": 280.97385666672005
+        },
+        "display_name": "init_vaariable"
+      }
+    },
+    "script_2a1061": {
+      "spec": {
+        "fn": "flow.output.lines = flow.private.lines\nflow.output.total = flow.private.total",
+        "kind": "script",
+        "name": "script_2a1061",
+        "position": {
+          "x": -36.041476284035866,
+          "y": 833.97385666672
+        },
+        "display_name": "foreach-to-block"
+      }
+    },
+    "foreach_9d9114": {
+      "spec": {
+        "kind": "foreach",
+        "name": "foreach_9d9114",
+        "position": {
+          "x": -76.04147628403587,
+          "y": 419.97385666672005
+        },
+        "dimensions": {
+          "width": 326,
+          "height": 393
+        },
+        "initiators": [],
+        "display_name": "Process items",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "additionalProperties": false
+        },
+        "foreach_policy": "SEQUENTIAL",
+        "private_schema": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "index": {
+              "type": "integer",
+              "description": "Current index for the iteration"
+            },
+            "line_total": {
+              "type": "integer",
+              "default": "",
+              "description": ""
+            },
+            "unit_price": {
+              "type": "integer",
+              "description": ""
+            },
+            "line_result": {
+              "type": "object",
+              "default": "",
+              "required": [
+                "sku",
+                "unit_price",
+                "quantity",
+                "line_total"
+              ],
+              "properties": {
+                "sku": {
+                  "type": "string",
+                  "description": ""
+                },
+                "quantity": {
+                  "type": "integer",
+                  "description": ""
+                },
+                "line_total": {
+                  "type": "integer",
+                  "description": ""
+                },
+                "unit_price": {
+                  "type": "integer",
+                  "description": ""
+                }
+              },
+              "description": ""
+            },
+            "current_item": {
+              "description": "Current item for the iteration"
+            }
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "b5ab147b-6c92-4d15-a060-11780a490dba",
+          "end": "script_286465",
+          "start": "foreach_9d9114__start__"
+        },
+        {
+          "id": "348bfa8c-42f0-4cb3-ac30-120f605de5fa",
+          "end": "script_55baf1",
+          "start": "script_286465"
+        },
+        {
+          "id": "2f13c096-3d78-40cb-a144-27685c45e0c4",
+          "end": "script_cae7a7",
+          "start": "script_55baf1"
+        },
+        {
+          "id": "b4a77988-6ee7-4457-a9cf-d9c7d972dcd0",
+          "end": "foreach_9d9114__end__",
+          "start": "script_cae7a7"
+        }
+      ],
+      "nodes": {
+        "script_286465": {
+          "spec": {
+            "fn": "loop = flow[\"Process items\"].private\nitem = loop.current_item\n\nprices = {\n    \"NOTEBOOK\": 1200000,\n    \"MONITOR\": 300000,\n    \"KEYBOARD\": 100000\n}\n\nsku = item[\"sku\"]\nloop.unit_price = prices.get(sku)\n\nif loop.unit_price is None:\n    raise ValueError(\"Unknown SKU: \" + str(sku))",
+            "kind": "script",
+            "name": "script_286465",
+            "position": {
+              "x": 39.18410701518829,
+              "y": 67
+            },
+            "display_name": "Determine unit price",
+            "output_schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "sku": {
+                      "type": "string",
+                      "description": ""
+                    },
+                    "quantity": {
+                      "type": "integer",
+                      "description": ""
+                    },
+                    "unit_price": {
+                      "type": "integer",
+                      "description": ""
+                    },
+                    "unit_total": {
+                      "type": "integer",
+                      "description": ""
+                    }
+                  },
+                  "description": ""
+                }
+              }
+            }
+          }
+        },
+        "script_55baf1": {
+          "spec": {
+            "fn": "loop = flow[\"Process items\"].private\nitem = loop.current_item\n\nloop.line_total = int(item[\"quantity\"]) * int(loop.unit_price)",
+            "kind": "script",
+            "name": "script_55baf1",
+            "position": {
+              "x": 39.18410701518829,
+              "y": 157
+            },
+            "display_name": "Calculate line total"
+          }
+        },
+        "script_cae7a7": {
+          "spec": {
+            "fn": "loop = flow[\"Process items\"].private\nitem = loop.current_item\n\nresult = {\n    \"sku\": item[\"sku\"],\n    \"quantity\": int(item[\"quantity\"]),\n    \"unit_price\": int(loop.unit_price),\n    \"line_total\": int(loop.line_total)\n}\n\nlines = list(flow.private.lines or [])\nlines.append(result)\n\nflow.private.lines = lines\nflow.private.total = int(flow.private.total or 0) + int(loop.line_total)\nloop.line_result = result",
+            "kind": "script",
+            "name": "script_cae7a7",
+            "position": {
+              "x": 39.18410701518832,
+              "y": 251.0000000000001
+            },
+            "display_name": "Build line result",
+            "output_schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        "foreach_9d9114__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "foreach_9d9114__end__",
+            "position": {
+              "x": 40,
+              "y": 348
+            }
+          }
+        },
+        "foreach_9d9114__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "foreach_9d9114__start__",
+            "position": {
+              "x": 40,
+              "y": 20
+            }
+          }
+        }
+      },
+      "schemas": {},
+      "input_map": {
+        "spec": {
+          "maps": [
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.value",
+              "value_expression": "flow.input.items"
+            }
+          ],
+          "name": ""
+        }
+      }
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [
+        {
+          "metadata": {
+            "assignmentType": "variable"
+          },
+          "has_no_value": false,
+          "target_variable": "self.output.line_result",
+          "value_expression": null
+        }
+      ],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

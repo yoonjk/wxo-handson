@@ -3,8 +3,9 @@
 mysql -u nexweb -p -h nexweb.ddnsgeek.com -P 13306 demo < schema.sql
 
 # 2) watsonx Orchestrate 커넥션 생성 (mysql_ai_agent에서 만든 것과 별개 app-id 사용)
-orchestrate connections add --app-id mysql_bank_demo
+
 ```bash
+orchestrate connections add --app-id mysql_bank_demo
 orchestrate connections configure --app-id mysql_bank_demo --environment draft --kind key_value --type team
 ```
 
@@ -12,10 +13,9 @@ orchestrate connections configure --app-id mysql_bank_demo --environment draft -
 ```bash
 orchestrate connections set-credentials --app-id mysql_bank_demo --env draft \
     -e MYSQL_HOST="localhost" \
-    -e MYSQL_PORT="3306" \
-    -e MYSQL_USER= \
-    -e MYSQL_PASSWORD= \
-    -e MYSQL_DATABASE="demo"
+    -e MYSQL_USER='' \
+    -e MYSQL_PASSWORD='' \
+    -e MYSQL_DATABASE=""
 ```
 
 - live
@@ -25,10 +25,9 @@ orchestrate connections configure --app-id mysql_bank_demo --environment live --
 ```bash
 orchestrate connections set-credentials --app-id mysql_bank_demo --env live \
     -e MYSQL_HOST="localhost" \
-    -e MYSQL_PORT="3306" \
-    -e MYSQL_USER= \
-    -e MYSQL_PASSWORD= \
-    -e MYSQL_DATABASE="demo"
+    -e MYSQL_USER='' \
+    -e MYSQL_PASSWORD='' \
+    -e MYSQL_DATABASE=""
 ```
 
 
@@ -56,7 +55,7 @@ TOKEN=$(curl -s -X POST \
 ## 4. watsonx Orchestrate에 Tools 등록하기
 
 ```bash
-orchestrate tools import -k python -f lab02/banking_tools.py -p lab02  -r lab02/requirements.txt --app-id mysql_hr_demo
+orchestrate tools import -k python -f lab02/banking_tools.py -p lab02  -r lab02/requirements.txt --app-id mysql_bank_demo
 ```
 
 # 5) agent_id 조회 API

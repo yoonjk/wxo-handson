@@ -15,7 +15,7 @@ orchestrate agents export \
 ```
 ## Agent 등록
 ```bash
-orchestrate agents import -f leave_agent.yaml
+orchestrate agents import -f cal_leave_date.yaml
 ```
 
 ## TOKEN

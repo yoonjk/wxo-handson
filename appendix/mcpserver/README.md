@@ -12,6 +12,12 @@ orchestrate connections configure \
   --env draft \
   --type team \
   --kind bearer
+
+orchestrate connections configure \
+  -a my_mcpserver \
+  --env live \
+  --type team \
+  --kind bearer  
 ```  
 
 ```bash

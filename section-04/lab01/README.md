@@ -148,11 +148,6 @@ orchestrate tools export \
 ```bash
 orchestrate tools import \
   --kind flow \
-  --file day04_foreach_adv_workflow.json
+  --file Agentic_workflow_0134Bq.json
 ```
 
-# Test ChatMode
-chat mode 
-```bash
-requester_id 재국
-```

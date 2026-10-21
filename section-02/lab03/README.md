@@ -82,7 +82,7 @@ AGENT_NAME="holiday"
 curl -s --request GET \
   --url "${API_ENDPOINT}/v1/orchestrate/agents" \
   --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "Untitled_Agent_1_0708AT")'
+  | jq -r '.[] | select(.name == "Untitled_Agent_1_80564P")'
 
 
 orchestrate agents export \

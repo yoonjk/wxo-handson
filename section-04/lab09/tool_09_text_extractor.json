@@ -1,0 +1,583 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "tool_09_text_extractor_2017rk",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "09_text_extractor_workflow",
+    "input_schema": {},
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "approval_status": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "private_schema": {
+      "type": "object",
+      "properties": {
+        "approval_status": {
+          "type": "string",
+          "description": "\uc2b9\uc778 \uc0c1\ud0dc"
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "505c37a9-fd19-4023-9a69-3431d5e22d3b",
+      "end": "user_flow_c6f60f",
+      "start": "__start__"
+    },
+    {
+      "id": "024e7b40-393c-4cd4-9952-32e35e4bb086",
+      "end": "Text extractor 1",
+      "start": "user_flow_c6f60f"
+    },
+    {
+      "id": "c976b55e-6106-4728-9c4c-ee7e74d8c272",
+      "end": "script_0fd3f9",
+      "start": "Text extractor 1"
+    },
+    {
+      "id": "9a96ece5-743c-47d3-bdf8-e47b9098152d",
+      "end": "branch_be730b",
+      "start": "script_0fd3f9"
+    },
+    {
+      "id": "ba85330d-dca3-4f96-a6b0-8b2b62a4fa76",
+      "end": "user_flow_4bc2fd",
+      "start": "branch_be730b",
+      "display_name": "Path 1"
+    },
+    {
+      "id": "1d5852bb-73ca-4906-90ec-12f383185f4d",
+      "end": "user_flow_2415fd",
+      "start": "branch_be730b",
+      "display_name": "Path 2"
+    },
+    {
+      "id": "b9bb617d-4452-4f97-b276-aca46d529076",
+      "end": "__end__",
+      "start": "user_flow_2415fd"
+    },
+    {
+      "id": "f2aa470e-b51d-4247-be06-2e7681da61c3",
+      "end": "__end__",
+      "start": "user_flow_4bc2fd"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": 71.23589722158022,
+          "y": 1237.755325109784
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": -2,
+          "y": 134
+        }
+      }
+    },
+    "branch_be730b": {
+      "spec": {
+        "kind": "branch",
+        "name": "branch_be730b",
+        "position": {
+          "x": -1.0000000000000284,
+          "y": 754.661575109784
+        },
+        "evaluator": {
+          "conditions": [
+            {
+              "default": false,
+              "edge_id": "ba85330d-dca3-4f96-a6b0-8b2b62a4fa76",
+              "metadata": {
+                "conditions": []
+              },
+              "expression": "flow.private.purchase_request['approval_status'] == 'REJECT'"
+            },
+            {
+              "default": true,
+              "edge_id": "1d5852bb-73ca-4906-90ec-12f383185f4d",
+              "metadata": {}
+            }
+          ]
+        },
+        "display_name": "Check Approval Status",
+        "match_policy": "FIRST_MATCH"
+      }
+    },
+    "script_0fd3f9": {
+      "spec": {
+        "fn": "# Text extractor\uc758 \uc804\uccb4 Object \uacb0\uacfc\ub97c \uac00\uc838\uc635\ub2c8\ub2e4.\nresult = flow[\"Text extractor 1\"].output\n\n# KVP \ubc30\uc5f4\uc744 \uac00\uc838\uc635\ub2c8\ub2e4.\nif isinstance(result, dict):\n    kvps = result.get(\"kvps\") or []\nelse:\n    kvps = getattr(result, \"kvps\", []) or []\n\npurchase_request = {\n    \"requester\": \"\",\n    \"department\": \"\",\n    \"request_date\": \"\",\n    \"currency\": \"\",\n    \"budget\": 0,\n    \"total\": 0,\n    \"reason\": \"\",\n    \"items\": []\n}\n\nitems_by_row = {}\n\nfor kvp in kvps:\n    key = kvp.get(\"key\") or {}\n    value = kvp.get(\"value\") or {}\n\n    label = key.get(\"semantic_label\", \"\")\n    raw_value = value.get(\"normalized_text\") or value.get(\"raw_text\") or \"\"\n\n    table_name = kvp.get(\"table_name\")\n    row_index = kvp.get(\"table_row_index\")\n\n    # items \ud14c\uc774\ube14\uc758 \uac12 \ucc98\ub9ac\n    if table_name == \"items\" and row_index is not None:\n        item = items_by_row.setdefault(\n            row_index,\n            {\n                \"sku\": \"\",\n                \"quantity\": 0,\n                \"unit_price\": 0\n            }\n        )\n\n        if label == \"sku\":\n            item[\"sku\"] = raw_value\n        elif label == \"quantity\":\n            item[\"quantity\"] = int(raw_value)\n        elif label in (\"unitprice\", \"unit_price\"):\n            item[\"unit_price\"] = int(raw_value)\n\n    # \uc77c\ubc18 \ud544\ub4dc \ucc98\ub9ac\n    elif label == \"requester\":\n        purchase_request[\"requester\"] = raw_value\n    elif label == \"department\":\n        purchase_request[\"department\"] = raw_value\n    elif label == \"request_date\":\n        purchase_request[\"request_date\"] = raw_value\n    elif label == \"currency\":\n        purchase_request[\"currency\"] = raw_value\n    elif label == \"budget\":\n        purchase_request[\"budget\"] = int(raw_value)\n    elif label == \"total\":\n        purchase_request[\"total\"] = int(raw_value)\n    elif label == \"reason\":\n        purchase_request[\"reason\"] = raw_value\n\n# \ud589 \ubc88\ud638 \uc21c\uc11c\ub300\ub85c \ud488\ubaa9 \ubc30\uc5f4\uc744 \uc0dd\uc131\ud569\ub2c8\ub2e4.\npurchase_request[\"items\"] = [\n    items_by_row[row_index]\n    for row_index in sorted(items_by_row)\n]\n\n# \ud488\ubaa9 \ud569\uacc4\ub97c \uacc4\uc0b0\ud569\ub2c8\ub2e4.\nitem_total = sum(\n    item[\"quantity\"] * item[\"unit_price\"]\n    for item in purchase_request[\"items\"]\n)\n\npurchase_request[\"item_total\"] = item_total\npurchase_request[\"items_count\"] = len(purchase_request[\"items\"])\n\n# \uc608\uc0b0 \ucd08\uacfc \uc5ec\ubd80\ub97c \uacc4\uc0b0\ud569\ub2c8\ub2e4.\nif item_total > purchase_request[\"budget\"]:\n    purchase_request[\"approval_status\"] = \"REJECT\"\nelse:\n    purchase_request[\"approval_status\"] = \"APPROVED\"\n\n# Workflow \ucd9c\ub825\uc73c\ub85c \uc804\ub2ec\ud569\ub2c8\ub2e4.\nflow.private.purchase_request = purchase_request\nflow.private.approval_status = purchase_request[\"approval_status\"]",
+        "kind": "script",
+        "name": "script_0fd3f9",
+        "position": {
+          "x": -1.0000000000000284,
+          "y": 656.2603870107527
+        },
+        "display_name": "Set purchase_request"
+      }
+    },
+    "Text extractor 1": {
+      "spec": {
+        "kind": "docproc",
+        "name": "Text extractor 1",
+        "task": "text_extraction",
+        "language": "en",
+        "position": {
+          "x": -2,
+          "y": 543.8666722389145
+        },
+        "enable_hw": false,
+        "kvp_schemas": [
+          {
+            "fields": {
+              "items": {
+                "type": "array",
+                "columns": {
+                  "sku": {
+                    "default": "",
+                    "example": "NOTEBOOK",
+                    "description": "\ud488\ubaa9\uba85 \ub610\ub294 \ud488\ubaa9 \ucf54\ub4dc"
+                  },
+                  "quantity": {
+                    "default": "",
+                    "example": "1",
+                    "description": "\uad6c\ub9e4 \uc218\ub7c9"
+                  },
+                  "unitprice": {
+                    "default": "",
+                    "example": "1200000",
+                    "description": "\ud488\ubaa9 \ub2e8\uac00"
+                  }
+                },
+                "description": "\uad6c\ub9e4 \ud488\ubaa9 \ubaa9\ub85d"
+              },
+              "total": {
+                "default": "",
+                "example": "1500000",
+                "description": "\uad6c\ub9e4\uc694\uccad\uc11c\uc5d0 \ud45c\uc2dc\ub41c \ucd1d\uc561"
+              },
+              "budget": {
+                "default": "",
+                "example": "2000000",
+                "description": "\uad6c\ub9e4\uc5d0 \uc0ac\uc6a9\ud560 \uc218 \uc788\ub294 \uc608\uc0b0"
+              },
+              "reason": {
+                "default": "",
+                "example": "Development equipment purchase",
+                "description": "\uad6c\ub9e4 \uc0ac\uc720"
+              },
+              "requester": {
+                "default": "",
+                "example": "hong.gildong",
+                "description": "\uad6c\ub9e4 \uc694\uccad\uc790\uc758 \uc0ac\uc6a9\uc790 ID \ub610\ub294 \uc774\ub984"
+              },
+              "department": {
+                "default": "",
+                "example": "Engineering",
+                "description": "\uad6c\ub9e4 \uc694\uccad \ubd80\uc11c"
+              }
+            },
+            "document_type": "purchase_request",
+            "document_description": "\ud68c\uc0ac \ub0b4\ubd80 \uad6c\ub9e4\uc694\uccad\uc11c",
+            "additional_prompt_instructions": "\ubb38\uc11c\uc5d0 \ud45c\uc2dc\ub41c \uac12\ub9cc \ucd94\ucd9c\ud558\uace0, \ubb38\uc11c\uc5d0 \uc5c6\ub294 \uac12\uc740 \ucd94\uc815\ud558\uc9c0 \ub9c8\uc138\uc694. \uc22b\uc790\ub294 \uac00\ub2a5\ud55c \ud55c \uc6d0\ubb38 \uadf8\ub300\ub85c \ucd94\ucd9c\ud558\uc138\uc694."
+          }
+        ],
+        "display_name": "Text extractor 1",
+        "input_schema": {
+          "type": "object",
+          "title": "Text extractor input",
+          "required": [
+            "document_ref"
+          ],
+          "properties": {
+            "document_ref": {
+              "type": "string",
+              "title": "File reference",
+              "format": "wxo-file",
+              "description": "A URL identifying the File to be used."
+            },
+            "kvp_model_name": {
+              "type": "string",
+              "title": "KVP model name",
+              "description": "The LLM model used for key-value pair extraction."
+            }
+          }
+        },
+        "output_format": "object",
+        "output_schema": {
+          "type": "object",
+          "title": "Text extractor response",
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "title": "text",
+              "description": "The raw text extracted from the input document."
+            }
+          },
+          "description": "The text extraction operation response when output_format is set to \"object\".\n\nThis class represents the structured response from a document text extraction operation,\ncontaining both the extracted plain text and the complete document structure metadata\ninherited from AssemblyJsonOutput.\n\nAttributes:\n    text (str): The extracted plain text content from the document. This is the \n               concatenated text from all pages and structures in reading order.\n               Empty string if no text could be extracted.\n\nNote:\n    - This response type is used when DocProcSpec.output_format is set to \n      DocProcOutputFormat.object\n    - For file reference responses, use TextExtractionResponse instead\n    - The text field contains only plain text; structured data is in inherited fields"
+        },
+        "kvp_model_name": "watsonx/mistralai/mistral-small-3-1-24b-instruct-2503",
+        "document_structure": false,
+        "kvp_enable_text_hints": true,
+        "kvp_force_schema_name": "purchase_request"
+      },
+      "input_map": {
+        "spec": {
+          "maps": [
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.document_ref",
+              "value_expression": "flow[\"User activity 1\"][\"File upload 1\"].output.value"
+            },
+            {
+              "metadata": {
+                "assignmentType": "pyExpression"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.kvp_model_name",
+              "value_expression": "\"watsonx/mistralai/mistral-small-3-1-24b-instruct-2503\""
+            }
+          ],
+          "name": "",
+          "fallback_strategy": "ask_the_user"
+        }
+      }
+    },
+    "user_flow_2415fd": {
+      "spec": {
+        "kind": "user_flow",
+        "name": "user_flow_2415fd",
+        "metadata": {
+          "ui:generated_name": true
+        },
+        "position": {
+          "x": 185.94006589451166,
+          "y": 926.0388248435479
+        },
+        "dimensions": {
+          "width": 286,
+          "height": 247
+        },
+        "initiators": [],
+        "display_name": "User activity 3",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "assignees": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "wxo-user"
+              }
+            }
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "1b0a909d-5bec-44f9-b211-0cd4f73a4f11",
+          "end": "user_17c93d",
+          "start": "user_flow_2415fd__start__"
+        },
+        {
+          "id": "50f9ee0d-62e7-470d-b624-1dcf938ed661",
+          "end": "user_flow_2415fd__end__",
+          "start": "user_17c93d"
+        }
+      ],
+      "nodes": {
+        "user_17c93d": {
+          "spec": {
+            "kind": "user",
+            "name": "user_17c93d",
+            "fields": [
+              {
+                "kind": "text",
+                "name": "text_output_972d11",
+                "text": "\uad6c\ub9e4\uac00 \uc2b9\uc778\ub418\uc5c8\uc2b5\ub2c8\ub2e4. : ",
+                "direction": "output",
+                "input_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {},
+            "position": {
+              "x": 21,
+              "y": 107.82037406817335
+            },
+            "display_name": "\uc2b9\uc778"
+          }
+        },
+        "user_flow_2415fd__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "user_flow_2415fd__end__",
+            "position": {
+              "x": 20,
+              "y": 187
+            }
+          }
+        },
+        "user_flow_2415fd__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "user_flow_2415fd__start__",
+            "position": {
+              "x": 20,
+              "y": 50
+            }
+          }
+        }
+      },
+      "schemas": {}
+    },
+    "user_flow_4bc2fd": {
+      "spec": {
+        "kind": "user_flow",
+        "name": "user_flow_4bc2fd",
+        "metadata": {
+          "ui:generated_name": true
+        },
+        "position": {
+          "x": -212.8479752491758,
+          "y": 926.7274497104297
+        },
+        "dimensions": {
+          "width": 286,
+          "height": 255
+        },
+        "initiators": [],
+        "display_name": "User activity 2",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "assignees": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "wxo-user"
+              }
+            }
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "43d91272-0166-407a-93da-2bd7dff2701b",
+          "end": "user_993c6f",
+          "start": "user_flow_4bc2fd__start__"
+        },
+        {
+          "id": "9edfe3b7-5858-4a6c-b7d0-9fa52134cd32",
+          "end": "user_flow_4bc2fd__end__",
+          "start": "user_993c6f"
+        }
+      ],
+      "nodes": {
+        "user_993c6f": {
+          "spec": {
+            "kind": "user",
+            "name": "user_993c6f",
+            "fields": [
+              {
+                "kind": "text",
+                "name": "text_output_5c9128",
+                "text": "\ube44\uc6a9 \ucd08\uacfc\ub85c \uc2b9\uc778 \uac70\uc808\ub418\uc5c8\uc2b5\ub2c8\ub2e4. : {flow.private.approval_status}",
+                "direction": "output",
+                "input_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {},
+            "position": {
+              "x": 20,
+              "y": 115
+            },
+            "display_name": "\uc2b9\uc778\uac70\uc808"
+          }
+        },
+        "user_flow_4bc2fd__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "user_flow_4bc2fd__end__",
+            "position": {
+              "x": 20,
+              "y": 210
+            }
+          }
+        },
+        "user_flow_4bc2fd__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "user_flow_4bc2fd__start__",
+            "position": {
+              "x": 20,
+              "y": 66
+            }
+          }
+        }
+      },
+      "schemas": {}
+    },
+    "user_flow_c6f60f": {
+      "spec": {
+        "kind": "user_flow",
+        "name": "user_flow_c6f60f",
+        "metadata": {
+          "ui:generated_name": true
+        },
+        "position": {
+          "x": -22,
+          "y": 286
+        },
+        "dimensions": {
+          "width": 286,
+          "height": 222
+        },
+        "initiators": [],
+        "display_name": "User activity 1",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "assignees": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "wxo-user"
+              }
+            }
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "70f91957-ab8c-4b1d-8d91-c9530b841fd7",
+          "end": "user_6c1e48",
+          "start": "user_flow_c6f60f__start__"
+        },
+        {
+          "id": "86dc798e-3516-40cb-bcc1-b2db05af3828",
+          "end": "user_flow_c6f60f__end__",
+          "start": "user_6c1e48"
+        }
+      ],
+      "nodes": {
+        "user_6c1e48": {
+          "spec": {
+            "kind": "user",
+            "name": "user_6c1e48",
+            "fields": [
+              {
+                "kind": "file",
+                "name": "upload_1dca11",
+                "direction": "input",
+                "output_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "format": "wxo-file"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {
+              "ui:generated_name": true
+            },
+            "position": {
+              "x": 20,
+              "y": 78
+            },
+            "display_name": "File upload 1"
+          }
+        },
+        "user_flow_c6f60f__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "user_flow_c6f60f__end__",
+            "position": {
+              "x": 20,
+              "y": 177
+            }
+          }
+        },
+        "user_flow_c6f60f__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "user_flow_c6f60f__start__",
+            "position": {
+              "x": 20,
+              "y": 0
+            }
+          }
+        }
+      },
+      "schemas": {}
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

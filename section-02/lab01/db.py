@@ -243,6 +243,36 @@ def fetch_requests_by_employee(employee_id: str) -> List[dict]:
         return rows
 
 
+def is_manager(employee_id: str) -> bool:
+    """해당 직원이 관리자인지 확인합니다. (다른 직원의 manager_id로 등록된 경우 True)"""
+    with get_connection() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT COUNT(*) FROM employees WHERE manager_id = %s",
+            (employee_id,),
+        )
+        row = cur.fetchone()
+        cur.close()
+        return row[0] > 0
+
+
+def update_request_status(request_id: str, status: str, approver_id: str) -> bool:
+    """
+    휴가 신청 건의 상태를 변경합니다 (Approved / Rejected).
+    변경된 행이 있으면 True, 없으면(request_id 불일치) False를 반환합니다.
+    """
+    with get_connection() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE vacation_requests SET status = %s WHERE request_id = %s",
+            (status, request_id),
+        )
+        conn.commit()
+        affected = cur.rowcount
+        cur.close()
+        return affected > 0
+
+
 def next_request_id() -> str:
     """기존 request_id 중 최대값 다음 번호(V-1003, V-1004, ...)를 생성합니다."""
     with get_connection() as conn:

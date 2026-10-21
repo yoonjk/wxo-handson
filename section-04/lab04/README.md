@@ -26,13 +26,28 @@ curl http://nexweb.ddnsgeek.com/purchase/openapi.json \
   -f openapi.json 
 ```  
 
+# Import workflow
+```bash
+orchestrate tools import \
+  --kind flow \
+  --file tool_04_array.json
+```
+
 ## export tool
 ```bash
 orchestrate tools export \
   --name tool_04_array_96778s \
   --output day04_foreach_workflow.zip
 ```  
-# List Agents
+
+
+# Agents
+
+## Import Agent
+```bash
+orchestrate agents import -f day04_foreach.yaml
+```
+
 ## API-ENDPOINT
 ```bash
 API_ENDPOINT="https://api.ca-tor.watson-orchestrate.cloud.ibm.com/instances/6a4f1092-b48c-4340-8703-6b22d0c6821a"

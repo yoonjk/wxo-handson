@@ -26,13 +26,25 @@ curl http://nexweb.ddnsgeek.com/purchase/openapi.json \
   -f openapi.json 
 ```  
 
+# Import workflow
+```bash
+orchestrate tools import \
+  --kind flow \
+  --file tool_08_text_extractor_workflow.json
+```
+
 ## export tool
 ```bash
 orchestrate tools export \
   --name tool_08_text_extractor_workflo_53430Z \
   --output day08_doc_extractor_workflow.zip
 ``` 
-# List Agents
+# Agents
+## Import Agent
+```bash
+orchestrate agents import -f day08_doc_extractor.yaml
+```
+
 ## API-ENDPOINT
 ```bash
 API_ENDPOINT="https://api.ca-tor.watson-orchestrate.cloud.ibm.com/instances/6a4f1092-b48c-4340-8703-6b22d0c6821a"

@@ -26,6 +26,13 @@ curl http://nexweb.ddnsgeek.com/purchase/openapi.json \
   -f openapi.json 
 ```  
 
+# Import workflow
+```bash
+orchestrate tools import \
+  --kind flow \
+  --file tool_03_condition_flow.json
+```
+
 ## export tool
 ```bash
 orchestrate tools export \
@@ -71,6 +78,11 @@ AGENT_ID=$(curl -s --request GET \
   --header "Authorization: Bearer ${TOKEN}" \
   | jq -r '.[] | select(.name == "cal_leave_date") | .id')  
 
+```
+
+# Import Agent
+```bash
+orchestrate agents import -f day03_condition.yaml
 ```
 
 # Export Agent

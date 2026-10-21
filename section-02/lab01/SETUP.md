@@ -176,9 +176,9 @@ orchestrate connections configure -a mysql_bank_demo --env live --kind key_value
 orchestrate connections set-credentials -a mysql_bank_demo --env live \
   -e MYSQL_HOST=localhost \
   -e MYSQL_PORT=3306 \
-  -e MYSQL_USER=user \
+  -e MYSQL_USER= \
   -e MYSQL_PASSWORD='' \
-  -e MYSQL_DATABASE=demo
+  -e MYSQL_DATABASE=
 
 # 5) 확인
 orchestrate connections list
