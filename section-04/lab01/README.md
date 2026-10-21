@@ -148,6 +148,6 @@ orchestrate tools export \
 ```bash
 orchestrate tools import \
   --kind flow \
-  --file Agentic_workflow_0134Bq.json
+  --file Agentic_workflow.json
 ```
 
