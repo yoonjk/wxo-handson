@@ -17,7 +17,7 @@
         "tags": [
           "Health"
         ],
-        "summary": "API와 MySQL 연결 상태를 SELECT 1로 확인",
+        "summary": "API 연결 상태를 확인",
         "description": "인증 없이 MySQL 연결을 얻어 SELECT 1을 실행합니다. 성공하면 HTTP 200을 반환합니다. 구매 데이터를 생성하거나 변경하지 않으며 요청 파라미터와 본문은 없습니다.\n\n프로세스 생존 확인만 하는 API와 달리 DB 연결이 가능해야 성공합니다. 단, purchase_requests 테이블의 존재·권한·업무 처리 성공을 보장하지는 않습니다. DB 접속 실패는 현재 구현에서 처리되지 않은 서버 오류(기본 HTTP 500)로 전달됩니다.",
         "operationId": "health_check",
         "responses": {

@@ -65,27 +65,33 @@ Description:
 구매 승인 A2A 에이전트 연결
 ```
 
-# connection 등록 draft/live
-- draft
-orchestrate connections add -a purchase_approval_a2a_dev
-
-- live
+## connection 등록
+```bash
 orchestrate connections add -a purchase_approval_a2a
-
-
+```
+## connection configure
+- draft
 ```bash
 orchestrate connections configure \
-  -a purchase_approval_a2a_dev \
+  -a purchase_approval_a2a \
+  --env draft \
+  --type team \
+  --kind bearer
+```  
+- live
+```bash
+orchestrate connections configure \
+  -a purchase_approval_a2a \
   --env live \
   --type team \
   --kind bearer
 ```  
 
-## token 등록
+## connection credentials
 - draft
 ```bash
 orchestrate connections set-credentials \
-  --app-id purchase_approval_a2a_dev \
+  --app-id purchase_approval_a2a \
   --env draft \
   --token "$A2A_BEARER_TOKEN"
 ```
@@ -93,7 +99,7 @@ orchestrate connections set-credentials \
 - live
 ```bash
 orchestrate connections set-credentials \
-  --app-id purchase_approval_a2a_dev \
+  --app-id purchase_approval_a2a \
   --env live \
   --token "$A2A_BEARER_TOKEN"
 ```

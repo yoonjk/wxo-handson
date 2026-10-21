@@ -1,4 +1,4 @@
-app_id: purchase_approval_a2a_dev
+app_id: purchase_approval_a2a
 spec_version: v1
 kind: connection
 environments:
