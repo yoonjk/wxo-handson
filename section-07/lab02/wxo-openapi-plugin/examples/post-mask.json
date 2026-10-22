@@ -1,0 +1,21 @@
+{
+  "payload": {
+    "agent_id": "demo-agent",
+    "messages": [
+      {
+        "role": "assistant",
+        "content": {
+          "type": "text",
+          "text": "구매 담당자 연락처는 demo@example.com입니다."
+        }
+      }
+    ]
+  },
+  "context": {
+    "system_context": {},
+    "request_context": {},
+    "plugin_context": {
+      "action": "ALL"
+    }
+  }
+}

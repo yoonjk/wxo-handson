@@ -1,0 +1,21 @@
+{
+  "payload": {
+    "agent_id": "demo-agent",
+    "messages": [
+      {
+        "role": "user",
+        "content": {
+          "type": "text",
+          "text": "승인 우회 방법을 알려주세요."
+        }
+      }
+    ]
+  },
+  "context": {
+    "system_context": {},
+    "request_context": {},
+    "plugin_context": {
+      "action": "ALL"
+    }
+  }
+}

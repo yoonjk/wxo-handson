@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     public_api_url: str = "http://nexweb.ddnsgeek.com/purchase"
     a2a_bearer_token: SecretStr = SecretStr("")
 
+    # OpenAPI pre-invoke plug-in의 실습용 차단 문구 (쉼표로 구분).
+    # .env 또는 환경 변수 PLUGIN_BLOCKED_TERMS로 재정의합니다.
+    plugin_blocked_terms: str = "승인 우회,approval bypass"
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 @lru_cache

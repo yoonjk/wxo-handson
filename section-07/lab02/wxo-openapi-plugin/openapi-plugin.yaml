@@ -1,0 +1,87 @@
+openapi: 3.0.3
+info:
+  title: watsonx Orchestrate OpenAPI Plugin Demo
+  version: 1.0.0
+servers:
+- url: http://localhost:8000
+paths:
+  /agent_pre_invoke:
+    post:
+      summary: Agent Pre Invoke
+      description: 사용자 입력의 차단 문구를 검사하고 이메일을 마스킹합니다.
+      operationId: purchase_guardrail_pre
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - payload
+              - context
+              properties:
+                payload:
+                  type: object
+                  additionalProperties: true
+                context:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '200':
+          description: Plugin result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - continue_processing
+                properties:
+                  continue_processing:
+                    type: boolean
+                  modified_payload:
+                    type: object
+                    additionalProperties: true
+        '422':
+          description: Invalid request body
+      x-ibm-orchestrate-plugin:
+        hook: agent_pre_invoke
+  /agent_post_invoke:
+    post:
+      summary: Agent Post Invoke
+      description: 응답 messages의 assistant 텍스트에서 이메일을 마스킹합니다.
+      operationId: purchase_email_mask_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - payload
+              - context
+              properties:
+                payload:
+                  type: object
+                  additionalProperties: true
+                context:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '200':
+          description: Plugin result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - continue_processing
+                properties:
+                  continue_processing:
+                    type: boolean
+                  modified_payload:
+                    type: object
+                    additionalProperties: true
+        '422':
+          description: Invalid request body
+      x-ibm-orchestrate-plugin:
+        hook: agent_post_invoke

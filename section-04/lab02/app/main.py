@@ -8,6 +8,7 @@ from app.api.routes.health import router as health_router
 from app.api.routes.products import router as product_router
 from app.api.routes.purchases import router as purchase_router
 from app.api.routes.a2a import router as a2a_router
+from app.api.routes.plugins import router as plugin_router
 from app.core.config import get_settings
 from app.db.connection import Base, engine
 
@@ -76,3 +77,6 @@ app.include_router(purchase_router)
 
 # A2A(Agent-to-Agent) API
 app.include_router(a2a_router)
+
+# 에이전트 실행 전/후 OpenAPI plug-in (DB를 사용하지 않습니다.)
+app.include_router(plugin_router)

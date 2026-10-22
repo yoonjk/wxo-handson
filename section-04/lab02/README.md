@@ -82,7 +82,7 @@ curl -X PATCH http://localhost:8010/api/purchase-requests/1/status \
 
 
 ```bash
-orchestrate env activate nexweb-env
+orchestrate env activate nexweb-env1019
 ```
 
 # Export openapi
@@ -111,75 +111,7 @@ orchestrate tools export \
   --name update_purchase_status \
   --output update_purchase_status.zip
 ```
-## TOKEN
-```bash
-TOKEN=$(curl -s -X POST \
-  --url https://iam.cloud.ibm.com/identity/token \
-  --header "Content-Type: application/x-www-form-urlencoded" \
-  --data "grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${WO_API_KEY}" \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
-```
 
-# List Agents
-```bash
-curl -s --request GET \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r ".[].name"
-```
-
-# findByName : AGENT_ID
-```bash
-orchestrate agents list -v
-
-
-curl -s --request GET \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "day02_decision")'
-
-AGENT_ID=$(curl -s --request GET \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  | jq -r '.[] | select(.name == "day02_decision") | .id')  
-
-```
-# Import Agent
-```bash
-orchestrate agents import -f day02_decision.yaml
-```
-
-# Export Agent
-```bash
-orchestrate agents export \
-  -n "day02_decision" \
-  -k native \
-  -o day02_decision.yaml \
-  --agent-only  
-```
-
-# Update Agent Name
-```bash
-curl --request PATCH \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "name": "day02_decision",
-    "display_name": "구매 요청 승인"
-  }'
-```
-
-```bash
-curl --request PATCH \
-  --url "${API_ENDPOINT}/v1/orchestrate/agents/${AGENT_ID}" \
-  --header "Authorization: Bearer ${TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "name": "day01_firstworkflow",
-    "display_name": "day01-firstworkflow"
-  }'
-```
 
 # Update Agent
 ```bash
