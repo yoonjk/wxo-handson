@@ -949,7 +949,10 @@ function runPopupSmokeTest(context) {
 }
 
 async function addNotification(context, payload, eventId) {
-  if (notificationItems.some((item) => String(item.event_id) === String(eventId))) return;
+  if (notificationItems.some((item) => String(item.event_id) === String(eventId))) {
+    output.appendLine(`[event_duplicate] event_id=${eventId} already stored; popup suppressed`);
+    return;
+  }
   notificationItems.push({
     event_id: eventId,
     event_type: payload.event_type,
@@ -985,6 +988,13 @@ async function addNotification(context, payload, eventId) {
   } else {
     popupPreview = false;
     updatePopup();
+    // A webview may still exist while hidden behind another editor tab.
+    // Bring it forward for a new notification, but leave the admin composer
+    // undisturbed while it is being edited.
+    if (!adminDrawerOpen) {
+      notificationPanel.reveal(vscode.ViewColumn.Active, false);
+      output.appendLine(`[popup_revealed] event_id=${eventId} ticket_key=${payload.ticket_key}`);
+    }
     // Re-send after HTML refresh so the Webview receives the current value.
     updateNotificationStatus();
   }

@@ -92,8 +92,8 @@ Add an MCP server > Remote MCP server
 ```bash
 orchestrate toolkits add \
   --kind mcp \
-  --name nexweb_mcp \
-  --description "NEXWEB 원격 MCP 서버" \
+  --name mcpgateway \
+  --description "원격 MCP 서버" \
   --url "http://nexweb.ddnsgeek.com:14444/servers/f50b2bab745f4e19a6396f578a390f58/mcp" \
   --transport "streamable_http" \
   --tools "*" \

@@ -22,13 +22,13 @@ npm install
 npm run package
 ```
 
-The package is written as `bob-notifier-1.8.1.vsix`.
+The package is written as `bob-notifier-1.8.3.vsix`.
 
 ## Install in IBM Bob
 
 1. Open Bob's **Extensions** view.
 2. Open the view's `...` menu and choose **Install from VSIX...**.
-3. Select `bob-notifier-1.8.1.vsix` and reload Bob if prompted.
+3. Select `bob-notifier-1.8.3.vsix` and reload Bob if prompted.
 4. In Bob, open the Command Palette and run **IBM Bob Notifier: Set Bearer Token**. Enter the raw token mapped to this Bob user's employee number, without the `Bearer ` prefix. The token is stored in VS Code SecretStorage, not in `settings.json`.
 5. Set `ibmBobNotification.sseUrl` to the endpoint reachable from Bob. Existing `itsmSrNotifier.*` values are read as a fallback after upgrading. For example:
 
