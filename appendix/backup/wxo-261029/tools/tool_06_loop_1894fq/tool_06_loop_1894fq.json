@@ -1,0 +1,326 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "tool_06_loop_1894fq",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "06_loop_workflow",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "retry_count"
+      ],
+      "properties": {
+        "retry_count": {
+          "type": "integer",
+          "description": "\ucd08\uae30 \uc785\ub825\uac12"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "tries": {
+          "type": "integer",
+          "description": ""
+        },
+        "valid": {
+          "type": "boolean",
+          "description": ""
+        },
+        "start_no": {
+          "type": "integer",
+          "default": "",
+          "description": ""
+        }
+      }
+    },
+    "private_schema": {
+      "type": "object",
+      "properties": {
+        "is_valid": {
+          "type": "boolean",
+          "description": ""
+        },
+        "retry_count": {
+          "type": "integer",
+          "description": ""
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "d33e107e-e001-4bd2-839e-e678fc1820ae",
+      "end": "script_722b4b",
+      "start": "__start__"
+    },
+    {
+      "id": "b6250d76-02ca-47b1-b7b6-a415b5e421d5",
+      "end": "loop_0cf167",
+      "start": "script_722b4b"
+    },
+    {
+      "id": "54b386f3-2689-4a7d-a38a-a022cc93072b",
+      "end": "script_46bb10",
+      "start": "loop_0cf167"
+    },
+    {
+      "id": "42e23615-c488-44fc-90e0-3b0e07392b16",
+      "end": "__end__",
+      "start": "script_46bb10"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": -0.5929028968361791,
+          "y": 1057.0402665218999
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": 1.1853970222669545,
+          "y": 82.9777915586868
+        }
+      }
+    },
+    "loop_0cf167": {
+      "spec": {
+        "kind": "loop",
+        "name": "loop_0cf167",
+        "position": {
+          "x": -40,
+          "y": 347
+        },
+        "evaluator": {
+          "conditions": [],
+          "expression": "flow.private.retry_count < 10 and not flow.private.is_valid"
+        },
+        "dimensions": {
+          "width": 326,
+          "height": 554.8818982651906
+        },
+        "initiators": [],
+        "display_name": "retry",
+        "input_schema": {
+          "type": "object",
+          "properties": {}
+        },
+        "output_schema": {
+          "type": "object",
+          "properties": {}
+        },
+        "private_schema": {
+          "type": "object",
+          "properties": {
+            "start_no": {
+              "type": "integer",
+              "default": "",
+              "description": ""
+            }
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "d33427c0-c9da-4096-81e4-c062c1b1dfbc",
+          "end": "script_f26346",
+          "start": "loop_0cf167__start__"
+        },
+        {
+          "id": "c0603a78-64e5-43aa-86fb-b33f5c8de3a4",
+          "end": "user_flow_bc69a9",
+          "start": "script_f26346"
+        },
+        {
+          "id": "c2723673-c2a3-400d-ad31-7d3c1fc0b7ea",
+          "end": "loop_0cf167__end__",
+          "start": "user_flow_bc69a9"
+        }
+      ],
+      "nodes": {
+        "script_f26346": {
+          "spec": {
+            "fn": "flow.private.retry_count = (flow.private.retry_count or 0) + 1\n\n# \uc2e4\ubb34\uc5d0\uc11c\ub294 \uc5ec\uae30\uc11c \uc7ac\ucd94\ucd9c\uc744 \uc2dc\ub3c4\ud558\uace0 confidence\ub97c \uac80\uc0ac\ud55c\ub2e4.\n# \uc2e4\uc2b5\uc5d0\uc11c\ub294 3\ubc88\uc9f8 \uc2dc\ub3c4\uc5d0 \uc131\uacf5\ud558\ub294 \uac83\uc73c\ub85c \ud749\ub0b4\ub0b8\ub2e4.\nif flow.private.retry_count >= 10:\n    flow.private.is_valid = True\n",
+            "kind": "script",
+            "name": "script_f26346",
+            "position": {
+              "x": 40,
+              "y": 75.38741188146173
+            },
+            "display_name": "attempt"
+          }
+        },
+        "user_flow_bc69a9": {
+          "spec": {
+            "kind": "user_flow",
+            "name": "user_flow_bc69a9",
+            "metadata": {
+              "ui:generated_name": true
+            },
+            "position": {
+              "x": 20.56754320517892,
+              "y": 220.1727734384201
+            },
+            "dimensions": {
+              "width": 286,
+              "height": 245
+            },
+            "initiators": [],
+            "display_name": "User activity 1",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "assignees": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "wxo-user"
+                  }
+                }
+              }
+            }
+          },
+          "edges": [
+            {
+              "id": "b6204616-2f51-4e4e-9d10-e5dacb0f6586",
+              "end": "user_0dc05e",
+              "start": "user_flow_bc69a9__start__"
+            },
+            {
+              "id": "4ef56321-4460-4598-943b-f933b3f52cd0",
+              "end": "user_flow_bc69a9__end__",
+              "start": "user_0dc05e"
+            }
+          ],
+          "nodes": {
+            "user_0dc05e": {
+              "spec": {
+                "kind": "user",
+                "name": "user_0dc05e",
+                "fields": [
+                  {
+                    "kind": "text",
+                    "name": "text_output_c08d1b",
+                    "text": "retry count : {flow.private.retry_count}                        \nis_vaid : {flow.private.is_valid}",
+                    "direction": "output",
+                    "input_schema": {
+                      "type": "object",
+                      "required": [
+                        "value"
+                      ],
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                ],
+                "owners": [],
+                "metadata": {},
+                "position": {
+                  "x": 20,
+                  "y": 83
+                },
+                "display_name": "print retry_count"
+              }
+            },
+            "user_flow_bc69a9__end__": {
+              "spec": {
+                "kind": "end",
+                "name": "user_flow_bc69a9__end__",
+                "position": {
+                  "x": 20,
+                  "y": 199
+                }
+              }
+            },
+            "user_flow_bc69a9__start__": {
+              "spec": {
+                "kind": "start",
+                "name": "user_flow_bc69a9__start__",
+                "position": {
+                  "x": 20,
+                  "y": 20
+                }
+              }
+            }
+          },
+          "schemas": {}
+        },
+        "loop_0cf167__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "loop_0cf167__end__",
+            "position": {
+              "x": 40,
+              "y": 509.88189826519056
+            }
+          }
+        },
+        "loop_0cf167__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "loop_0cf167__start__",
+            "position": {
+              "x": 40,
+              "y": 20
+            }
+          }
+        }
+      },
+      "schemas": {}
+    },
+    "script_46bb10": {
+      "spec": {
+        "fn": "self.output.tries = flow.private.retry_count or 0\nself.output.valid = bool(flow.private.is_valid)\nself.output.start_no = flow.private.start_no\n\n",
+        "kind": "script",
+        "name": "script_46bb10",
+        "position": {
+          "x": 0.5924941254307896,
+          "y": 943.6372329378974
+        },
+        "display_name": "after_loop"
+      }
+    },
+    "script_722b4b": {
+      "spec": {
+        "fn": "flow.private.retry_count = flow.input.retry_count\nflow.private.start_no = flow.input.retry_count\nflow.private.is_valid = False",
+        "kind": "script",
+        "name": "script_722b4b",
+        "position": {
+          "x": 1,
+          "y": 200
+        },
+        "display_name": "normalize"
+      }
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

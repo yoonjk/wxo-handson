@@ -1,0 +1,578 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "tool_08_text_extractor_workflo_53430Z",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "08_document_extractor_workflow",
+    "input_schema": {},
+    "output_schema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "approval": {
+          "type": "string",
+          "description": ""
+        },
+        "approval_text": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "private_schema": {
+      "type": "object",
+      "properties": {
+        "extractor_result": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "853af022-e17e-4451-a870-f9aedf0ca1c7",
+      "end": "user_flow_bdf066",
+      "start": "__start__"
+    },
+    {
+      "id": "4e90708a-850c-441a-957a-5c4151858edd",
+      "end": "prompt_01317f",
+      "start": "docext_613e2735-2a0e-47ce-ac67-f6ec0b18437c"
+    },
+    {
+      "id": "1f8ee4a4-1d99-4ab9-81db-2aa2bc369f39",
+      "end": "docext_613e2735-2a0e-47ce-ac67-f6ec0b18437c",
+      "start": "user_flow_bdf066"
+    },
+    {
+      "id": "dda2a453-bac7-44a4-bc05-3e546c942af1",
+      "end": "script_21d231",
+      "start": "prompt_01317f"
+    },
+    {
+      "id": "b7008fae-eccf-408e-99a6-9f2fc5f9cb2e",
+      "end": "branch_f76a43",
+      "start": "script_21d231"
+    },
+    {
+      "id": "d92e22a2-8dfa-45af-b842-35d1f70b86aa",
+      "end": "script_8cacb6",
+      "start": "branch_f76a43",
+      "metadata": {
+        "user_renamed": true
+      },
+      "display_name": "Reject"
+    },
+    {
+      "id": "f48f1842-8f4d-4054-8652-b7189779d3a5",
+      "end": "script_e50683",
+      "start": "branch_f76a43",
+      "metadata": {
+        "user_renamed": true
+      },
+      "display_name": "Approval"
+    },
+    {
+      "id": "b1d53ed2-49a0-45e5-ac0f-52447d928ccd",
+      "end": "__end__",
+      "start": "script_e50683"
+    },
+    {
+      "id": "d50bcbc7-dcbb-4f99-83b7-95067a0ed9fa",
+      "end": "__end__",
+      "start": "script_8cacb6"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": 12,
+          "y": 1232.8125
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": -16,
+          "y": 273
+        }
+      }
+    },
+    "branch_f76a43": {
+      "spec": {
+        "kind": "branch",
+        "name": "branch_f76a43",
+        "position": {
+          "x": -13,
+          "y": 952.21875
+        },
+        "evaluator": {
+          "conditions": [
+            {
+              "default": false,
+              "edge_id": "d92e22a2-8dfa-45af-b842-35d1f70b86aa",
+              "metadata": {
+                "conditions": []
+              },
+              "expression": "{flow.private.item_total > flow.private.budget}"
+            },
+            {
+              "default": true,
+              "edge_id": "f48f1842-8f4d-4054-8652-b7189779d3a5",
+              "metadata": {}
+            }
+          ]
+        },
+        "display_name": "Approval determination",
+        "match_policy": "FIRST_MATCH"
+      }
+    },
+    "prompt_01317f": {
+      "spec": {
+        "llm": "groq/openai/gpt-oss-120b",
+        "kind": "prompt",
+        "name": "prompt_01317f",
+        "metadata": {
+          "creativity_slider_position": "5",
+          "creativity_slider_manual_override": false
+        },
+        "position": {
+          "x": -14,
+          "y": 750.21875
+        },
+        "test_data": [],
+        "description": "",
+        "user_prompt": "\ub2e4\uc74c \uad6c\ub9e4\uc694\uccad\uc11c \ud14d\uc2a4\ud2b8\ub97c \ubd84\uc11d\ud558\uc5ec JSON\uc73c\ub85c \ubc18\ud658\ud558\uc138\uc694.\n\n\ucd94\ucd9c \ud544\ub4dc:\n- requester: \uad6c\ub9e4 \uc694\uccad\uc790\n- items: \uad6c\ub9e4 \ud488\ubaa9 \ubc30\uc5f4\n- reason: \uad6c\ub9e4 \uc0ac\uc720\n- total: \ucd1d\uc561\n\n\uaddc\uce59:\n- items\uc758 \uac01 \ud56d\ubaa9\uc5d0\ub294 name, quantity\ub97c \ud3ec\ud568\ud558\uc138\uc694.\n- total\uc740 \uc22b\uc790\ub85c \ubc18\ud658\ud558\uc138\uc694.\n- \uc124\uba85\uc774\ub098 Markdown\uc740 \ubc18\ud658\ud558\uc9c0 \ub9c8\uc138\uc694.\n- \ubc18\ub4dc\uc2dc \uc720\ud6a8\ud55c JSON\ub9cc \ubc18\ud658\ud558\uc138\uc694.\n\n\uc785\ub825 \ud14d\uc2a4\ud2b8:\n{{Document extractor.text}}",
+        "display_name": "Generative prompt",
+        "input_schema": {
+          "type": "object",
+          "title": "input_data",
+          "required": [],
+          "properties": {}
+        },
+        "output_schema": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        "system_prompt": "",
+        "llm_parameters": {
+          "top_k": 30,
+          "top_p": 0.7,
+          "temperature": 0.4,
+          "max_new_tokens": 200,
+          "min_new_tokens": 50,
+          "stop_sequences": [
+            "Human",
+            "AI"
+          ]
+        },
+        "prompt_examples": [],
+        "error_handler_config": {
+          "max_retries": 0,
+          "error_message": "Something went wrong while running 'Generative prompt'",
+          "retry_interval": 1000
+        },
+        "include_agent_context": false
+      },
+      "input_map": {
+        "spec": {
+          "maps": [],
+          "name": "",
+          "fallback_strategy": "ask_the_user"
+        }
+      }
+    },
+    "script_21d231": {
+      "spec": {
+        "fn": "# Generative prompt\uc758 \ucd9c\ub825\uac12\uc744 \uac00\uc838\uc635\ub2c8\ub2e4.\nprompt_output = flow[\"Generative prompt\"].output\n\n# \ucd9c\ub825\uac12\uc774 JSON \ubb38\uc790\uc5f4\uc778 \uacbd\uc6b0 \uac1d\uccb4\ub85c \ubcc0\ud658\ud569\ub2c8\ub2e4.\nif isinstance(prompt_output, str):\n    prompt_output = json.loads(prompt_output)\n\n# \ucd9c\ub825 \uad6c\uc870\uac00 \ub2e4\uc74c\uacfc \uac19\uc740 \uacbd\uc6b0\ub97c \ucc98\ub9ac\ud569\ub2c8\ub2e4.\n# { \"purchase_request\": { ... } }\nif isinstance(prompt_output, dict) and \"purchase_request\" in prompt_output:\n    request = prompt_output[\"purchase_request\"]\nelse:\n    request = prompt_output\n\n# items\uac00 \uc5c6\uac70\ub098 None\uc774\uba74 \ube48 \ubc30\uc5f4\ub85c \ucc98\ub9ac\ud569\ub2c8\ub2e4.\nitems = request.get(\"items\") or []\n\n# \uc608\uc0b0 \uac12\uc744 \uc77d\uc2b5\ub2c8\ub2e4.\nbudget = request.get(\"budget\") or 0\n\n# \ud488\ubaa9\ubcc4 \ud569\uacc4\ub97c \uacc4\uc0b0\ud569\ub2c8\ub2e4.\nitem_total = 0\n\nfor item in items:\n    quantity = item.get(\"quantity\") or 0\n    unitprice = item.get(\"unitprice\") or 0\n\n    item_total += quantity * unitprice\n\n# Branch node\uc5d0\uc11c \uc0ac\uc6a9\ud560 \uac12\uc744 \uc800\uc7a5\ud569\ub2c8\ub2e4.\nflow.private.item_total = item_total\nflow.private.budget = budget\nflow.private.items_count = len(items)\nflow.private.validation_error = (\n    \"\" if items else \"\uad6c\ub9e4 \ud488\ubaa9 \ubaa9\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.\"\n)",
+        "kind": "script",
+        "name": "script_21d231",
+        "position": {
+          "x": -13,
+          "y": 848.21875
+        },
+        "display_name": "Calculate Items"
+      }
+    },
+    "script_8cacb6": {
+      "spec": {
+        "fn": "flow.private.approval = \"REJECT\"\nflow.private.approval_text = \"\uc608\uc0b0 \ucd08\uacfc\"",
+        "kind": "script",
+        "name": "script_8cacb6",
+        "position": {
+          "x": -116,
+          "y": 1103
+        },
+        "display_name": "REJECT"
+      }
+    },
+    "script_e50683": {
+      "spec": {
+        "fn": "flow.private.approval = \"APPROVED\"\nflow.private.approval_text = \"\uc2b9\uc778\ub418\uc5c8\uc2b5\ub2c8\ub2e4\"",
+        "kind": "script",
+        "name": "script_e50683",
+        "position": {
+          "x": 210,
+          "y": 1095.21875
+        },
+        "display_name": "APPROVED"
+      }
+    },
+    "user_flow_bdf066": {
+      "spec": {
+        "kind": "user_flow",
+        "name": "user_flow_bdf066",
+        "label": "User activity 1",
+        "metadata": {
+          "ui:generated_name": true
+        },
+        "position": {
+          "x": -36,
+          "y": 415
+        },
+        "dimensions": {
+          "width": 286,
+          "height": 215
+        },
+        "initiators": [],
+        "display_name": "User activity 1",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "assignees": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "wxo-user"
+              }
+            }
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "ff0d95a0-42d5-4542-8d43-9742c30a15b2",
+          "end": "user_2ff0c3",
+          "start": "user_flow_bdf066__start__"
+        },
+        {
+          "id": "34e914a7-02fb-4f80-86b3-e8c7ac9806d4",
+          "end": "user_flow_bdf066__end__",
+          "start": "user_2ff0c3"
+        }
+      ],
+      "nodes": {
+        "user_2ff0c3": {
+          "spec": {
+            "kind": "user",
+            "name": "user_2ff0c3",
+            "fields": [
+              {
+                "kind": "file",
+                "name": "upload_1bba50",
+                "uiSchema": {
+                  "ui:title": "File upload 1",
+                  "ui:widget": "FileUpload"
+                },
+                "direction": "input",
+                "jsonSchema": {
+                  "type": "object",
+                  "required": [],
+                  "properties": {
+                    "upload_1bba50": {
+                      "type": "array",
+                      "items": {},
+                      "multi": false,
+                      "title": "File upload 1"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "display_name": "File upload 1",
+                "input_schema": {
+                  "type": "object",
+                  "required": [],
+                  "properties": {},
+                  "additionalProperties": false
+                },
+                "spec_version": "2.0",
+                "output_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "format": "wxo-file"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {
+              "ui:generated_name": true
+            },
+            "position": {
+              "x": 20,
+              "y": 77
+            },
+            "display_name": "File upload 1"
+          }
+        },
+        "user_flow_bdf066__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "user_flow_bdf066__end__",
+            "position": {
+              "x": 20,
+              "y": 170
+            }
+          }
+        },
+        "user_flow_bdf066__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "user_flow_bdf066__start__",
+            "position": {
+              "x": 20,
+              "y": 20
+            }
+          }
+        }
+      },
+      "schemas": {}
+    },
+    "docext_613e2735-2a0e-47ce-ac67-f6ec0b18437c": {
+      "spec": {
+        "kind": "docext",
+        "name": "docext_613e2735-2a0e-47ce-ac67-f6ec0b18437c",
+        "task": "custom_field_extraction",
+        "config": {
+          "llm": "watsonx/mistralai/mistral-small-3-1-24b-instruct-2503",
+          "type": "agreement",
+          "domain": "other",
+          "fields": [
+            {
+              "name": "products",
+              "type": "table",
+              "fields": [
+                {
+                  "name": "sku",
+                  "type": "string",
+                  "examples": [],
+                  "field_name": "sku",
+                  "description": "",
+                  "example_value": "",
+                  "multiple_mentions": false
+                },
+                {
+                  "name": "quantity",
+                  "type": "string",
+                  "examples": [],
+                  "field_name": "quantity",
+                  "description": "",
+                  "example_value": "",
+                  "multiple_mentions": false
+                },
+                {
+                  "name": "unitprice",
+                  "type": "string",
+                  "examples": [],
+                  "field_name": "unitprice",
+                  "description": "",
+                  "example_value": "",
+                  "multiple_mentions": false
+                }
+              ],
+              "examples": [],
+              "field_name": "products",
+              "description": "",
+              "example_value": "",
+              "multiple_mentions": false
+            },
+            {
+              "name": "reason",
+              "type": "string",
+              "examples": [],
+              "field_name": "reason",
+              "description": "",
+              "example_value": "",
+              "multiple_mentions": false
+            },
+            {
+              "name": "budget",
+              "type": "string",
+              "examples": [],
+              "field_name": "budget",
+              "description": "",
+              "example_value": "",
+              "multiple_mentions": false
+            },
+            {
+              "name": "total",
+              "type": "string",
+              "examples": [],
+              "field_name": "total",
+              "description": "",
+              "example_value": "",
+              "multiple_mentions": false
+            },
+            {
+              "name": "requester",
+              "type": "string",
+              "examples": [],
+              "field_name": "requester",
+              "description": "",
+              "example_value": "",
+              "multiple_mentions": false
+            }
+          ],
+          "lastModelUpdateTs": 1789941508934,
+          "field_extraction_method": "layout"
+        },
+        "version": "TIP",
+        "position": {
+          "x": -15,
+          "y": 659.21875
+        },
+        "display_name": "Document extractor",
+        "input_schema": {
+          "type": "object",
+          "title": "Document extractor input",
+          "required": [
+            "document_ref"
+          ],
+          "properties": {
+            "document_ref": {
+              "type": "string",
+              "title": "File reference",
+              "format": "wxo-file",
+              "description": "A URL identifying the File to be used."
+            }
+          }
+        },
+        "enable_review": true,
+        "is_configured": true,
+        "output_schema": {
+          "type": "object",
+          "title": "Field values",
+          "required": [
+            "products",
+            "reason",
+            "budget",
+            "total",
+            "requester"
+          ],
+          "properties": {
+            "total": {
+              "type": "string",
+              "title": "total",
+              "description": "Extracted value for total"
+            },
+            "budget": {
+              "type": "string",
+              "title": "budget",
+              "description": "Extracted value for budget"
+            },
+            "reason": {
+              "type": "string",
+              "title": "reason",
+              "description": "Extracted value for reason"
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "sku",
+                  "quantity",
+                  "unitprice"
+                ],
+                "properties": {
+                  "sku": {
+                    "type": "string",
+                    "title": "sku",
+                    "description": "Extracted value for sku"
+                  },
+                  "quantity": {
+                    "type": "string",
+                    "title": "quantity",
+                    "description": "Extracted value for quantity"
+                  },
+                  "unitprice": {
+                    "type": "string",
+                    "title": "unitprice",
+                    "description": "Extracted value for unitprice"
+                  }
+                }
+              },
+              "title": "products",
+              "description": "Extracted table for products"
+            },
+            "requester": {
+              "type": "string",
+              "title": "requester",
+              "description": "Extracted value for requester"
+            }
+          }
+        },
+        "review_fields": [
+          "products",
+          "reason",
+          "budget",
+          "total",
+          "requester"
+        ],
+        "min_confidence": 0.95,
+        "review_assignee_option": "flow_initiator"
+      },
+      "input_map": {
+        "spec": {
+          "maps": [
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.document_ref",
+              "value_expression": "flow[\"User activity 1\"][\"File upload 1\"].output.value"
+            }
+          ],
+          "name": "",
+          "fallback_strategy": "ask_the_user"
+        }
+      }
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

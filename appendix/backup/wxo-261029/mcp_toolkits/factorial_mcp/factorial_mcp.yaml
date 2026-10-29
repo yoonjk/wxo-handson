@@ -1,0 +1,10 @@
+kind: mcp
+name: factorial_mcp
+description: 'Factorial MCP Server: compute n! value and digit count'
+connections: []
+package_root: factorial_mcp
+command: python3 server.py
+tools:
+- factorial_value
+- factorial_digits
+spec_version: v1

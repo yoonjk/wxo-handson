@@ -1,0 +1,457 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "tool_04_foreach_adv_7664Sg",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "05_foreach_adv_workflow",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sku": {
+                "type": "string",
+                "description": ""
+              },
+              "quantity": {
+                "type": "integer",
+                "description": ""
+              }
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "lines": {
+          "type": "object",
+          "required": [
+            "items"
+          ],
+          "properties": {
+            "items": {
+              "type": "object",
+              "properties": {},
+              "description": ""
+            }
+          },
+          "description": ""
+        },
+        "total": {
+          "type": "integer",
+          "description": ""
+        }
+      }
+    },
+    "private_schema": {
+      "type": "object",
+      "properties": {
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "object",
+                "properties": {},
+                "description": ""
+              }
+            }
+          },
+          "default": [],
+          "description": ""
+        },
+        "total": {
+          "type": "integer",
+          "description": ""
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "9828ff6a-012d-4717-89b3-b16bc41d8706",
+      "end": "script_4823b3",
+      "start": "__start__"
+    },
+    {
+      "id": "74197cd6-f30f-4549-afd9-af41ee511edb",
+      "end": "foreach_4eafa0",
+      "start": "script_4823b3"
+    },
+    {
+      "id": "5bc4ede6-0011-4afc-800c-688e1d3b070a",
+      "end": "script_23529f",
+      "start": "foreach_4eafa0"
+    },
+    {
+      "id": "ce5cf9fc-b716-42e9-8384-4d47c2b1722a",
+      "end": "__end__",
+      "start": "script_23529f"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": 39,
+          "y": 1191.375
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": 43,
+          "y": 71
+        }
+      }
+    },
+    "script_23529f": {
+      "spec": {
+        "fn": "flow.output.lines = flow.private.lines\nflow.output.total = flow.private.total",
+        "kind": "script",
+        "name": "script_23529f",
+        "position": {
+          "x": 40,
+          "y": 1081.0625
+        },
+        "display_name": "set prvivte to output"
+      }
+    },
+    "script_4823b3": {
+      "spec": {
+        "fn": "flow.private.lines = []\nflow.private.total = 0",
+        "kind": "script",
+        "name": "script_4823b3",
+        "position": {
+          "x": 41,
+          "y": 200
+        },
+        "display_name": "init_variables"
+      }
+    },
+    "foreach_4eafa0": {
+      "spec": {
+        "kind": "foreach",
+        "name": "foreach_4eafa0",
+        "position": {
+          "x": 20,
+          "y": 350
+        },
+        "dimensions": {
+          "width": 286,
+          "height": 690
+        },
+        "initiators": [],
+        "display_name": "Process items",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "additionalProperties": false
+        },
+        "foreach_policy": "SEQUENTIAL",
+        "private_schema": {
+          "type": "object",
+          "properties": {
+            "sku": {
+              "type": "string",
+              "description": ""
+            },
+            "name": {
+              "type": "string",
+              "description": "product\uc758 name"
+            },
+            "index": {
+              "type": "integer",
+              "description": "Current index for the iteration"
+            },
+            "line_total": {
+              "type": "integer",
+              "description": ""
+            },
+            "line_result": {
+              "type": "object",
+              "required": [
+                "string1"
+              ],
+              "properties": {
+                "string1": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "description": ""
+            },
+            "current_item": {
+              "description": "Current item for the iteration"
+            }
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "224f3e04-81f5-4e6a-ad18-cdcbf1c192cb",
+          "end": "script_9ecbce",
+          "start": "foreach_4eafa0__start__"
+        },
+        {
+          "id": "be60dc64-2080-445e-8903-78de6ae6d7c1",
+          "end": "script_e8471a",
+          "start": "tool_e9ab0e"
+        },
+        {
+          "id": "df93325b-7a74-4fa9-b758-797a6ba1369c",
+          "end": "script_8f221d",
+          "start": "script_e8471a"
+        },
+        {
+          "id": "3a7957bd-e493-4686-821f-b3419ccaa16b",
+          "end": "tool_e9ab0e",
+          "start": "script_9ecbce"
+        },
+        {
+          "id": "af538b2b-bdcc-4789-88f9-97ccf5046055",
+          "end": "script_26f6a3",
+          "start": "script_8f221d"
+        },
+        {
+          "id": "3f2dff07-f071-47b3-bbe2-2c2ae4ed9e74",
+          "end": "foreach_4eafa0__end__",
+          "start": "script_26f6a3"
+        }
+      ],
+      "nodes": {
+        "tool_e9ab0e": {
+          "spec": {
+            "kind": "tool",
+            "name": "tool_e9ab0e",
+            "tool": "get_product_by_sku:05900831-d1a5-4e5a-946c-c8fce4832daf",
+            "position": {
+              "x": 21,
+              "y": 208
+            },
+            "description": "\uc9c0\uc815\ud55c SKU\uc758 \ud65c\uc131 \ubb3c\ud488\uc744 \uc870\ud68c\ud558\uace0 1\uac1c \uae30\uc900 \ub2e8\uac00(unit_price)\ub97c \ubc18\ud658\ud569\ub2c8\ub2e4. SKU\ub294 \ub300\uc18c\ubb38\uc790\ub97c \uad6c\ubd84\ud558\uc9c0 \uc54a\uc73c\uba70 \uc11c\ubc84\uc5d0\uc11c \ub300\ubb38\uc790\ub85c \uc815\uaddc\ud654\ud569\ub2c8\ub2e4.",
+            "display_name": "Get product by API",
+            "input_schema": {
+              "type": "object",
+              "required": [
+                "sku"
+              ],
+              "properties": {
+                "sku": {
+                  "in": "path",
+                  "type": "string",
+                  "title": "sku",
+                  "examples": [
+                    "NOTEBOOK",
+                    "MONITOR",
+                    "KEYBOARD"
+                  ],
+                  "aliasName": "sku",
+                  "maxLength": 50,
+                  "minLength": 1,
+                  "description": "\uc870\ud68c\ud560 \ubb3c\ud488 SKU"
+                }
+              }
+            },
+            "output_schema": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "type": "string",
+                  "title": "Sku",
+                  "examples": [
+                    "NOTEBOOK"
+                  ],
+                  "description": "\ubb3c\ud488\uc744 \uc2dd\ubcc4\ud558\ub294 \ub300\ubb38\uc790 SKU"
+                },
+                "name": {
+                  "type": "string",
+                  "title": "Name",
+                  "examples": [
+                    "\ub178\ud2b8\ubd81"
+                  ],
+                  "description": "\ubb3c\ud488\uba85"
+                },
+                "active": {
+                  "type": "boolean",
+                  "title": "Active",
+                  "examples": [
+                    true
+                  ],
+                  "description": "\ud604\uc7ac \uad6c\ub9e4 \uac00\ub2a5\ud55c \ubb3c\ud488\uc778\uc9c0 \uc5ec\ubd80"
+                },
+                "unit_price": {
+                  "type": "string",
+                  "title": "Unit Price",
+                  "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                  "examples": [
+                    1200000
+                  ],
+                  "description": "\ubb3c\ud488 1\uac1c\uc758 \ub2e8\uac00"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Description",
+                  "description": "\ubb3c\ud488 \uc124\uba85"
+                }
+              }
+            },
+            "error_handler_config": {
+              "max_retries": 0,
+              "error_message": "Something went wrong while running 'Get product by API'",
+              "retry_interval": 1000
+            }
+          },
+          "input_map": {
+            "spec": {
+              "maps": [
+                {
+                  "metadata": {
+                    "assignmentType": "variable"
+                  },
+                  "has_no_value": false,
+                  "target_variable": "self.input.sku",
+                  "value_expression": "flow[\"Process items\"].private.sku"
+                }
+              ],
+              "name": "",
+              "fallback_strategy": "no_value"
+            }
+          }
+        },
+        "script_26f6a3": {
+          "spec": {
+            "fn": "loop = flow['Process items'].private \nitem = loop.current_item\n\nresult = {\n    \"sku\": item['sku'],\n    'quantity': item['quantity'],\n    'unit_price': loop.unit_price,\n    'line_total': loop.line_total\n}\n\nlines = list(flow.private.lines or [])\nlines.append(result)\nflow.private.lines = lines\nflow.private.total = int(flow.private.total or 0) + int(loop.line_total)\n\n",
+            "kind": "script",
+            "name": "script_26f6a3",
+            "position": {
+              "x": 19,
+              "y": 527
+            },
+            "display_name": "Build line result"
+          }
+        },
+        "script_8f221d": {
+          "spec": {
+            "fn": "loop = flow[\"Process items\"].private\n\nitem  = loop.current_item\n\nloop.line_total = int(item[\"quantity\"]) * int(loop.unit_price)\n\n",
+            "kind": "script",
+            "name": "script_8f221d",
+            "position": {
+              "x": 20,
+              "y": 426
+            },
+            "display_name": "Calculate line total"
+          }
+        },
+        "script_9ecbce": {
+          "spec": {
+            "fn": "loop = flow[\"Process items\"].private\nitem = loop.current_item or {}\n\nif not isinstance(item, dict):\n    raise ValueError(f\"current item\uc774 \uac1d\uccb4\uac00 \uc544\ub2d9\ub2c8\ub2e4: {item!r}\")\n\nsku = item.get(\"sku\")\n\nif not sku:\n    raise ValueError(f\"current item\uc5d0 sku\uac00 \uc5c6\uc2b5\ub2c8\ub2e4: {item!r}\")\n\nloop.sku = str(sku).strip().upper()",
+            "kind": "script",
+            "name": "script_9ecbce",
+            "position": {
+              "x": 20,
+              "y": 104
+            },
+            "display_name": "set sku name"
+          }
+        },
+        "script_e8471a": {
+          "spec": {
+            "fn": "loop = flow[\"Process items\"].private\n\nloop.name = flow[\"Process items\"][\"Get product by API\"].output.name\n\nloop.unit_price = int(float(flow[\"Process items\"][\"Get product by API\"].output.unit_price))",
+            "kind": "script",
+            "name": "script_e8471a",
+            "position": {
+              "x": 20,
+              "y": 316
+            },
+            "display_name": "Determine unit price"
+          }
+        },
+        "foreach_4eafa0__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "foreach_4eafa0__end__",
+            "position": {
+              "x": 20,
+              "y": 645
+            }
+          }
+        },
+        "foreach_4eafa0__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "foreach_4eafa0__start__",
+            "position": {
+              "x": 20,
+              "y": -16
+            }
+          }
+        }
+      },
+      "schemas": {},
+      "input_map": {
+        "spec": {
+          "maps": [
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.value",
+              "value_expression": "flow.input.items"
+            }
+          ],
+          "name": ""
+        }
+      }
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

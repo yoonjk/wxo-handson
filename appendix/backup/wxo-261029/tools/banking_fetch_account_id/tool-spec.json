@@ -1,0 +1,31 @@
+{
+  "name": "banking_fetch_account_id",
+  "description": "Fetch the account ID(s) linked to a customer username or customer number. A customer may have more than one account.",
+  "permission": "admin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "identifier": {
+        "type": "string",
+        "title": "Identifier",
+        "description": "Customer's username or customer number."
+      }
+    },
+    "required": [
+      "identifier"
+    ]
+  },
+  "output_schema": {
+    "type": "string",
+    "description": "A JSON string like {\"accounts\": [\"ACC10001\", \"ACC10004\"]}.\nThe list is empty if no account is linked to the identifier."
+  },
+  "binding": {
+    "python": {
+      "function": "banking_tools:banking_fetch_account_id",
+      "requirements": [
+        "mysql-connector-python>=8.0.33"
+      ]
+    }
+  },
+  "response_format": "content"
+}

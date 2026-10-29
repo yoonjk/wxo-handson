@@ -1,0 +1,37 @@
+{
+  "name": "banking_get_transfer_history",
+  "description": "Get the transfer history (incoming and outgoing) for a specific account. Use this when the user wants to see past transfers for an account, as opposed to raw transactions.",
+  "permission": "admin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "account_id": {
+        "type": "string",
+        "title": "Account Id",
+        "description": "Account identifier."
+      },
+      "limit": {
+        "type": "string",
+        "title": "Limit",
+        "description": "Maximum number of transfer records to return. Defaults to \"20\".",
+        "default": "20"
+      }
+    },
+    "required": [
+      "account_id"
+    ]
+  },
+  "output_schema": {
+    "type": "string",
+    "description": "A JSON string with the list of transfer records, or a JSON error message."
+  },
+  "binding": {
+    "python": {
+      "function": "banking_tools:banking_get_transfer_history",
+      "requirements": [
+        "mysql-connector-python>=8.0.33"
+      ]
+    }
+  },
+  "response_format": "content"
+}

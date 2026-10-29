@@ -1,0 +1,54 @@
+{
+  "name": "banking_initiate_funds_transfer",
+  "description": "Initiate a funds transfer between two accounts (internal).",
+  "permission": "admin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "from_account": {
+        "type": "string",
+        "title": "From Account",
+        "description": "Source account ID."
+      },
+      "to_account": {
+        "type": "string",
+        "title": "To Account",
+        "description": "Destination account ID."
+      },
+      "amount": {
+        "type": "string",
+        "title": "Amount",
+        "description": "Amount as a string (e.g., \"100.50\")."
+      },
+      "currency": {
+        "type": "string",
+        "title": "Currency",
+        "description": "Currency code. Defaults to \"USD\".",
+        "default": "USD"
+      },
+      "reference": {
+        "type": "string",
+        "title": "Reference",
+        "description": "Optional transaction reference/note."
+      }
+    },
+    "required": [
+      "from_account",
+      "to_account",
+      "amount"
+    ]
+  },
+  "output_schema": {
+    "type": "string",
+    "description": "A JSON string with the transfer status, or a JSON error message."
+  },
+  "binding": {
+    "python": {
+      "function": "banking_tools:banking_initiate_funds_transfer",
+      "requirements": [
+        "mysql-connector-python>=8.0.33"
+      ]
+    }
+  },
+  "response_format": "content"
+}

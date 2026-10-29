@@ -1,0 +1,25 @@
+{
+  "name": "Order Processing Flow",
+  "spec": {
+    "name": "order_processing_flow",
+    "description": "Order Processing Flow",
+    "display_name": "Order Processing Flow"
+  },
+  "steps": [
+    {
+      "name": "Start",
+      "type": "start"
+    },
+    {
+      "name": "Step",
+      "type": "task"
+    },
+    {
+      "name": "__flow_end__",
+      "type": "end"
+    }
+  ],
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b"
+  }
+}

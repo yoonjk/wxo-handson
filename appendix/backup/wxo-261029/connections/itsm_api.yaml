@@ -1,0 +1,8 @@
+app_id: itsm_api
+spec_version: v1
+kind: connection
+environments:
+  draft:
+    server_url: http://nexweb.ddnsgeek.com:3463
+    kind: bearer
+    type: team

@@ -1,0 +1,31 @@
+{
+  "name": "banking_retrieve_account_balance",
+  "description": "Get account balance for a given account ID.",
+  "permission": "admin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "account_id": {
+        "type": "string",
+        "title": "Account Id",
+        "description": "Account identifier."
+      }
+    },
+    "required": [
+      "account_id"
+    ]
+  },
+  "output_schema": {
+    "type": "string",
+    "description": "A JSON string with the balance details, or a JSON error message."
+  },
+  "binding": {
+    "python": {
+      "function": "banking_tools:banking_retrieve_account_balance",
+      "requirements": [
+        "mysql-connector-python>=8.0.33"
+      ]
+    }
+  },
+  "response_format": "content"
+}

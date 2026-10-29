@@ -223,8 +223,9 @@ orchestrate connections configure \
 orchestrate connections set-credentials --app-id mysql_bank_demo --env draft \
     -e MYSQL_HOST="localhost" \
     -e MYSQL_PORT="3306" \
-    -e MYSQL_USER="" \
-    -e MYSQL_DATABASE=""
+    -e MYSQL_USER='' \
+    -e MYSQL_PASSWORD='' \
+    -e MYSQL_DATABASE=''
 ```
 
 - live
@@ -232,8 +233,9 @@ orchestrate connections set-credentials --app-id mysql_bank_demo --env draft \
 orchestrate connections set-credentials --app-id mysql_bank_demo --env live \
     -e MYSQL_HOST="localhost" \
     -e MYSQL_PORT="3306" \
-    -e MYSQL_USER="" \
-    -e MYSQL_DATABASE=""
+    -e MYSQL_USER='' \
+    -e MYSQL_PASSWORD='' \
+    -e MYSQL_DATABASE=''
 ```
 
 ### Bearer token 등록

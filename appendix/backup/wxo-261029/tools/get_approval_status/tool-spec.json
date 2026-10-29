@@ -1,0 +1,42 @@
+{
+  "name": "get_approval_status",
+  "description": "\ud734\uac00 \uc2e0\uccad \uac74\uc758 \uc2b9\uc778\ud604\ud669(Pending/Approved/Rejected)\uc744 \uc870\ud68c\ud569\ub2c8\ub2e4.\n\nrequest_id\ub97c \uc54c\uace0 \uc788\uc73c\uba74 \uadf8 \uac74 \ud558\ub098\ub9cc \uc815\ud655\ud788 \uc870\ud68c\ud558\uace0,\nrequest_id\ub97c \ubaa8\ub974\uba74 employee_id\ub85c \ud574\ub2f9 \uc9c1\uc6d0\uc758 \ubaa8\ub4e0 \uc2e0\uccad \uac74\uacfc\n\uac01\uac01\uc758 \uc2b9\uc778\ud604\ud669\uc744 \uc870\ud68c\ud569\ub2c8\ub2e4. \ub458 \ub2e4 \ube44\uc5b4 \uc788\uc73c\uba74 \uc624\ub958\ub97c \ubc18\ud658\ud569\ub2c8\ub2e4.",
+  "permission": "read_only",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "request_id": {
+        "type": "string",
+        "title": "Request Id",
+        "description": "\uc870\ud68c\ud560 \ud2b9\uc815 \ud734\uac00 \uc2e0\uccad \ubc88\ud638 (\uc608: \"V-1005\"). \uc120\ud0dd \uc0ac\ud56d.",
+        "default": ""
+      },
+      "employee_id": {
+        "type": "string",
+        "title": "Employee Id",
+        "description": "request_id\ub97c \ubaa8\ub97c \ub54c \ub300\uc2e0 \uc870\ud68c\ud560 \uc9c1\uc6d0 \uc0ac\ubc88. \uc120\ud0dd \uc0ac\ud56d.",
+        "default": ""
+      }
+    },
+    "required": []
+  },
+  "output_schema": {
+    "type": "object",
+    "description": "\ub2e8\uac74 \uc870\ud68c \uc2dc \ud574\ub2f9 \uc2e0\uccad \uac74\uc758 \uc0c1\ud0dc, \ub2e4\uac74 \uc870\ud68c \uc2dc \uc2e0\uccad \ubaa9\ub85d\uacfc \uac01\uac01\uc758\n\uc0c1\ud0dc\ub97c \ub2f4\uc740 \ub515\uc154\ub108\ub9ac.",
+    "additionalProperties": true
+  },
+  "binding": {
+    "python": {
+      "function": "tools:get_approval_status",
+      "requirements": [
+        "mysql-connector-python>=8.0.33",
+        "SQLAlchemy>=2.0.0",
+        "PyMySQL>=1.1.0"
+      ],
+      "connections": {
+        "mysql_bank_demo": "4d88d377-6fb0-40b0-be31-b630b88635a3"
+      }
+    }
+  },
+  "response_format": "content"
+}

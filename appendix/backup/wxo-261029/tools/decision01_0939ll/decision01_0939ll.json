@@ -1,0 +1,978 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "decision01_0939ll",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "02_decision_workflow",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "purchase_type",
+        "requester",
+        "total_amount",
+        "reason",
+        "request_id"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "description": "\uad6c\ub9e4 \uc0ac\uc720"
+        },
+        "requester": {
+          "type": "string",
+          "description": "\uad6c\ub9e4 \uc694\uccad\uc790"
+        },
+        "request_id": {
+          "type": "integer",
+          "description": "\uad6c\ub9e4 \uc694\uccad \uc2dd\ubcc4\uc790"
+        },
+        "total_amount": {
+          "type": "string",
+          "description": "\uad6c\ub9e4 \uae08\uc561"
+        },
+        "purchase_type": {
+          "type": "string"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "approval": {
+          "type": "boolean",
+          "default": "",
+          "description": ""
+        },
+        "approver_role": {
+          "type": "string",
+          "description": ""
+        },
+        "approval_comment": {
+          "type": "string",
+          "description": "\uc2b9\uc778 \uc694\uccad \uc0ac\uc720"
+        }
+      }
+    },
+    "private_schema": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "description": ""
+        },
+        "budget": {
+          "type": "integer",
+          "description": ""
+        },
+        "approval": {
+          "type": "boolean",
+          "description": ""
+        },
+        "approver_role": {
+          "type": "string",
+          "description": ""
+        },
+        "purchase_type": {
+          "type": "string",
+          "description": ""
+        },
+        "approval_comment": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "7950ed06-2fe0-4feb-8dc6-efd0289a89b2",
+      "end": "decisions_efdd64",
+      "start": "__start__"
+    },
+    {
+      "id": "78c13370-0be2-4ff7-a6d8-da419b270146",
+      "end": "user_flow_a16165",
+      "start": "decisions_efdd64"
+    },
+    {
+      "id": "c4655090-bb25-49cf-91f4-287444544cf5",
+      "end": "branch_f57414",
+      "start": "user_flow_a16165"
+    },
+    {
+      "id": "ac594512-72e0-426d-a715-2970a6894ce2",
+      "end": "tool_1d5c0c",
+      "start": "branch_f57414",
+      "metadata": {
+        "user_renamed": true
+      },
+      "display_name": "Approved"
+    },
+    {
+      "id": "99e67d90-fc21-4205-913f-0f85d432dba4",
+      "end": "tool_812b20",
+      "start": "branch_f57414",
+      "metadata": {
+        "user_renamed": true
+      },
+      "display_name": "Rejected"
+    },
+    {
+      "id": "76b76e63-072e-434a-ba59-919b546c6636",
+      "end": "__end__",
+      "start": "tool_812b20"
+    },
+    {
+      "id": "cbe79d05-5736-49d2-bc6c-80d4d745b5a8",
+      "end": "__end__",
+      "start": "tool_1d5c0c"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": 49,
+          "y": 1138
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": 40,
+          "y": 70
+        }
+      }
+    },
+    "tool_1d5c0c": {
+      "spec": {
+        "kind": "tool",
+        "name": "tool_1d5c0c",
+        "tool": "update_purchase_status:c406e790-cd68-44da-a992-d03c2b532e9a",
+        "position": {
+          "x": -170.17929032617923,
+          "y": 1014.4106305784587
+        },
+        "description": "PENDING \uc0c1\ud0dc\uc778 \uad6c\ub9e4 \uc694\uccad\uc5d0 \uc2b9\uc778 \ub610\ub294 \ubc18\ub824 \uacb0\uacfc\ub97c \uc800\uc7a5\ud569\ub2c8\ub2e4. status\ub294 APPROVED \ub610\ub294 REJECTED\uc774\uba70 approver_role\uc740 \ud544\uc218 \uc5c5\ubb34 \uae30\ub85d \ud544\ub4dc\uc785\ub2c8\ub2e4. comment\ub294 \uc120\ud0dd \uc0ac\ud56d\uc785\ub2c8\ub2e4.\n\n\uc815\uc0c1 \ucc98\ub9ac \ud6c4 \uac31\uc2e0\ub41c \uc694\uccad\uc744 \ubc18\ud658\ud569\ub2c8\ub2e4. \uc774\ubbf8 \uac19\uc740 \ucd5c\uc885 \uc0c1\ud0dc\uc778 \uc694\uccad\uc5d0 \uac19\uc740 \uacb0\uacfc\ub97c \ubcf4\ub0b4\uba74 \ud604\uc7ac \ub808\ucf54\ub4dc\ub97c \uadf8\ub300\ub85c \ubc18\ud658\ud569\ub2c8\ub2e4. \uc774 \uacbd\uc6b0 \uc0c8 comment\ub098 approver_role\uc740 \uc800\uc7a5\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc774\ubbf8 APPROVED\uc778 \uc694\uccad\uc744 REJECTED\ub85c \ubc14\uafb8\uac70\ub098 \uadf8 \ubc18\ub300\uc758 \uc804\uc774\ub294 409\ub97c \ubc18\ud658\ud569\ub2c8\ub2e4. \uc5c6\ub294 id\ub294 404\uc785\ub2c8\ub2e4.\n\n\uc774 API\ub294 approver_role\uc744 \uc774\uc6a9\ud574 \ud638\ucd9c\uc790\uc758 \uad8c\ud55c\uc744 \uc778\uc99d\ud558\uac70\ub098 \uac80\uc0ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \ud638\ucd9c\uc790 \uad8c\ud55c \uac80\uc99d\uc740 \ubcc4\ub3c4\ub85c \uad6c\uc131\ud574\uc57c \ud569\ub2c8\ub2e4.",
+        "display_name": "\uad6c\ub9e4 \uc694\uccad \uc2b9\uc778 \ub610\ub294 \ubc18\ub824",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "status",
+            "approver_role",
+            "request_id"
+          ],
+          "properties": {
+            "status": {
+              "in": "body",
+              "enum": [
+                "APPROVED",
+                "REJECTED"
+              ],
+              "type": "string",
+              "title": "ApprovalStatus",
+              "description": "Allowed final approval results. New requests begin in PENDING."
+            },
+            "comment": {
+              "in": "body",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Comment",
+              "examples": [
+                "\uc608\uc0b0 \ud655\uc778 \uc644\ub8cc"
+              ],
+              "description": "\uc2b9\uc778/\ubc18\ub824 \uc758\uacac\uc785\ub2c8\ub2e4. \uc120\ud0dd \ud56d\ubaa9\uc774\uba70 \ucd5c\ub300 2,000\uc790\uc785\ub2c8\ub2e4. DB \ud544\ub4dc\uba85\uc740 approval_comment\uc785\ub2c8\ub2e4."
+            },
+            "request_id": {
+              "in": "path",
+              "type": "integer",
+              "title": "request_id",
+              "examples": [
+                1
+              ],
+              "aliasName": "request_id",
+              "description": "POST /api/purchase-requests \uc751\ub2f5\uc5d0\uc11c \ubc1b\uc740 \uc815\uc218 id\uc785\ub2c8\ub2e4. DB\uac00 \uc0dd\uc131\ud55c \uad6c\ub9e4 \uc694\uccad \ubc88\ud638\uc774\uba70 \uc694\uccad\uc790 ID\ub098 watsonx Orchestrate \uc2e4\ud589 ID\uac00 \uc544\ub2d9\ub2c8\ub2e4. \uc608\ub97c \ub4e4\uc5b4 \uc0dd\uc131 \uc751\ub2f5\uc774 id=1\uc774\uba74 \uacbd\ub85c\uc5d0 1\uc744 \uc0ac\uc6a9\ud569\ub2c8\ub2e4. \uc815\uc218\uac00 \uc544\ub2c8\uba74 422, \ud574\ub2f9 \uc694\uccad\uc774 \uc5c6\uc73c\uba74 404\ub97c \ubc18\ud658\ud569\ub2c8\ub2e4."
+            },
+            "approver_role": {
+              "in": "body",
+              "type": "string",
+              "title": "Approver Role",
+              "examples": [
+                "IT_MANAGER"
+              ],
+              "maxLength": 100,
+              "minLength": 1,
+              "description": "\uacb0\uacfc\ub97c \uae30\ub85d\ud55c \uc5ed\ud560 \uc774\ub984\uc785\ub2c8\ub2e4. 1~100\uc790 \ud544\uc218 \uc785\ub825\uc785\ub2c8\ub2e4. \uc5c5\ubb34 \uae30\ub85d\uc6a9 \uac12\uc774\uba70 \uc778\uc99d \ub610\ub294 \uad8c\ud55c \uac80\uc0ac\ub97c \uc218\ud589\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+            }
+          }
+        },
+        "output_schema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "title": "Id",
+              "examples": [
+                1
+              ],
+              "description": "DB\uac00 \uc790\ub3d9 \uc0dd\uc131\ud55c \uad6c\ub9e4 \uc694\uccad\uc758 \uc815\uc218 \uc2dd\ubcc4\uc790\uc785\ub2c8\ub2e4."
+            },
+            "reason": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reason",
+              "examples": [
+                "\uac1c\ubc1c\uc6a9 \ub178\ud2b8\ubd81 \uad6c\ub9e4",
+                null
+              ],
+              "description": "\uad6c\ub9e4 \uc0ac\uc720\uc785\ub2c8\ub2e4. \uc785\ub825\ud558\uc9c0 \uc54a\uc73c\uba74 null\uc785\ub2c8\ub2e4."
+            },
+            "status": {
+              "type": "string",
+              "title": "Status",
+              "examples": [
+                "PENDING"
+              ],
+              "description": "\uc694\uccad \uc0c1\ud0dc\uc785\ub2c8\ub2e4. \uc0dd\uc131 \uc2dc PENDING, \ucc98\ub9ac \ud6c4 APPROVED \ub610\ub294 REJECTED\uc785\ub2c8\ub2e4."
+            },
+            "requester": {
+              "type": "string",
+              "title": "Requester",
+              "examples": [
+                "hong.gildong"
+              ],
+              "description": "\uc694\uccad\uc744 \ub4f1\ub85d\ud55c \uc0ac\uc6a9\uc790 \uc2dd\ubcc4 \ubb38\uc790\uc5f4\uc785\ub2c8\ub2e4."
+            },
+            "created_at": {
+              "type": "string",
+              "title": "Created At",
+              "format": "date-time",
+              "examples": [
+                "2026-09-18T09:00:00"
+              ],
+              "description": "DB\uc5d0 \uc694\uccad\uc774 \ucc98\uc74c \uc800\uc7a5\ub41c \uc2dc\uac01\uc785\ub2c8\ub2e4."
+            },
+            "updated_at": {
+              "type": "string",
+              "title": "Updated At",
+              "format": "date-time",
+              "examples": [
+                "2026-09-18T09:05:00"
+              ],
+              "description": "\uc694\uccad\uc774 \ub9c8\uc9c0\ub9c9\uc73c\ub85c \uc800\uc7a5\ub41c \uc2dc\uac01\uc785\ub2c8\ub2e4. DB \uc2dc\uac04\ub300 \uc124\uc815\uc744 \ub530\ub985\ub2c8\ub2e4."
+            },
+            "approved_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Approved At",
+              "examples": [
+                null,
+                "2026-09-18T09:05:00"
+              ],
+              "description": "APPROVED\ub85c \ubcc0\uacbd\ub41c \uc2dc\uac01\uc785\ub2c8\ub2e4. \ubc18\ub824 \ub610\ub294 \ucc98\ub9ac \uc804\uc5d0\ub294 null\uc785\ub2c8\ub2e4."
+            },
+            "total_amount": {
+              "type": "string",
+              "title": "Total Amount",
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "examples": [
+                "1500000.00"
+              ],
+              "description": "\uad6c\ub9e4 \ucd1d\uc561\uc785\ub2c8\ub2e4. JSON \uc751\ub2f5\uc5d0\uc11c \ubb38\uc790\uc5f4\ub85c \uc9c1\ub82c\ud654\ub420 \uc218 \uc788\uc2b5\ub2c8\ub2e4."
+            },
+            "approver_role": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Approver Role",
+              "examples": [
+                null,
+                "IT_MANAGER"
+              ],
+              "description": "\uc2b9\uc778/\ubc18\ub824 \ucc98\ub9ac \uc2dc \ud568\uaed8 \uc800\uc7a5\ud55c \uc5ed\ud560 \ubb38\uc790\uc5f4\uc785\ub2c8\ub2e4. \ucc98\ub9ac \uc804\uc5d0\ub294 null\uc785\ub2c8\ub2e4."
+            },
+            "purchase_type": {
+              "type": "string",
+              "title": "Purchase Type",
+              "examples": [
+                "IT_EQUIPMENT"
+              ],
+              "description": "\ub4f1\ub85d\ub41c \uad6c\ub9e4 \uc720\ud615 \ucf54\ub4dc\uc785\ub2c8\ub2e4."
+            },
+            "approval_comment": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Approval Comment",
+              "examples": [
+                null,
+                "\uc608\uc0b0 \ud655\uc778 \uc644\ub8cc"
+              ],
+              "description": "\uc2b9\uc778/\ubc18\ub824 \ucc98\ub9ac \uc2dc \uc785\ub825\ud55c \uc758\uacac\uc785\ub2c8\ub2e4. \uc785\ub825\ud558\uc9c0 \uc54a\uc73c\uba74 null\uc785\ub2c8\ub2e4."
+            }
+          }
+        },
+        "error_handler_config": {
+          "max_retries": 0,
+          "error_message": "Something went wrong while running '\uad6c\ub9e4 \uc694\uccad \uc2b9\uc778 \ub610\ub294 \ubc18\ub824'",
+          "retry_interval": 1000
+        }
+      },
+      "input_map": {
+        "spec": {
+          "maps": [
+            {
+              "metadata": {
+                "assignmentType": "pyExpression"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.status",
+              "value_expression": "\"APPROVED\""
+            },
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.comment",
+              "value_expression": "flow.private.approval_comment"
+            },
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.approver_role",
+              "value_expression": "flow.private.approver_role"
+            },
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "default_value": "0",
+              "target_variable": "self.input.request_id",
+              "value_expression": "flow.input.request_id"
+            }
+          ],
+          "name": "",
+          "fallback_strategy": "no_value"
+        }
+      }
+    },
+    "tool_812b20": {
+      "spec": {
+        "kind": "tool",
+        "name": "tool_812b20",
+        "tool": "update_purchase_status:c406e790-cd68-44da-a992-d03c2b532e9a",
+        "position": {
+          "x": 330.2687976184948,
+          "y": 1021.285596110765
+        },
+        "description": "PENDING \uc0c1\ud0dc\uc778 \uad6c\ub9e4 \uc694\uccad\uc5d0 \uc2b9\uc778 \ub610\ub294 \ubc18\ub824 \uacb0\uacfc\ub97c \uc800\uc7a5\ud569\ub2c8\ub2e4. status\ub294 APPROVED \ub610\ub294 REJECTED\uc774\uba70 approver_role\uc740 \ud544\uc218 \uc5c5\ubb34 \uae30\ub85d \ud544\ub4dc\uc785\ub2c8\ub2e4. comment\ub294 \uc120\ud0dd \uc0ac\ud56d\uc785\ub2c8\ub2e4.\n\n\uc815\uc0c1 \ucc98\ub9ac \ud6c4 \uac31\uc2e0\ub41c \uc694\uccad\uc744 \ubc18\ud658\ud569\ub2c8\ub2e4. \uc774\ubbf8 \uac19\uc740 \ucd5c\uc885 \uc0c1\ud0dc\uc778 \uc694\uccad\uc5d0 \uac19\uc740 \uacb0\uacfc\ub97c \ubcf4\ub0b4\uba74 \ud604\uc7ac \ub808\ucf54\ub4dc\ub97c \uadf8\ub300\ub85c \ubc18\ud658\ud569\ub2c8\ub2e4. \uc774 \uacbd\uc6b0 \uc0c8 comment\ub098 approver_role\uc740 \uc800\uc7a5\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc774\ubbf8 APPROVED\uc778 \uc694\uccad\uc744 REJECTED\ub85c \ubc14\uafb8\uac70\ub098 \uadf8 \ubc18\ub300\uc758 \uc804\uc774\ub294 409\ub97c \ubc18\ud658\ud569\ub2c8\ub2e4. \uc5c6\ub294 id\ub294 404\uc785\ub2c8\ub2e4.\n\n\uc774 API\ub294 approver_role\uc744 \uc774\uc6a9\ud574 \ud638\ucd9c\uc790\uc758 \uad8c\ud55c\uc744 \uc778\uc99d\ud558\uac70\ub098 \uac80\uc0ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \ud638\ucd9c\uc790 \uad8c\ud55c \uac80\uc99d\uc740 \ubcc4\ub3c4\ub85c \uad6c\uc131\ud574\uc57c \ud569\ub2c8\ub2e4.",
+        "display_name": "\uad6c\ub9e4 \uc694\uccad \uc2b9\uc778 \ub610\ub294 \ubc18\ub824 1",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "status",
+            "approver_role",
+            "request_id"
+          ],
+          "properties": {
+            "status": {
+              "in": "body",
+              "enum": [
+                "APPROVED",
+                "REJECTED"
+              ],
+              "type": "string",
+              "title": "ApprovalStatus",
+              "description": "Allowed final approval results. New requests begin in PENDING."
+            },
+            "comment": {
+              "in": "body",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Comment",
+              "examples": [
+                "\uc608\uc0b0 \ud655\uc778 \uc644\ub8cc"
+              ],
+              "description": "\uc2b9\uc778/\ubc18\ub824 \uc758\uacac\uc785\ub2c8\ub2e4. \uc120\ud0dd \ud56d\ubaa9\uc774\uba70 \ucd5c\ub300 2,000\uc790\uc785\ub2c8\ub2e4. DB \ud544\ub4dc\uba85\uc740 approval_comment\uc785\ub2c8\ub2e4."
+            },
+            "request_id": {
+              "in": "path",
+              "type": "integer",
+              "title": "request_id",
+              "examples": [
+                1
+              ],
+              "aliasName": "request_id",
+              "description": "POST /api/purchase-requests \uc751\ub2f5\uc5d0\uc11c \ubc1b\uc740 \uc815\uc218 id\uc785\ub2c8\ub2e4. DB\uac00 \uc0dd\uc131\ud55c \uad6c\ub9e4 \uc694\uccad \ubc88\ud638\uc774\uba70 \uc694\uccad\uc790 ID\ub098 watsonx Orchestrate \uc2e4\ud589 ID\uac00 \uc544\ub2d9\ub2c8\ub2e4. \uc608\ub97c \ub4e4\uc5b4 \uc0dd\uc131 \uc751\ub2f5\uc774 id=1\uc774\uba74 \uacbd\ub85c\uc5d0 1\uc744 \uc0ac\uc6a9\ud569\ub2c8\ub2e4. \uc815\uc218\uac00 \uc544\ub2c8\uba74 422, \ud574\ub2f9 \uc694\uccad\uc774 \uc5c6\uc73c\uba74 404\ub97c \ubc18\ud658\ud569\ub2c8\ub2e4."
+            },
+            "approver_role": {
+              "in": "body",
+              "type": "string",
+              "title": "Approver Role",
+              "examples": [
+                "IT_MANAGER"
+              ],
+              "maxLength": 100,
+              "minLength": 1,
+              "description": "\uacb0\uacfc\ub97c \uae30\ub85d\ud55c \uc5ed\ud560 \uc774\ub984\uc785\ub2c8\ub2e4. 1~100\uc790 \ud544\uc218 \uc785\ub825\uc785\ub2c8\ub2e4. \uc5c5\ubb34 \uae30\ub85d\uc6a9 \uac12\uc774\uba70 \uc778\uc99d \ub610\ub294 \uad8c\ud55c \uac80\uc0ac\ub97c \uc218\ud589\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+            }
+          }
+        },
+        "output_schema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "title": "Id",
+              "examples": [
+                1
+              ],
+              "description": "DB\uac00 \uc790\ub3d9 \uc0dd\uc131\ud55c \uad6c\ub9e4 \uc694\uccad\uc758 \uc815\uc218 \uc2dd\ubcc4\uc790\uc785\ub2c8\ub2e4."
+            },
+            "reason": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reason",
+              "examples": [
+                "\uac1c\ubc1c\uc6a9 \ub178\ud2b8\ubd81 \uad6c\ub9e4",
+                null
+              ],
+              "description": "\uad6c\ub9e4 \uc0ac\uc720\uc785\ub2c8\ub2e4. \uc785\ub825\ud558\uc9c0 \uc54a\uc73c\uba74 null\uc785\ub2c8\ub2e4."
+            },
+            "status": {
+              "type": "string",
+              "title": "Status",
+              "examples": [
+                "PENDING"
+              ],
+              "description": "\uc694\uccad \uc0c1\ud0dc\uc785\ub2c8\ub2e4. \uc0dd\uc131 \uc2dc PENDING, \ucc98\ub9ac \ud6c4 APPROVED \ub610\ub294 REJECTED\uc785\ub2c8\ub2e4."
+            },
+            "requester": {
+              "type": "string",
+              "title": "Requester",
+              "examples": [
+                "hong.gildong"
+              ],
+              "description": "\uc694\uccad\uc744 \ub4f1\ub85d\ud55c \uc0ac\uc6a9\uc790 \uc2dd\ubcc4 \ubb38\uc790\uc5f4\uc785\ub2c8\ub2e4."
+            },
+            "created_at": {
+              "type": "string",
+              "title": "Created At",
+              "format": "date-time",
+              "examples": [
+                "2026-09-18T09:00:00"
+              ],
+              "description": "DB\uc5d0 \uc694\uccad\uc774 \ucc98\uc74c \uc800\uc7a5\ub41c \uc2dc\uac01\uc785\ub2c8\ub2e4."
+            },
+            "updated_at": {
+              "type": "string",
+              "title": "Updated At",
+              "format": "date-time",
+              "examples": [
+                "2026-09-18T09:05:00"
+              ],
+              "description": "\uc694\uccad\uc774 \ub9c8\uc9c0\ub9c9\uc73c\ub85c \uc800\uc7a5\ub41c \uc2dc\uac01\uc785\ub2c8\ub2e4. DB \uc2dc\uac04\ub300 \uc124\uc815\uc744 \ub530\ub985\ub2c8\ub2e4."
+            },
+            "approved_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Approved At",
+              "examples": [
+                null,
+                "2026-09-18T09:05:00"
+              ],
+              "description": "APPROVED\ub85c \ubcc0\uacbd\ub41c \uc2dc\uac01\uc785\ub2c8\ub2e4. \ubc18\ub824 \ub610\ub294 \ucc98\ub9ac \uc804\uc5d0\ub294 null\uc785\ub2c8\ub2e4."
+            },
+            "total_amount": {
+              "type": "string",
+              "title": "Total Amount",
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "examples": [
+                "1500000.00"
+              ],
+              "description": "\uad6c\ub9e4 \ucd1d\uc561\uc785\ub2c8\ub2e4. JSON \uc751\ub2f5\uc5d0\uc11c \ubb38\uc790\uc5f4\ub85c \uc9c1\ub82c\ud654\ub420 \uc218 \uc788\uc2b5\ub2c8\ub2e4."
+            },
+            "approver_role": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Approver Role",
+              "examples": [
+                null,
+                "IT_MANAGER"
+              ],
+              "description": "\uc2b9\uc778/\ubc18\ub824 \ucc98\ub9ac \uc2dc \ud568\uaed8 \uc800\uc7a5\ud55c \uc5ed\ud560 \ubb38\uc790\uc5f4\uc785\ub2c8\ub2e4. \ucc98\ub9ac \uc804\uc5d0\ub294 null\uc785\ub2c8\ub2e4."
+            },
+            "purchase_type": {
+              "type": "string",
+              "title": "Purchase Type",
+              "examples": [
+                "IT_EQUIPMENT"
+              ],
+              "description": "\ub4f1\ub85d\ub41c \uad6c\ub9e4 \uc720\ud615 \ucf54\ub4dc\uc785\ub2c8\ub2e4."
+            },
+            "approval_comment": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Approval Comment",
+              "examples": [
+                null,
+                "\uc608\uc0b0 \ud655\uc778 \uc644\ub8cc"
+              ],
+              "description": "\uc2b9\uc778/\ubc18\ub824 \ucc98\ub9ac \uc2dc \uc785\ub825\ud55c \uc758\uacac\uc785\ub2c8\ub2e4. \uc785\ub825\ud558\uc9c0 \uc54a\uc73c\uba74 null\uc785\ub2c8\ub2e4."
+            }
+          }
+        },
+        "error_handler_config": {
+          "max_retries": 0,
+          "error_message": "Something went wrong while running '\uad6c\ub9e4 \uc694\uccad \uc2b9\uc778 \ub610\ub294 \ubc18\ub824'",
+          "retry_interval": 1000
+        }
+      },
+      "input_map": {
+        "spec": {
+          "maps": [
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.approver_role",
+              "value_expression": "flow.private.approver_role"
+            },
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.comment",
+              "value_expression": "flow.private.approval_comment"
+            },
+            {
+              "metadata": {
+                "assignmentType": "pyExpression"
+              },
+              "has_no_value": false,
+              "target_variable": "self.input.status",
+              "value_expression": "\"REJECTED\""
+            },
+            {
+              "metadata": {
+                "assignmentType": "variable"
+              },
+              "has_no_value": false,
+              "default_value": "0",
+              "target_variable": "self.input.request_id",
+              "value_expression": "flow.input.request_id"
+            }
+          ],
+          "name": "",
+          "fallback_strategy": "no_value"
+        }
+      }
+    },
+    "branch_f57414": {
+      "spec": {
+        "kind": "branch",
+        "name": "branch_f57414",
+        "position": {
+          "x": 41,
+          "y": 875
+        },
+        "evaluator": {
+          "conditions": [
+            {
+              "default": false,
+              "edge_id": "ac594512-72e0-426d-a715-2970a6894ce2",
+              "metadata": {
+                "conditions": [
+                  {
+                    "value": "True",
+                    "dataType": "boolean",
+                    "operator": "is",
+                    "variableName": "flow.private.approval"
+                  }
+                ]
+              },
+              "expression": "flow.private.approval is True"
+            },
+            {
+              "default": true,
+              "edge_id": "99e67d90-fc21-4205-913f-0f85d432dba4",
+              "metadata": {}
+            }
+          ]
+        },
+        "display_name": "Check approval result",
+        "match_policy": "FIRST_MATCH"
+      }
+    },
+    "decisions_efdd64": {
+      "spec": {
+        "kind": "decisions",
+        "name": "decisions_efdd64",
+        "rules": [
+          {
+            "actions": [
+              {
+                "value": "IT_MANAGER",
+                "variable": "flow.private.approver_role",
+                "column_id": "action_1f7e13"
+              }
+            ],
+            "conditions": [
+              {
+                "value": "== \"IT_EQUIPMENT\"",
+                "variable": "flow.private.purchase_type",
+                "column_id": "condition_d0356d"
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "value": "IT_MANAGER",
+                "variable": "flow.private.approver_role",
+                "column_id": "action_1f7e13"
+              }
+            ],
+            "conditions": [
+              {
+                "value": "== \"SOFTWARE\"",
+                "variable": "flow.private.purchase_type",
+                "column_id": "condition_d0356d"
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "value": "GENERAL_AFFAIRS_MANAGER",
+                "variable": "flow.private.approver_role",
+                "column_id": "action_1f7e13"
+              }
+            ],
+            "conditions": [
+              {
+                "value": "== \"OFFICE_SUPPLIES\"",
+                "variable": "flow.private.purchase_type",
+                "column_id": "condition_d0356d"
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "value": "PURCHASE_MANAGER",
+                "variable": "flow.private.approver_role",
+                "column_id": "action_1f7e13"
+              }
+            ],
+            "conditions": [
+              {
+                "value": "== \"FURNITURE\"",
+                "variable": "flow.private.purchase_type",
+                "column_id": "condition_d0356d"
+              }
+            ]
+          }
+        ],
+        "position": {
+          "x": 40,
+          "y": 190
+        },
+        "display_name": "Determine purchase approver",
+        "default_actions": {
+          "flow.private.approver_role": "PURCHASE_MANAGER"
+        },
+        "decisionTableColumns": [
+          {
+            "variable": "flow.private.purchase_type",
+            "column_id": "condition_d0356d",
+            "display_name": "Determine purchase approver"
+          },
+          {
+            "variable": "flow.private.approver_role",
+            "column_id": "action_1f7e13",
+            "display_name": "Action 1"
+          }
+        ]
+      }
+    },
+    "user_flow_a16165": {
+      "spec": {
+        "kind": "user_flow",
+        "name": "user_flow_a16165",
+        "metadata": {},
+        "position": {
+          "x": 20,
+          "y": 350
+        },
+        "dimensions": {
+          "width": 286,
+          "height": 483
+        },
+        "initiators": [],
+        "display_name": "Purchase approval",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "assignees": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "wxo-user"
+              }
+            }
+          }
+        },
+        "assignment_policy": "initiator"
+      },
+      "edges": [
+        {
+          "id": "3be761d8-da81-4b9a-8534-ac69b5fca584",
+          "end": "user_d62213",
+          "start": "user_flow_a16165__start__"
+        },
+        {
+          "id": "797815b0-55e7-4a5f-885c-5a8dccaaf75e",
+          "end": "user_34725d",
+          "start": "user_d62213"
+        },
+        {
+          "id": "fa544fd4-7058-4730-9850-b76fccfa0395",
+          "end": "user_9621f8",
+          "start": "user_34725d"
+        },
+        {
+          "id": "f6fdfb2b-219b-4ec8-94d9-8542a7860975",
+          "end": "user_flow_a16165__end__",
+          "start": "user_9621f8"
+        }
+      ],
+      "nodes": {
+        "user_34725d": {
+          "spec": {
+            "kind": "user",
+            "name": "user_34725d",
+            "fields": [
+              {
+                "kind": "boolean",
+                "name": "boolean_154743",
+                "direction": "input",
+                "output_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {},
+            "position": {
+              "x": 20,
+              "y": 202
+            },
+            "display_name": "\uc774 \uad6c\ub9e4 \uc694\uccad\uc744 \uc2b9\uc778\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
+          }
+        },
+        "user_9621f8": {
+          "spec": {
+            "kind": "user",
+            "name": "user_9621f8",
+            "fields": [
+              {
+                "kind": "text",
+                "name": "text_input_9d83bb",
+                "direction": "input",
+                "output_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {},
+            "position": {
+              "x": 19,
+              "y": 316
+            },
+            "display_name": "\uc2b9\uc778 \ub610\ub294 \ubc18\ub824 \uc758\uacac\uc744 \uc785\ub825\ud574 \uc8fc\uc138\uc694."
+          }
+        },
+        "user_d62213": {
+          "spec": {
+            "kind": "user",
+            "name": "user_d62213",
+            "fields": [
+              {
+                "kind": "text",
+                "name": "text_output_93d663",
+                "text": "\uad6c\ub9e4 \uc694\uccad\uc744 \ud655\uc778\ud574 \uc8fc\uc138\uc694.                                                      \n\uad6c\ub9e4 \uc720\ud615: {flow.input.purchase_type}                                                      \n\uc2b9\uc778 \ub2f4\ub2f9 \uc5ed\ud560: {flow.private.approver_role}                                                      \n",
+                "direction": "output",
+                "input_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {},
+            "position": {
+              "x": 20,
+              "y": 104
+            },
+            "display_name": "\uad6c\ub9e4 \uc694\uccad \uc2b9\uc778"
+          }
+        },
+        "user_flow_a16165__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "user_flow_a16165__end__",
+            "position": {
+              "x": 20,
+              "y": 438
+            }
+          }
+        },
+        "user_flow_a16165__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "user_flow_a16165__start__",
+            "position": {
+              "x": 20,
+              "y": -16
+            }
+          }
+        }
+      },
+      "schemas": {},
+      "input_map": {
+        "spec": {
+          "maps": [],
+          "name": ""
+        }
+      }
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [
+        {
+          "metadata": {
+            "assignmentType": "variable"
+          },
+          "has_no_value": false,
+          "target_variable": "self.output.approval",
+          "value_expression": null
+        }
+      ],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

@@ -54,6 +54,8 @@ ADK CLI에서 connection을 만들고, draft와 live 각 환경에 key-value 자
 
 ADK CLI가 설치·인증되어 있고 현재 환경이 draft인지 확인합니다. toolkit 루트 폴더에서 실행합니다.
 
+toolkit은 dedicate server or premium plan만 가능
+
 ```bash
 orchestrate env list
 orchestrate env activate draft
@@ -63,13 +65,28 @@ orchestrate toolkits add \
   --description "HR 휴가 잔여일, 휴가 일정 충돌, 신청 및 승인현황 관리" \
   --package-root . \
   --tier small \
-  --app-id mysql__demo
+  --app-id mysql_bank_demo
 ```
+- 수행 결과
+Failed to create toolkit: Dedicated Deployment (deployment_tier) is only available for PREMIUM plan customers or accounts with dedicated deployment enabled. Please upgrade your plan or contact support
+
+
+
+```
+orchestrate tools import \
+  --kind python \
+  --name hr_leave_toolkit \
+  --description "HR 휴가 잔여일, 휴가 일정 충돌, 신청 및 승인현황 관리" \
+  --package-root . \
+  --tier small \
+  --app-id mysql_bank_demo
+```
+
 
 - live
 ```bash
 orchestrate connections configure \
-  --app-id mysql_hr_demo --env live --kind key_value --type team
+  --app-id mysql_bank_demo --env live --kind key_value --type team
 ```
 
 `--tier small`은 Python toolkit 전용 실행 tier가 계정에서 활성화되어 있어야 사용할 수 있습니다. IBM ADK 문서상 tier는 Python toolkit에 필요하며 플랜별로 제공 여부가 다를 수 있습니다. 명령 옵션이 설치된 ADK와 다르면 `orchestrate toolkits add --help` 결과를 따르세요.

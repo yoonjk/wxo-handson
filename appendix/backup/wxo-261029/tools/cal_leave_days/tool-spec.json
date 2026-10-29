@@ -1,0 +1,38 @@
+{
+  "name": "cal_leave_days",
+  "description": "\uc785\uc0ac\uc77c\uacfc \ud604\uc7ac \ub0a0\uc9dc\ub97c \uae30\uc900\uc73c\ub85c \uc0ac\uc6a9 \uac00\ub2a5\ud55c \uc5f0\ucc28 \uc77c\uc218\ub97c \uacc4\uc0b0\ud569\ub2c8\ub2e4.\n",
+  "permission": "read_only",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "join_date": {
+        "type": "string",
+        "title": "Join Date",
+        "description": "\uc785\uc0ac\uc77c (YYYY-MM-DD)"
+      },
+      "current_date": {
+        "type": "string",
+        "title": "Current Date",
+        "description": "\uae30\uc900\uc77c (YYYY-MM-DD)"
+      }
+    },
+    "required": [
+      "join_date",
+      "current_date"
+    ]
+  },
+  "output_schema": {
+    "type": "object",
+    "description": "\uadfc\uc18d\uc5f0\ucc28\uc640 \uc0ac\uc6a9 \uac00\ub2a5 \uc5f0\ucc28 \uc77c\uc218",
+    "additionalProperties": true
+  },
+  "binding": {
+    "python": {
+      "function": "leave_calculator:cal_leave_days",
+      "requirements": [
+        "mysql-connector-python>=8.0.33"
+      ]
+    }
+  },
+  "response_format": "content"
+}

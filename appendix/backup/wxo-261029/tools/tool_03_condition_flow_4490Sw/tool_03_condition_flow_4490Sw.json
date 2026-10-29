@@ -1,0 +1,376 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "tool_03_condition_flow_4490Sw",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "03_condition_workflow",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "total",
+        "budget"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "budget": {
+          "type": "integer",
+          "description": "\uc608\uc0b0"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "route": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "private_schema": {
+      "type": "object",
+      "properties": {
+        "route": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "ef8b849e-268e-4005-9d32-a3bc4b15cb6d",
+      "end": "user_flow_acd775",
+      "start": "__start__"
+    },
+    {
+      "id": "b6d87f89-ed88-4677-a04a-80aaa43e0e68",
+      "end": "__end__",
+      "start": "user_flow_acd775"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": -4,
+          "y": 762.7158098537436
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": -3.6736146347930116,
+          "y": 54.74987314745185
+        }
+      }
+    },
+    "user_flow_acd775": {
+      "spec": {
+        "kind": "user_flow",
+        "name": "user_flow_acd775",
+        "metadata": {
+          "ui:generated_name": true
+        },
+        "position": {
+          "x": -180,
+          "y": 223
+        },
+        "dimensions": {
+          "width": 600,
+          "height": 501.55462664753804
+        },
+        "initiators": [],
+        "display_name": "User activity 1",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "assignees": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "wxo-user"
+              }
+            }
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "919d6ac3-93d6-46c9-b41f-0b52cdb27cc9",
+          "end": "branch_0780f3",
+          "start": "user_flow_acd775__start__"
+        },
+        {
+          "id": "7b231a4c-654b-4245-b1d2-0ddef10bfacd",
+          "end": "decisions_56df84",
+          "start": "branch_0780f3",
+          "metadata": {
+            "user_renamed": true
+          },
+          "display_name": "Reject"
+        },
+        {
+          "id": "b599e3d1-3076-4df5-abf7-e3bfee894c25",
+          "end": "decisions_70a268",
+          "start": "branch_0780f3",
+          "metadata": {
+            "user_renamed": true
+          },
+          "display_name": "default"
+        },
+        {
+          "id": "de1998fd-b2a2-4048-816a-ac57518dca92",
+          "end": "user_04f329",
+          "start": "decisions_70a268"
+        },
+        {
+          "id": "4ea189c8-1bfc-46ac-bc23-518c2fa5611a",
+          "end": "user_flow_acd775__end__",
+          "start": "user_04f329"
+        },
+        {
+          "id": "0d19b33e-128b-4200-a380-c81641fc8cdd",
+          "end": "user_flow_acd775__end__",
+          "start": "user_dd55fc"
+        },
+        {
+          "id": "e4980372-de1a-4a4f-8f5a-f5f1a3570013",
+          "end": "user_dd55fc",
+          "start": "decisions_56df84"
+        }
+      ],
+      "nodes": {
+        "user_04f329": {
+          "spec": {
+            "kind": "user",
+            "name": "user_04f329",
+            "fields": [
+              {
+                "kind": "text",
+                "name": "text_output_3e2aac",
+                "text": "\uc2b9\uc778 \ucc98\ub9ac \uacb0\uacfc:{flow.private.route}",
+                "direction": "output",
+                "input_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {},
+            "position": {
+              "x": 322,
+              "y": 316.6521614822227
+            },
+            "display_name": "\uc2b9\uc778 \ucc98\ub77c \uacb0\uacfc"
+          }
+        },
+        "user_dd55fc": {
+          "spec": {
+            "kind": "user",
+            "name": "user_dd55fc",
+            "fields": [
+              {
+                "kind": "text",
+                "name": "text_output_3f96f4",
+                "text": "\uc608\uc0b0\uc744 \ucd08\uacfc\ud558\uc5ec \uc694\uccad\uc774 \uac70\uc808\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
+                "direction": "output",
+                "input_schema": {
+                  "type": "object",
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "owners": [],
+            "metadata": {},
+            "position": {
+              "x": 39.6504108608859,
+              "y": 317.02290103181724
+            },
+            "display_name": "\uc2b9\uc778 \uac70\uc808"
+          }
+        },
+        "branch_0780f3": {
+          "spec": {
+            "kind": "branch",
+            "name": "branch_0780f3",
+            "position": {
+              "x": 177.93008217217715,
+              "y": 66.44240799875428
+            },
+            "evaluator": {
+              "conditions": [
+                {
+                  "default": false,
+                  "edge_id": "7b231a4c-654b-4245-b1d2-0ddef10bfacd",
+                  "metadata": {
+                    "conditions": []
+                  },
+                  "expression": "flow.input.total>flow.input.budget"
+                },
+                {
+                  "default": true,
+                  "edge_id": "b599e3d1-3076-4df5-abf7-e3bfee894c25",
+                  "metadata": {}
+                }
+              ]
+            },
+            "display_name": "Check budget",
+            "match_policy": "FIRST_MATCH"
+          }
+        },
+        "decisions_56df84": {
+          "spec": {
+            "kind": "decisions",
+            "name": "decisions_56df84",
+            "rules": [
+              {
+                "actions": [
+                  {
+                    "value": "REJECTED",
+                    "variable": "flow.output.route",
+                    "column_id": "action_eb7c62"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "value": "< 1000000",
+                    "variable": "flow.input.total",
+                    "column_id": "condition_dd18fe"
+                  }
+                ]
+              }
+            ],
+            "position": {
+              "x": 40.67361463479301,
+              "y": 191.30165282480414
+            },
+            "display_name": "Set rejected route",
+            "default_actions": {
+              "flow.output.route": "REJECTED"
+            },
+            "decisionTableColumns": [
+              {
+                "variable": "flow.input.total",
+                "column_id": "condition_dd18fe",
+                "display_name": "Condition 1"
+              },
+              {
+                "variable": "flow.output.route",
+                "column_id": "action_eb7c62",
+                "display_name": "Action 1"
+              }
+            ]
+          }
+        },
+        "decisions_70a268": {
+          "spec": {
+            "kind": "decisions",
+            "name": "decisions_70a268",
+            "rules": [
+              {
+                "actions": [
+                  {
+                    "value": "PENDING_APPROVAL",
+                    "variable": "flow.private.route",
+                    "column_id": "action_34b80b"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "value": "> 1000000",
+                    "variable": "flow.input.total",
+                    "column_id": "condition_de3334"
+                  }
+                ]
+              }
+            ],
+            "position": {
+              "x": 323.18418984003324,
+              "y": 189.91037587693194
+            },
+            "display_name": "Determine within-budget route",
+            "default_actions": {
+              "flow.private.route": "AUTO_APPROVED"
+            },
+            "decisionTableColumns": [
+              {
+                "variable": "flow.input.total",
+                "column_id": "condition_de3334",
+                "display_name": "Condition 1"
+              },
+              {
+                "variable": "flow.private.route",
+                "column_id": "action_34b80b",
+                "display_name": "Action 1"
+              }
+            ]
+          }
+        },
+        "user_flow_acd775__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "user_flow_acd775__end__",
+            "position": {
+              "x": 177,
+              "y": 458.55462664753804
+            }
+          }
+        },
+        "user_flow_acd775__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "user_flow_acd775__start__",
+            "position": {
+              "x": 177,
+              "y": 0
+            }
+          }
+        }
+      },
+      "schemas": {}
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

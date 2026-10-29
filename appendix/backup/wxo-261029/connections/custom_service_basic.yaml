@@ -1,0 +1,11 @@
+app_id: custom_service_basic
+spec_version: v1
+kind: connection
+environments:
+  draft:
+    server_url: http://nexweb.ddnsgeek.com:3464
+    kind: basic
+    type: team
+resource:
+  component: knowledge
+  category: custom_service

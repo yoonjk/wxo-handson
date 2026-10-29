@@ -1,0 +1,298 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "tool_06_parallel_8212Gt",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "07_parallel_workflow",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "requester",
+        "total",
+        "budget"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "budget": {
+          "type": "integer"
+        },
+        "requester": {
+          "type": "string"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "approval_result": {
+          "type": "object",
+          "required": [
+            "audit_message",
+            "budget_status",
+            "approval_route",
+            "requester_status"
+          ],
+          "properties": {
+            "audit_message": {
+              "type": "string",
+              "description": ""
+            },
+            "budget_status": {
+              "type": "string",
+              "description": ""
+            },
+            "approval_route": {
+              "type": "string",
+              "description": ""
+            },
+            "requester_status": {
+              "type": "string",
+              "description": ""
+            }
+          },
+          "description": ""
+        }
+      }
+    },
+    "private_schema": {
+      "type": "object",
+      "properties": {
+        "gap": {
+          "type": "integer",
+          "description": ""
+        },
+        "over_budget": {
+          "type": "boolean",
+          "description": ""
+        },
+        "is_duplicate": {
+          "type": "boolean",
+          "description": ""
+        },
+        "approval_route": {
+          "type": "string",
+          "description": ""
+        },
+        "approval_status": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "2ad66521-3253-44b8-9a15-19e3c877376f",
+      "end": "script_8b769e",
+      "start": "__start__"
+    },
+    {
+      "id": "beb884ce-b6cd-476a-adfd-9b6981643e9c",
+      "end": "parallel_ab754c",
+      "start": "script_8b769e"
+    },
+    {
+      "id": "ef78a6e2-b81f-4d4b-83f3-52bc57eaaf7f",
+      "end": "script_b268ad",
+      "start": "parallel_ab754c"
+    },
+    {
+      "id": "2967cb8d-3727-4c64-8c1f-f0b517c95970",
+      "end": "__end__",
+      "start": "script_b268ad"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": 277.07795419146805,
+          "y": 812.9653975139177
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": 277,
+          "y": 68
+        }
+      }
+    },
+    "script_8b769e": {
+      "spec": {
+        "fn": "flow.private.total = int(flow.input.total or 0)\nflow.private.budget = int(flow.input.budget or 0)\nflow.private.requester = str(flow.input.requester or \"\").strip()",
+        "kind": "script",
+        "name": "script_8b769e",
+        "position": {
+          "x": 278.4134185753555,
+          "y": 178.76613742559582
+        },
+        "display_name": "normalize"
+      }
+    },
+    "script_b268ad": {
+      "spec": {
+        "fn": "budget_status = str(\n    flow.private.budget_status or \"\"\n).strip().upper()\n\nrequester_status = str(\n    flow.private.requester_status or \"\"\n).strip().upper()\n\nif (\n    budget_status == \"WITHIN_BUDGET\"\n    and requester_status == \"VALID\"\n):\n    approval_route = \"AUTO_APPROVED\"\nelse:\n    approval_route = \"PENDING_APPROVAL\"\n\nflow.private.approval_route = approval_route\n\nflow.private.approval_result = {\n    \"budget_status\": budget_status,\n    \"requester_status\": requester_status,\n    \"audit_message\": flow.private.audit_message,\n    \"approval_route\": approval_route,\n}",
+        "kind": "script",
+        "name": "script_b268ad",
+        "position": {
+          "x": 276,
+          "y": 710.6528975139177
+        },
+        "display_name": "Join results"
+      }
+    },
+    "parallel_ab754c": {
+      "spec": {
+        "kind": "parallel",
+        "name": "parallel_ab754c",
+        "position": {
+          "x": -21,
+          "y": 325
+        },
+        "dimensions": {
+          "width": 850,
+          "height": 337.5
+        },
+        "initiators": [],
+        "display_name": "Parallel Check",
+        "input_schema": {
+          "type": "object",
+          "properties": {}
+        },
+        "output_schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "edges": [
+        {
+          "id": "cdaf1937-4d15-4c65-bdad-f1495c3761f5",
+          "end": "script_9f9f0d",
+          "start": "parallel_ab754c__start__",
+          "metadata": {
+            "user_renamed": false
+          },
+          "display_name": "Path 1"
+        },
+        {
+          "id": "5b92dff9-3e07-44a6-b339-4c506b4f9cd9",
+          "end": "script_981b4c",
+          "start": "parallel_ab754c__start__",
+          "metadata": {
+            "user_renamed": false
+          },
+          "display_name": "Path 2"
+        },
+        {
+          "id": "db59c09e-08ee-487d-bb2f-3ae6b8813a29",
+          "end": "parallel_ab754c__end__",
+          "start": "script_981b4c"
+        },
+        {
+          "id": "d2ef6457-6563-41f5-83fb-9243f1a07d1a",
+          "end": "script_8a8a47",
+          "start": "parallel_ab754c__start__",
+          "metadata": {
+            "user_renamed": false
+          },
+          "display_name": "Path 3"
+        },
+        {
+          "id": "7e3c1acb-b87a-431a-b958-fe47a441b51c",
+          "end": "parallel_ab754c__end__",
+          "start": "script_8a8a47"
+        },
+        {
+          "id": "793b1ba4-13f1-4594-872c-eabc31d815f0",
+          "end": "parallel_ab754c__end__",
+          "start": "script_9f9f0d"
+        }
+      ],
+      "nodes": {
+        "script_8a8a47": {
+          "spec": {
+            "fn": "requester = str(flow.private.requester or \"\").strip()\ntotal = int(flow.private.total or 0)\n\nflow.private.audit_message = (\n    f\"\uad6c\ub9e4 \uc694\uccad\uc790={requester}, \uc694\uccad \uae08\uc561={total}\"\n)",
+            "kind": "script",
+            "name": "script_8a8a47",
+            "position": {
+              "x": 565,
+              "y": 110
+            },
+            "display_name": "Prepare audit message"
+          }
+        },
+        "script_981b4c": {
+          "spec": {
+            "fn": "requester = str(flow.private.requester or \"\").strip()\n\nif requester:\n    flow.private.requester_status = \"VALID\"\nelse:\n    flow.private.requester_status = \"INVALID\"",
+            "kind": "script",
+            "name": "script_981b4c",
+            "position": {
+              "x": 303,
+              "y": 109
+            },
+            "display_name": "Validate requester"
+          }
+        },
+        "script_9f9f0d": {
+          "spec": {
+            "fn": "total = int(flow.private.total or 0)\nbudget = int(flow.private.budget or 0)\n\nif total > budget:\n    status = \"OVER_BUDGET\"\nelse:\n    status = \"WITHIN_BUDGET\"\n\nflow.private.budget_status = status\n\nflow.private.budget_debug = {\n    \"total\": total,\n    \"budget\": budget,\n    \"status\": status,\n}",
+            "kind": "script",
+            "name": "script_9f9f0d",
+            "position": {
+              "x": 25,
+              "y": 111.5
+            },
+            "display_name": "Check budget"
+          }
+        },
+        "parallel_ab754c__end__": {
+          "spec": {
+            "kind": "end",
+            "name": "parallel_ab754c__end__",
+            "position": {
+              "x": 302,
+              "y": 272.5
+            }
+          }
+        },
+        "parallel_ab754c__start__": {
+          "spec": {
+            "kind": "start",
+            "name": "parallel_ab754c__start__",
+            "position": {
+              "x": 302,
+              "y": 0
+            }
+          }
+        }
+      },
+      "schemas": {}
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

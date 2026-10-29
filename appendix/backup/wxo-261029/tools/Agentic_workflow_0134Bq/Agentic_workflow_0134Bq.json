@@ -1,0 +1,115 @@
+{
+  "spec": {
+    "kind": "flow",
+    "name": "Agentic_workflow_0134Bq",
+    "initiators": [],
+    "description": "No description",
+    "schedulable": true,
+    "display_name": "01_first_workflow",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "requester_name",
+        "request_id"
+      ],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "default": "D01-001"
+        },
+        "requester_name": {
+          "type": "string",
+          "default": "\uae40\ud559\uc2b5"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": ""
+        },
+        "request_id": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "suppress_agent_summarization": true
+  },
+  "edges": [
+    {
+      "id": "6b936a1b-01e8-4f2b-a338-def59b451e9e",
+      "end": "script_8f8d79",
+      "start": "__start__"
+    },
+    {
+      "id": "a66ed705-c0de-4927-99d0-1e1e7793c986",
+      "end": "__end__",
+      "start": "script_8f8d79"
+    }
+  ],
+  "nodes": {
+    "__end__": {
+      "spec": {
+        "kind": "end",
+        "name": "__end__",
+        "position": {
+          "x": 0,
+          "y": 300
+        }
+      }
+    },
+    "__start__": {
+      "spec": {
+        "kind": "start",
+        "name": "__start__",
+        "position": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "script_8f8d79": {
+      "spec": {
+        "fn": "self.output.request_id = flow.input.request_id\nself.output.message = flow.input.requester_name + \"\ub2d8, \uc694\uccad\uc744 \ud655\uc778\ud588\uc2b5\ub2c8\ub2e4. ok\"",
+        "kind": "script",
+        "name": "script_8f8d79",
+        "position": {
+          "x": 0,
+          "y": 155
+        },
+        "display_name": "Logic block 1",
+        "output_schema": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": ""
+            },
+            "request_id": {
+              "type": "string",
+              "description": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemas": {},
+  "metadata": {
+    "llm_model": "groq/openai/gpt-oss-120b",
+    "source_kind": "ui",
+    "is_transfer_workflow": false,
+    "is_system_generated_description": true
+  },
+  "output_map": {
+    "spec": {
+      "maps": [],
+      "name": "",
+      "fallback_strategy": "ask_the_user"
+    }
+  }
+}

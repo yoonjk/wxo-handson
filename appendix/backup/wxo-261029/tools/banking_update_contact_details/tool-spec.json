@@ -1,0 +1,41 @@
+{
+  "name": "banking_update_contact_details",
+  "description": "Update the contact details (email/phone) for given account ID.",
+  "permission": "admin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "account_id": {
+        "type": "string",
+        "title": "Account Id",
+        "description": "Account identifier."
+      },
+      "email": {
+        "type": "string",
+        "title": "Email",
+        "description": "New email address."
+      },
+      "phone": {
+        "type": "string",
+        "title": "Phone",
+        "description": "New phone number."
+      }
+    },
+    "required": [
+      "account_id"
+    ]
+  },
+  "output_schema": {
+    "type": "string",
+    "description": "A success or error message."
+  },
+  "binding": {
+    "python": {
+      "function": "banking_tools:banking_update_contact_details",
+      "requirements": [
+        "mysql-connector-python>=8.0.33"
+      ]
+    }
+  },
+  "response_format": "content"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "banking_list_recent_transactions",
+  "description": "List recent transactions for an account within optional date range.",
+  "permission": "admin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "account_id": {
+        "type": "string",
+        "title": "Account Id",
+        "description": "Account identifier."
+      },
+      "start_date": {
+        "type": "string",
+        "title": "Start Date",
+        "description": "Start date filter in YYYY-MM-DD format."
+      },
+      "end_date": {
+        "type": "string",
+        "title": "End Date",
+        "description": "End date filter in YYYY-MM-DD format."
+      },
+      "limit": {
+        "type": "string",
+        "title": "Limit",
+        "description": "Maximum number of transactions to return. Defaults to \"20\".",
+        "default": "20"
+      }
+    },
+    "required": [
+      "account_id"
+    ]
+  },
+  "output_schema": {
+    "type": "string",
+    "description": "A JSON string with the list of transactions, or a JSON error message."
+  },
+  "binding": {
+    "python": {
+      "function": "banking_tools:banking_list_recent_transactions",
+      "requirements": [
+        "mysql-connector-python>=8.0.33"
+      ]
+    }
+  },
+  "response_format": "content"
+}

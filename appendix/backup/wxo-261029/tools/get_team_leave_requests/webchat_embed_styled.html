@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>webchat 색상 미리보기</title>
+</head>
+<body>
+  <h1 style="font-family: sans-serif;">webchat 색상 미리보기</h1>
+<script>
+  window.wxOConfiguration = {
+    orchestrationID: "e54dee007967454c855650c4f10556da_6a4f1092-b48c-4340-8703-6b22d0c6821a",
+    hostURL: "https://ca-tor.watson-orchestrate.cloud.ibm.com",
+    rootElementID: "root",
+    deploymentPlatform: "ibmcloud",
+    crn: "crn:v1:bluemix:public:watsonx-orchestrate:ca-tor:a/e54dee007967454c855650c4f10556da:6a4f1092-b48c-4340-8703-6b22d0c6821a::",
+    chatOptions: {
+      agentId: "dc34a855-794c-4590-a3db-3adf862babc6",
+    },
+  style: {
+    theme: "light",
+    userMessageBackgroundColor: "#2f6df6",
+    primaryColor: "#2f6df6",
+    headerColor: "#2f6df6",
+  },
+  };
+  setTimeout(function () {
+    const script = document.createElement('script');
+    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js`;
+    script.addEventListener('load', function () {
+      wxoLoader.init();
+    });
+    document.head.appendChild(script);
+  }, 0);
+</script>
+
+</body>
+</html>

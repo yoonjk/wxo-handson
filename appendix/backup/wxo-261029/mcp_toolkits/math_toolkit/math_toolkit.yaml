@@ -1,0 +1,10 @@
+kind: mcp
+name: math_toolkit
+description: Math toolkit with square_root and power functions.
+connections: []
+package_root: math_toolkit
+command: python3 math_server.py
+tools:
+- square_root
+- power
+spec_version: v1

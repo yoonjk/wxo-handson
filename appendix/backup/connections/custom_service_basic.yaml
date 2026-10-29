@@ -1,8 +1,0 @@
-spec_version: v1
-kind: connection
-app_id: custom_service_basic
-environments:
-  draft:
-    security_scheme: basic_auth
-    type: team
-    server_url: http://nexweb.ddnsgeek.com:3464

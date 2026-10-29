@@ -1,0 +1,9 @@
+kind: mcp
+name: wxo_ootb_docproc
+description: OOTB Document Processing flow toolkit (ATM MCP)
+connections: []
+transport: streamable_http
+url: http://agentic-task-manager.agentic-task-manager-woprod.svc.cluster.local:9044/mcp/wxo_ootb_docproc
+tools:
+- '*'
+spec_version: v1

@@ -1,0 +1,37 @@
+{
+  "name": "list_leave_requests",
+  "description": "\ud2b9\uc815 \uc9c1\uc6d0\uc774 \uc2e0\uccad\ud55c \ubaa8\ub4e0 \ud734\uac00 \ub0b4\uc5ed(Pending/Approved/Rejected \ud3ec\ud568)\uc744\n\ucd5c\uc2e0 \uc21c\uc73c\ub85c \uc870\ud68c\ud569\ub2c8\ub2e4. \"\ub0b4\uac00 \uc2e0\uccad\ud55c \ud734\uac00\uac00 \uc2e4\uc81c\ub85c \ubc18\uc601\ub410\ub294\uc9c0\",\n\"\uc9c0\uae08 \uc0c1\ud0dc\uac00 \uc5b4\ub5a4\uc9c0\" \ud655\uc778\ud560 \ub54c \uc0ac\uc6a9\ud569\ub2c8\ub2e4.",
+  "permission": "read_only",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "employee_id": {
+        "type": "string",
+        "title": "Employee Id",
+        "description": "\uc870\ud68c\ud560 \uc9c1\uc6d0\uc758 \uc0ac\ubc88"
+      }
+    },
+    "required": [
+      "employee_id"
+    ]
+  },
+  "output_schema": {
+    "type": "object",
+    "description": "\ud574\ub2f9 \uc9c1\uc6d0\uc758 \ud734\uac00 \uc2e0\uccad \ubaa9\ub85d(requests)\uc744 \ub2f4\uc740 \ub515\uc154\ub108\ub9ac.\n\uc2e0\uccad \ub0b4\uc5ed\uc774 \uc5c6\uc73c\uba74 \ube48 \ub9ac\uc2a4\ud2b8\ub97c \ubc18\ud658\ud569\ub2c8\ub2e4.",
+    "additionalProperties": true
+  },
+  "binding": {
+    "python": {
+      "function": "tools:list_leave_requests",
+      "requirements": [
+        "mysql-connector-python>=8.0.33",
+        "SQLAlchemy>=2.0.0",
+        "PyMySQL>=1.1.0"
+      ],
+      "connections": {
+        "mysql_bank_demo": "4d88d377-6fb0-40b0-be31-b630b88635a3"
+      }
+    }
+  },
+  "response_format": "content"
+}

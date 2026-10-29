@@ -1,0 +1,61 @@
+{
+  "name": "apply_leave",
+  "description": "\ud734\uac00\ub97c \uc2e0\uccad\ud569\ub2c8\ub2e4. \uc794\uc5ec \uc5f0\ucc28\uc640 \ud300 \ub0b4 \uc77c\uc815 \ucda9\ub3cc\uc744 \uba3c\uc800 \ud655\uc778\ud569\ub2c8\ub2e4.\n\n- \ucda9\ub3cc\uc774 \uc5c6\uc73c\uba74: \ubc14\ub85c Pending \uc0c1\ud0dc\ub85c \uc2e0\uccad\uc744 \uc811\uc218\ud569\ub2c8\ub2e4.\n- \ucda9\ub3cc\uc774 \uc788\uace0 confirm_despite_conflict\uac00 False(\uae30\ubcf8\uac12)\uc774\uba74: \uc2e0\uccad\uc744\n  DB\uc5d0 \uc800\uc7a5\ud558\uc9c0 \uc54a\uace0, \ucda9\ub3cc \ub0b4\uc6a9\uacfc \ub300\uccb4 \ub0a0\uc9dc \ud6c4\ubcf4(suggested_alternatives)\ub9cc\n  \ubc18\ud658\ud569\ub2c8\ub2e4 (requires_confirmation=True). \uc774 \uacbd\uc6b0 \uc5d0\uc774\uc804\ud2b8\ub294 \uc0ac\uc6a9\uc790\uc5d0\uac8c\n  \"\uadf8\ub300\ub85c \uc9c4\ud589\ud560\uc9c0, \ub300\uccb4 \ub0a0\uc9dc \uc911 \ud558\ub098\ub97c \uc4f8\uc9c0\" \ubc18\ub4dc\uc2dc \uba3c\uc800 \ubb3c\uc5b4\ubd10\uc57c \ud558\uba70,\n  \uc0ac\uc6a9\uc790 \ud655\uc778 \uc5c6\uc774 \uc784\uc758\ub85c confirm_despite_conflict=True\ub85c \uc7ac\ud638\ucd9c\ud574\uc11c\ub294\n  \uc548 \ub429\ub2c8\ub2e4.\n- \uc0ac\uc6a9\uc790\uac00 \"\uadf8\ub798\ub3c4 \uc774 \ub0a0\uc9dc\ub85c \uc2e0\uccad\ud560\uac8c\uc694\"\ucc98\ub7fc \uba85\uc2dc\uc801\uc73c\ub85c \ub3d9\uc758\ud558\uba74, \uac19\uc740\n  start_date/end_date\ub85c confirm_despite_conflict=True\ub97c \uc8fc\uc5b4 \ub2e4\uc2dc\n  \ud638\ucd9c\ud574\uc57c \uc2e4\uc81c\ub85c \uc2e0\uccad\uc774 \uc811\uc218\ub429\ub2c8\ub2e4.\n- \uc0ac\uc6a9\uc790\uac00 \ub300\uccb4 \ub0a0\uc9dc \uc911 \ud558\ub098\ub97c \uc120\ud0dd\ud558\uba74, \uadf8 \ub0a0\uc9dc\ub85c confirm_despite_conflict\n  \uc5c6\uc774(False\ub85c) \ub2e4\uc2dc \ud638\ucd9c\ud558\uba74 \ub429\ub2c8\ub2e4 (\ubcf4\ud1b5 \uadf8 \ub0a0\uc9dc\uc5d4 \ucda9\ub3cc\uc774 \uc5c6\uc2b5\ub2c8\ub2e4).",
+  "permission": "read_write",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "employee_id": {
+        "type": "string",
+        "title": "Employee Id",
+        "description": "\ud734\uac00\ub97c \uc2e0\uccad\ud558\ub294 \uc9c1\uc6d0\uc758 \uc0ac\ubc88"
+      },
+      "start_date": {
+        "type": "string",
+        "title": "Start Date",
+        "description": "\ud734\uac00 \uc2dc\uc791\uc77c (YYYY-MM-DD)"
+      },
+      "end_date": {
+        "type": "string",
+        "title": "End Date",
+        "description": "\ud734\uac00 \uc885\ub8cc\uc77c (YYYY-MM-DD)"
+      },
+      "reason": {
+        "type": "string",
+        "title": "Reason",
+        "description": "\ud734\uac00 \uc0ac\uc720 (\uc120\ud0dd \uc0ac\ud56d)",
+        "default": ""
+      },
+      "confirm_despite_conflict": {
+        "type": "boolean",
+        "title": "Confirm Despite Conflict",
+        "description": "\ucda9\ub3cc\uc774 \uc788\uc5b4\ub3c4 \uc774 \ub0a0\uc9dc \uadf8\ub300\ub85c \uc2e0\uccad\uc744 \uac15\ud589\ud560\uc9c0 \uc5ec\ubd80. \uc0ac\uc6a9\uc790\uac00 \uba85\uc2dc\uc801\uc73c\ub85c \ub3d9\uc758\ud55c \uacbd\uc6b0\uc5d0\ub9cc True\ub85c \ud638\ucd9c.",
+        "default": false
+      }
+    },
+    "required": [
+      "employee_id",
+      "start_date",
+      "end_date"
+    ]
+  },
+  "output_schema": {
+    "type": "object",
+    "description": "\uc2e0\uccad\uc774 \uc2e4\uc81c\ub85c \uc811\uc218\ub410\ub294\uc9c0(success), \ud655\uc778\uc774 \ud544\uc694\ud55c \uc0c1\ud0dc\uc778\uc9c0\n(requires_confirmation), \ucda9\ub3cc \ub0b4\uc6a9\uacfc \ub300\uccb4 \ub0a0\uc9dc \ud6c4\ubcf4 \ub4f1\uc744 \ub2f4\uc740 \ub515\uc154\ub108\ub9ac.",
+    "additionalProperties": true
+  },
+  "binding": {
+    "python": {
+      "function": "tools:apply_leave",
+      "requirements": [
+        "mysql-connector-python>=8.0.33",
+        "SQLAlchemy>=2.0.0",
+        "PyMySQL>=1.1.0"
+      ],
+      "connections": {
+        "mysql_bank_demo": "4d88d377-6fb0-40b0-be31-b630b88635a3"
+      }
+    }
+  },
+  "response_format": "content"
+}

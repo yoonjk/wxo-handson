@@ -1,0 +1,37 @@
+{
+  "name": "banking_get_recent_transactions",
+  "description": "Get the most recent transactions for an account. Specify a count to control how many are returned (default 2).",
+  "permission": "admin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "account_id": {
+        "type": "string",
+        "title": "Account Id",
+        "description": "Account identifier."
+      },
+      "count": {
+        "type": "string",
+        "title": "Count",
+        "description": "Number of most recent transactions to return. Defaults to \"2\".",
+        "default": "2"
+      }
+    },
+    "required": [
+      "account_id"
+    ]
+  },
+  "output_schema": {
+    "type": "string",
+    "description": "A JSON string with the list of transactions, or a JSON error message."
+  },
+  "binding": {
+    "python": {
+      "function": "banking_tools:banking_get_recent_transactions",
+      "requirements": [
+        "mysql-connector-python>=8.0.33"
+      ]
+    }
+  },
+  "response_format": "content"
+}
